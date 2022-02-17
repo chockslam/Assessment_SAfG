@@ -280,10 +280,10 @@ ErrorType Game::StartOfGame()
    // Code to set up your game *********************************************
    // **********************************************************************
 
-	ship = new Spaceship();
-	ship->Initialize();
+	ship = new Spaceship(Vector2D(1000,2), Vector2D(0, 1),2.0f, false);
 	ship->Activate();
-
+	ship->Initialize();
+	
 	gt.mark();
 	gt.mark();
 

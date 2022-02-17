@@ -1,12 +1,13 @@
 #pragma once
 #include "GameObject.h"
 
-#include "mydrawengine.h"
 #include <string>
+
 class Spaceship :
     public GameObject
 {
 public:
+    Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activated, std::wstring path);
     Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activated);
     Spaceship(Vector2D initPos, Vector2D vel, float rotation);
     Spaceship(Vector2D initPos, Vector2D vel, bool activated);
@@ -20,8 +21,8 @@ public:
 protected:
     void Render();
 private:
-    const wchar_t* path = L"assets\\ship.bmp";
-    PictureIndex image;
+    std::wstring path;
+    int image;
     Vector2D velocity;
 };
 

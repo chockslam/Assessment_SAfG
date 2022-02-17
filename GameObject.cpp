@@ -1,17 +1,6 @@
 #include "GameObject.h"
 #include "ErrorLogger.h"
 
-GameObject::GameObject(Vector2D initPos)
-	: GameObject::GameObject(initPos, false)
-{
-}
-
-GameObject::GameObject(Vector2D initPos, float rotation)
-	:
-	GameObject::GameObject(initPos, rotation, false)
-{
-}
-
 
 GameObject::GameObject(Vector2D initPos, float rotation, bool activated)
 	:
@@ -21,25 +10,6 @@ GameObject::GameObject(Vector2D initPos, float rotation, bool activated)
 {
 }
 
-GameObject::GameObject(float rotation, bool activated)
-	:
-	GameObject::GameObject(Vector2D(0,0), rotation, activated)
-{
-}
-
-GameObject::GameObject(Vector2D initPos, bool activated)
-	:
-	GameObject::GameObject(initPos, 0.0f, activated)
-{
-
-}
-
-GameObject::GameObject()
-	: 
-	GameObject::GameObject(Vector2D(0,0))
-{
-
-}
 
 GameObject::~GameObject()
 {

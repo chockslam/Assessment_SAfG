@@ -1,18 +1,25 @@
 #include "Spaceship.h"
 
-MyDrawEngine* pDE = MyDrawEngine::GetInstance();
 
+#include "mydrawengine.h"
 #define PATH L"assets\\ship.bmp"
 
 
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activated)
+Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activated, std::wstring path)
 	:
-	GameObject::GameObject(initPos, rotation,activated),
-	velocity(vel)
+	GameObject::GameObject(initPos, rotation, activated),
+	velocity(vel),
+	path(path)
 {
-	image = -1;
+	image = 0;
 	posOffset = 1.0f;
 	rotOffset = 0.07f;
+}
+
+Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activated)
+	:
+	Spaceship::Spaceship(initPos,vel,rotation,activated,PATH)
+{
 }
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation)
@@ -48,7 +55,9 @@ Spaceship::Spaceship()
 
 void Spaceship::Initialize()
 {
-	image = pDE->LoadPicture(path);
+
+	MyDrawEngine* pDE = MyDrawEngine::GetInstance();
+	image = pDE->LoadPicture(path.c_str());
 	printf("");
 }
 
@@ -59,6 +68,8 @@ void Spaceship::Updated()
 
 void Spaceship::Render()
 {
-	if(this->active)
+	if (this->active) {
+		MyDrawEngine* pDE = MyDrawEngine::GetInstance();
 		pDE->DrawAt(this->position, image, 5.0f, this->rotation);
+	}
 }

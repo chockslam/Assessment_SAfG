@@ -6,12 +6,8 @@
 class GameObject
 {
 public:
-	GameObject(Vector2D initPos);
-	GameObject(Vector2D initPos, float rotation);
+
 	GameObject(Vector2D initPos, float rotation, bool activated);
-	GameObject(float rotation, bool activated);
-	GameObject(Vector2D initPos, bool activated);
-	GameObject();
 	virtual ~GameObject();
 	void Activate();
 	void Deactivate();
@@ -23,8 +19,11 @@ protected:
 
 	Vector2D position;
 	float posOffset;
+	
 	float rotation;
 	float rotOffset;
+	
+	
 	bool active;
 };
 
