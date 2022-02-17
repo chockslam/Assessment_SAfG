@@ -9,6 +9,7 @@
 #include "errortype.h"
 #include "windows.h"
 #include "mydrawengine.h"
+#include "mysoundengine.h"
 #include "gametimer.h"
 
 // This is a hack for reading keyboard in situations where you don't want to
@@ -80,6 +81,15 @@ public:
    // but could be done by the gameplay programmer in other situations
    // This will be used by the gameplay programmer to clean up
 	ErrorType EndOfGame();
+private:
+	PictureIndex image;
+	SoundIndex shootSound;
+	SoundIndex thrustSound;
+	Vector2D pos;
+	float rot;
+
+	float thrustOn = false;
+
 };
 
 
