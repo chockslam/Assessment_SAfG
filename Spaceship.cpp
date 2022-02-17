@@ -63,6 +63,81 @@ void Spaceship::Initialize()
 
 void Spaceship::Updated()
 {
+
+
+	//Acceleration
+	if (pInputs->KeyPressed(DIK_LSHIFT))
+	{
+		posOffsetPower *= 2.0f;
+	}
+
+
+	//Movements
+	if (pInputs->KeyPressed(DIK_W))
+	{
+
+		Vector2D velocity;
+
+		velocity += up;
+		velocity.setBearing(rot, 4.0f);
+		pos = pos + velocity * posOffsetPower;
+	}
+	if (pInputs->KeyPressed(DIK_S))
+	{
+
+		Vector2D velocity;
+
+		velocity += down;
+		velocity.setBearing(rot, -4.0f);
+		pos = pos + velocity * posOffsetPower;
+	}
+	if (pInputs->KeyPressed(DIK_D))
+	{
+
+		Vector2D velocity;
+
+		velocity += right;
+		pos = pos + velocity * posOffsetPower;
+	}
+	if (pInputs->KeyPressed(DIK_A))
+	{
+
+		Vector2D velocity;
+
+		velocity += left;
+		pos = pos + velocity * posOffsetPower;
+	}
+
+
+	//Rotation
+	if (pInputs->KeyPressed(DIK_LEFT))
+	{
+		rot -= rotOff;
+	}
+	if (pInputs->KeyPressed(DIK_RIGHT))
+	{
+		rot += rotOff;
+	}
+
+	//Sounds
+
+	if (pInputs->NewKeyPressed(DIK_SPACE))
+	{
+		pSE->Play(shootSound);
+	}
+	if (pInputs->NewKeyPressed(DIK_W))
+	{
+		pSE->Play(thrustSound, true);
+		thrustOn = true;
+	}
+	else if (!pInputs->KeyPressed(DIK_W) && thrustOn) {
+		pSE->Stop(thrustSound);
+		thrustOn = false;
+	}
+
+
+
+
 	this->Render();
 }
 
