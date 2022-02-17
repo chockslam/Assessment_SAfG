@@ -220,9 +220,7 @@ ErrorType MySoundEngine::SetPan(SoundIndex sound, int pan)
 
 ErrorType MySoundEngine::Play(SoundIndex sound, bool looping)
 {
-	// The first two numbers in the Play() functions below
-	// are always zero. The third controls whether to loop,
-	// or just play once.
+
 
 	MySound& sb = FindSound(sound);
 
@@ -567,6 +565,7 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 			m_hasDuplicates = false;
 			ErrorLogger::Write(L"Couldn't create buffer duplicates: ");
 			ErrorLogger::Writeln(filename);
+			break;
 		}
 	}
 

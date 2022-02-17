@@ -23,7 +23,7 @@ typedef unsigned int MusicIndex;
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "winmm.lib")
 
-const int NUMBUFFERCOPIES = 30;		// The number of copies of each sound buffer. Effectively the number of times the same sound can be played simultaneously
+const int NUMBUFFERCOPIES = 4;		// The number of copies of each sound buffer. Effectively the number of times the same sound can be played simultaneously
 
 // Class to load an play .wav files
 class MySoundEngine
