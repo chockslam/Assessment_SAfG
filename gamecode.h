@@ -11,6 +11,7 @@
 #include "mydrawengine.h"
 #include "mysoundengine.h"
 #include "gametimer.h"
+#include "Spaceship.h"
 
 // This is a hack for reading keyboard in situations where you don't want to
 // use a full input system.
@@ -82,10 +83,7 @@ public:
    // This will be used by the gameplay programmer to clean up
 	ErrorType EndOfGame();
 private:
-	PictureIndex image;
-	SoundIndex shootSound;
-	SoundIndex thrustSound;
-	Vector2D pos;
+	Spaceship* ship;
 	float rot;
 
 	float thrustOn = false;

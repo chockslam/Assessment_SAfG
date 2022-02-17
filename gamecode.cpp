@@ -280,19 +280,9 @@ ErrorType Game::StartOfGame()
    // Code to set up your game *********************************************
    // **********************************************************************
 
-	MyDrawEngine* pDE = MyDrawEngine::GetInstance();
-	image = pDE->LoadPicture(L"assets\\ship.bmp");
-
-	MySoundEngine* pSE = MySoundEngine::GetInstance();
-	shootSound = pSE->LoadWav(L"assets\\shoot.wav");
-	thrustSound = pSE->LoadWav(L"assets\\thrustloop2.wav");
-
-
-	//ships parameters
-	pos = { 300.0f, 300.0f };
-	rot = 0.0f;
-
-
+	ship = new Spaceship();
+	ship->Initialize();
+	ship->Activate();
 
 	gt.mark();
 	gt.mark();
@@ -323,107 +313,7 @@ ErrorType Game::Update()
    // Your code goes here *************************************************
    // *********************************************************************
 
-
-	//Vector2D pos(300, 300);
-	MyDrawEngine* pDE = MyDrawEngine::GetInstance();
-
-	//Vector2D move(2.0f, 2.0f);
-	float rotOff = 0.06f;
-
-	Vector2D right(4.0f,0.0f);
-	Vector2D left(-4.0f,0.0f);
-	Vector2D up(0.0f,4.0f);
-	Vector2D down(0.0f,-4.0f);
-
-	MyInputs* pInputs = MyInputs::GetInstance();
-	pInputs->SampleKeyboard();
-	MySoundEngine* pSE = MySoundEngine::GetInstance();
-
-	
-	//pos += move;
-	//rot += rotOff;
-	float posOffsetPower = 1.0f;
-
-
-	//Acceleration
-	if (pInputs->KeyPressed(DIK_LSHIFT))
-	{
-		posOffsetPower *= 2.0f;
-	}
-
-
-	//Movements
-	if (pInputs->KeyPressed(DIK_W))
-	{
-
-		Vector2D velocity;
-
-		velocity += up;
-		velocity.setBearing(rot, 4.0f);
-		pos = pos + velocity * posOffsetPower;
-	}
-	if (pInputs->KeyPressed(DIK_S))
-	{
-
-		Vector2D velocity;
-
-		velocity += down;
-		velocity.setBearing(rot, -4.0f);
-		pos = pos + velocity * posOffsetPower;
-	}
-	if (pInputs->KeyPressed(DIK_D))
-	{
-
-		Vector2D velocity;
-
-		velocity += right;
-		pos = pos + velocity * posOffsetPower;
-	}
-	if (pInputs->KeyPressed(DIK_A))
-	{
-
-		Vector2D velocity;
-
-		velocity += left;
-		pos = pos + velocity * posOffsetPower;
-	}
-
-
-	//Rotation
-	if (pInputs->KeyPressed(DIK_LEFT))
-	{
-		rot -= rotOff;
-	}
-	if (pInputs->KeyPressed(DIK_RIGHT))
-	{
-		rot += rotOff;
-	}
-
-	//Sounds
-
-	if (pInputs->NewKeyPressed(DIK_SPACE))
-	{
-		pSE->Play(shootSound);
-	}
-	if (pInputs->NewKeyPressed(DIK_W))
-	{
-		pSE->Play(thrustSound, true);
-		thrustOn = true;
-	}
-	else if (!pInputs->KeyPressed(DIK_W)&&thrustOn) {
-		pSE->Stop(thrustSound);
-		thrustOn = false;
-	}
-
-
-
-
-
-
-
-
-	pDE->DrawAt(pos, image,5.0f,rot);
-	
+	ship->Updated();
 
    
 	gt.mark();
