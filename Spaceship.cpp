@@ -23,8 +23,7 @@ Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation)
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, bool activated)
 	:
-	GameObject::GameObject(initPos, 0.0f, activated),
-	velocity(vel)
+	Spaceship::Spaceship(initPos,vel,0.0f,activated)
 {
 }
 
