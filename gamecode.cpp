@@ -280,7 +280,7 @@ ErrorType Game::StartOfGame()
    // Code to set up your game *********************************************
    // **********************************************************************
 
-	ship = new Spaceship(Vector2D(1000,2), Vector2D(0, 1),2.0f, false);
+	ship = new Spaceship(Vector2D(1000,2), Vector2D(0, 1),2.0f, false, L"assets\\basic.bmp");
 	ship->Activate();
 	ship->Initialize();
 	

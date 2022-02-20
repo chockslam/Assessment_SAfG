@@ -2,14 +2,17 @@
 
 
 #include "mydrawengine.h"
+#include "myinputs.h"
+#include "mysoundengine.h"
+
+
 #define PATH L"assets\\ship.bmp"
 
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activated, std::wstring path)
 	:
-	GameObject::GameObject(initPos, rotation, activated),
-	velocity(vel),
-	path(path)
+	GameObject::GameObject(initPos, rotation, activated, path),
+	velocity(vel)
 {
 	image = 0;
 	posOffset = 1.0f;
@@ -53,22 +56,33 @@ Spaceship::Spaceship()
 {
 }
 
-void Spaceship::Initialize()
-{
-
-	MyDrawEngine* pDE = MyDrawEngine::GetInstance();
-	image = pDE->LoadPicture(path.c_str());
-	printf("");
-}
+//void Spaceship::Initialize()
+//{
+//
+//	
+//}
 
 void Spaceship::Updated()
 {
 
 
+	//Vector2D move(2.0f, 2.0f);
+	float rotOff = 0.06f;
+	MyInputs* pInputs = MyInputs::GetInstance();
+	pInputs->SampleKeyboard();
+	MySoundEngine* pSE = MySoundEngine::GetInstance();
+
+
+	//pos += move;
+	//rot += rotOff;
+	
 	//Acceleration
 	if (pInputs->KeyPressed(DIK_LSHIFT))
 	{
-		posOffsetPower *= 2.0f;
+		this->posOffsetPower = 2.0f;
+	}
+	else {
+		this->posOffsetPower = 1.0f;
 	}
 
 
@@ -78,47 +92,27 @@ void Spaceship::Updated()
 
 		Vector2D velocity;
 
-		velocity += up;
-		velocity.setBearing(rot, 4.0f);
-		pos = pos + velocity * posOffsetPower;
+		velocity += this->up;
+		velocity.setBearing(this->rotation, 4.0f);
+		this->position += velocity * posOffsetPower;
 	}
 	if (pInputs->KeyPressed(DIK_S))
 	{
-
-		Vector2D velocity;
-
-		velocity += down;
-		velocity.setBearing(rot, -4.0f);
-		pos = pos + velocity * posOffsetPower;
+		this->velocity = this->down;
+		this->velocity.setBearing(this->rotation, -4.0f);
+		this->position += this->velocity * posOffsetPower;
 	}
-	if (pInputs->KeyPressed(DIK_D))
-	{
-
-		Vector2D velocity;
-
-		velocity += right;
-		pos = pos + velocity * posOffsetPower;
-	}
-	if (pInputs->KeyPressed(DIK_A))
-	{
-
-		Vector2D velocity;
-
-		velocity += left;
-		pos = pos + velocity * posOffsetPower;
-	}
-
-
+	
 	//Rotation
 	if (pInputs->KeyPressed(DIK_LEFT))
 	{
-		rot -= rotOff;
+		this->rotation -= this->rotOffset;
 	}
 	if (pInputs->KeyPressed(DIK_RIGHT))
 	{
-		rot += rotOff;
+		this->rotation += this->rotOffset;
 	}
-
+/*
 	//Sounds
 
 	if (pInputs->NewKeyPressed(DIK_SPACE))
@@ -136,15 +130,12 @@ void Spaceship::Updated()
 	}
 
 
-
+*/
 
 	this->Render();
 }
 
-void Spaceship::Render()
-{
-	if (this->active) {
-		MyDrawEngine* pDE = MyDrawEngine::GetInstance();
-		pDE->DrawAt(this->position, image, 5.0f, this->rotation);
-	}
-}
+//void Spaceship::Render()
+//{
+//	
+//}

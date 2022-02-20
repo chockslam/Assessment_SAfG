@@ -1,12 +1,15 @@
 #include "GameObject.h"
 #include "ErrorLogger.h"
+#include "mydrawengine.h"
 
 
-GameObject::GameObject(Vector2D initPos, float rotation, bool activated)
+
+GameObject::GameObject(Vector2D initPos, float rotation, bool activated, std::wstring path)
 	:
 	position(initPos),
 	rotation(rotation),
-	active(activated)
+	active(activated),
+	path(path)
 {
 }
 
@@ -37,9 +40,20 @@ void GameObject::Deactivate()
 
 void GameObject::Initialize()
 {
+	MyDrawEngine* pDE = MyDrawEngine::GetInstance();
+	image = pDE->LoadPicture(path.c_str());
+	printf("");
 }
 
 void GameObject::Updated()
 {
+}
+
+void GameObject::Render()
+{
+	if (this->active) {
+		MyDrawEngine* pDE = MyDrawEngine::GetInstance();
+		pDE->DrawAt(this->position, this->image, 5.0f, this->rotation);
+	}
 }
 

@@ -1,21 +1,20 @@
 #pragma once
 #include "vector2D.h"
-
-
+#include <string>
 
 class GameObject
 {
 public:
 
-	GameObject(Vector2D initPos, float rotation, bool activated);
+	GameObject(Vector2D initPos, float rotation, bool activated, std::wstring path);
 	virtual ~GameObject();
 	void Activate();
 	void Deactivate();
-	virtual void Initialize() = 0;
+	virtual void Initialize();
 	virtual void Updated() = 0;
 protected:
 
-	virtual void Render() = 0;
+	virtual void Render();
 
 	Vector2D position;
 	float posOffset;
@@ -23,7 +22,10 @@ protected:
 	float rotation;
 	float rotOffset;
 	
-	
+
+	std::wstring path;
+	int image;
+
 	bool active;
 };
 
