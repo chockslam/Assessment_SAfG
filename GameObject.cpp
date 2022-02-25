@@ -9,7 +9,8 @@ GameObject::GameObject(Vector2D initPos, float rotation, bool activated, std::ws
 	position(initPos),
 	rotation(rotation),
 	active(activated),
-	path(path)
+	path(path),
+	posOffsetPower(0.0f)
 {
 }
 
@@ -42,11 +43,6 @@ void GameObject::Initialize()
 {
 	MyDrawEngine* pDE = MyDrawEngine::GetInstance();
 	image = pDE->LoadPicture(path.c_str());
-	printf("");
-}
-
-void GameObject::Updated()
-{
 }
 
 void GameObject::Render()

@@ -10,6 +10,8 @@
 #include "errorlogger.h"
 #include <math.h>
 #include "shapes.h"
+#include "Spaceship.h"
+#include "Rock.h"
 
 
 Game::Game()
@@ -280,10 +282,20 @@ ErrorType Game::StartOfGame()
    // Code to set up your game *********************************************
    // **********************************************************************
 
-	ship = new Spaceship(Vector2D(1000,2), Vector2D(0, 1),2.0f, false, L"assets\\basic.bmp");
-	ship->Activate();
-	ship->Initialize();
-	
+	pShip = new Spaceship(Vector2D(-1000,0), Vector2D(0, 0),3.14f/2, false);
+	pShip->Activate();
+	pShip->Initialize();
+
+	for (int i = 1; i <= 4; i++) {
+		//int  = rand() % 4;
+		std::wstring nameAss = L"assets\\rock" + std::to_wstring(i) + L".bmp";
+		auto thisrock = std::make_unique<Rock>(Vector2D(300 * i, 0), Vector2D(0, 0), 3.14f / 2, false, nameAss);
+		thisrock->Activate();
+		thisrock->Initialize();
+		rocks.push_back(std::move(thisrock));
+		
+	}
+
 	gt.mark();
 	gt.mark();
 
@@ -313,9 +325,11 @@ ErrorType Game::Update()
    // Your code goes here *************************************************
    // *********************************************************************
 
-	ship->Updated();
+	pShip->Updated((float)gt.mdFrameTime);
+	for (auto& rock : rocks) {
+		rock->Updated((float)gt.mdFrameTime);
+	}
 
-   
 	gt.mark();
 
 

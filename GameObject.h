@@ -11,16 +11,16 @@ public:
 	void Activate();
 	void Deactivate();
 	virtual void Initialize();
-	virtual void Updated() = 0;
+	virtual void Updated(float timeFrame) = 0;
 protected:
 
 	virtual void Render();
 
 	Vector2D position;
-	float posOffset;
+	float posOffsetPower;
 	
 	float rotation;
-	float rotOffset;
+	const float rotOffset = 1.0f;
 	
 
 	std::wstring path;

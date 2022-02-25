@@ -15,8 +15,6 @@ Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activa
 	velocity(vel)
 {
 	image = 0;
-	posOffset = 1.0f;
-	rotOffset = 0.07f;
 }
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activated)
@@ -62,7 +60,7 @@ Spaceship::Spaceship()
 //	
 //}
 
-void Spaceship::Updated()
+void Spaceship::Updated(float timeFrame)
 {
 
 
@@ -79,38 +77,40 @@ void Spaceship::Updated()
 	//Acceleration
 	if (pInputs->KeyPressed(DIK_LSHIFT))
 	{
-		this->posOffsetPower = 2.0f;
-	}
-	else {
-		this->posOffsetPower = 1.0f;
+		this->posOffsetPower = 50.0f;
+	} 
+	else { 
+		this->posOffsetPower = 5.0f;
 	}
 
-
-	//Movements
 	if (pInputs->KeyPressed(DIK_W))
 	{
-
-		Vector2D velocity;
-
-		velocity += this->up;
-		velocity.setBearing(this->rotation, 4.0f);
-		this->position += velocity * posOffsetPower;
+		Vector2D acc;
+		acc.setBearing(this->rotation, this->AccPower);
+		this->velocity += acc*timeFrame * posOffsetPower;
+		
 	}
 	if (pInputs->KeyPressed(DIK_S))
 	{
-		this->velocity = this->down;
-		this->velocity.setBearing(this->rotation, -4.0f);
-		this->position += this->velocity * posOffsetPower;
+
+		Vector2D acc;
+		acc.setBearing(this->rotation, (-this->AccPower));
+		this->velocity += acc * timeFrame * posOffsetPower;
+		
 	}
+
+	Vector2D friction = -(frictionPower) * this->velocity * timeFrame;
+	this->velocity += friction + down;
+	this->position += this->velocity  * timeFrame;
 	
 	//Rotation
 	if (pInputs->KeyPressed(DIK_LEFT))
 	{
-		this->rotation -= this->rotOffset;
+		this->rotation -= this->rotOffset*timeFrame;
 	}
 	if (pInputs->KeyPressed(DIK_RIGHT))
 	{
-		this->rotation += this->rotOffset;
+		this->rotation += this->rotOffset*timeFrame;
 	}
 /*
 	//Sounds
