@@ -6,32 +6,35 @@
 #include "mysoundengine.h"
 
 
+#include "Bullet.h"
+
+
 #define PATH L"assets\\ship.bmp"
 
 
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activated, std::wstring path)
+Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float sc, float rotation, bool activated, std::wstring path)
 	:
-	GameObject::GameObject(initPos, rotation, activated, path),
+	GameObject::GameObject(initPos, rotation, sc, activated, path),
 	velocity(vel)
 {
 	image = 0;
 }
 
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, bool activated)
+Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated)
 	:
-	Spaceship::Spaceship(initPos,vel,rotation,activated,PATH)
+	Spaceship::Spaceship(initPos,vel, sc,rotation,activated,PATH)
 {
 }
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation)
 	:
-	Spaceship::Spaceship(initPos, vel, rotation, false)
+	Spaceship::Spaceship(initPos, vel, rotation, 5.0f, false)
 {
 }
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, bool activated)
 	:
-	Spaceship::Spaceship(initPos,vel,0.0f,activated)
+	Spaceship::Spaceship(initPos,vel,0.0f,5.0f,activated)
 {
 }
 
@@ -60,6 +63,14 @@ Spaceship::Spaceship()
 //	
 //}
 
+void Spaceship::Initialize(std::shared_ptr<ObjectManager> om)
+{
+	GameObject::Initialize();
+	
+	this->om = om;
+
+}
+
 void Spaceship::Updated(float timeFrame)
 {
 
@@ -68,7 +79,6 @@ void Spaceship::Updated(float timeFrame)
 	float rotOff = 0.06f;
 	MyInputs* pInputs = MyInputs::GetInstance();
 	pInputs->SampleKeyboard();
-	MySoundEngine* pSE = MySoundEngine::GetInstance();
 
 
 	//pos += move;
@@ -99,10 +109,35 @@ void Spaceship::Updated(float timeFrame)
 		
 	}
 
-	Vector2D friction = -(frictionPower) * this->velocity * timeFrame;
-	this->velocity += friction + down;
-	this->position += this->velocity  * timeFrame;
+	if (pInputs->NewKeyPressed(DIK_SPACE))
+	{
+		std::wstring nameAss = L"assets\\bullet.bmp";
+		auto bullet = std::make_unique<Bullet>(this->position, this->velocity, this->rotation, 10.0f, false, nameAss);
+		bullet->Initialize();
+		bullet->Activate();
+		if(this->om)
+			this->om->AddObject(std::move(bullet));
+	}
+
 	
+	Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
+	//this->velocity += friction + this->down;
+	this->velocity += friction;
+	this->position += this->velocity  * timeFrame;
+
+	// Wrap around
+	if (this->position.XValue > MyDrawEngine::GetInstance()->GetScreenWidth()) {
+		this->position.XValue = - MyDrawEngine::GetInstance()->GetScreenWidth();
+	}
+	if (this->position.XValue < - MyDrawEngine::GetInstance()->GetScreenWidth()) {
+		this->position.XValue = MyDrawEngine::GetInstance()->GetScreenWidth();
+	}
+	if (this->position.YValue > MyDrawEngine::GetInstance()->GetScreenHeight()) {
+		this->position.YValue = - MyDrawEngine::GetInstance()->GetScreenHeight();
+	}
+	if (this->position.YValue < -MyDrawEngine::GetInstance()->GetScreenHeight()) {
+		this->position.YValue = MyDrawEngine::GetInstance()->GetScreenHeight();
+	}
 	//Rotation
 	if (pInputs->KeyPressed(DIK_LEFT))
 	{
@@ -132,7 +167,6 @@ void Spaceship::Updated(float timeFrame)
 
 */
 
-	this->Render();
 }
 
 //void Spaceship::Render()

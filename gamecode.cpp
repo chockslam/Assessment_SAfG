@@ -11,7 +11,7 @@
 #include <math.h>
 #include "shapes.h"
 #include "Spaceship.h"
-#include "Rock.h"
+#include "Asteroid.h"
 
 
 Game::Game()
@@ -22,6 +22,8 @@ Game::Game()
 Game::~Game()
 {
    // No-op
+	OutputDebugString(L"-----------_CrtDumpMemoryLeaks ---------");
+	_CrtDumpMemoryLeaks();
 }
 
 Game Game::instance;    // Singleton instance
@@ -281,19 +283,23 @@ ErrorType Game::StartOfGame()
 {
    // Code to set up your game *********************************************
    // **********************************************************************
-
-	pShip = new Spaceship(Vector2D(-1000,0), Vector2D(0, 0),3.14f/2, false);
+	om = std::make_shared<ObjectManager>();
+	// Create Ship
+	auto pShip = std::make_unique<Spaceship>(Vector2D(-1000, 0), Vector2D(0, 0), 3.14f / 2, 3.5f, false);
 	pShip->Activate();
-	pShip->Initialize();
+	pShip->Initialize(om);
+	om->AddObject(std::move(pShip));
 
-	for (int i = 1; i <= 4; i++) {
-		//int  = rand() % 4;
-		std::wstring nameAss = L"assets\\rock" + std::to_wstring(i) + L".bmp";
-		auto thisrock = std::make_unique<Rock>(Vector2D(300 * i, 0), Vector2D(0, 0), 3.14f / 2, false, nameAss);
+	// Create 8 asteroids
+	for (int i = 1; i <= 20; i++) {
+		std::wstring nameAss = L"assets\\rock" + std::to_wstring((i%4) + 1) + L".bmp";
+		auto thisrock = std::make_unique<Asteroid>(	Vector2D(rand() % 600, rand() % 1200 - 600),
+													Vector2D(rand() % 1000+50, rand() % 1000 + 50), 
+													rand() % 628 / 100.0f, 2.0f, false,
+													nameAss);
 		thisrock->Activate();
 		thisrock->Initialize();
-		rocks.push_back(std::move(thisrock));
-		
+		om->AddObject(std::move(thisrock));
 	}
 
 	gt.mark();
@@ -325,10 +331,8 @@ ErrorType Game::Update()
    // Your code goes here *************************************************
    // *********************************************************************
 
-	pShip->Updated((float)gt.mdFrameTime);
-	for (auto& rock : rocks) {
-		rock->Updated((float)gt.mdFrameTime);
-	}
+	om->UpdateAll(gt.mdFrameTime);
+	om->RenderAll();
 
 	gt.mark();
 
@@ -351,8 +355,15 @@ ErrorType Game::EndOfGame()
    // *********************************************************************
 	MySoundEngine* pSE = MySoundEngine::GetInstance();
 	pSE->StopAllSounds();
+	if(om)
+		om->DeleteAll();
 	
 
 	return SUCCESS;
+}
+
+std::shared_ptr<ObjectManager> Game::getObjectManager()
+{
+	return this->om;
 }
 

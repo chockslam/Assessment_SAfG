@@ -6,15 +6,16 @@ class GameObject
 {
 public:
 
-	GameObject(Vector2D initPos, float rotation, bool activated, std::wstring path);
+	GameObject(Vector2D initPos, float rotation, float sc, bool activated, std::wstring path);
 	virtual ~GameObject();
 	void Activate();
 	void Deactivate();
 	virtual void Initialize();
 	virtual void Updated(float timeFrame) = 0;
+	virtual void Render();
 protected:
 
-	virtual void Render();
+	float scale;
 
 	Vector2D position;
 	float posOffsetPower;

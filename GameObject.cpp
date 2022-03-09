@@ -4,12 +4,13 @@
 
 
 
-GameObject::GameObject(Vector2D initPos, float rotation, bool activated, std::wstring path)
+GameObject::GameObject(Vector2D initPos, float rotation, float sc, bool activated, std::wstring path)
 	:
 	position(initPos),
 	rotation(rotation),
 	active(activated),
 	path(path),
+	scale(sc),
 	posOffsetPower(0.0f)
 {
 }
@@ -49,7 +50,7 @@ void GameObject::Render()
 {
 	if (this->active) {
 		MyDrawEngine* pDE = MyDrawEngine::GetInstance();
-		pDE->DrawAt(this->position, this->image, 5.0f, this->rotation);
+		pDE->DrawAt(this->position, this->image, this->scale, this->rotation);
 	}
 }
 
