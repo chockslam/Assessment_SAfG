@@ -21,9 +21,8 @@ Game::Game()
 
 Game::~Game()
 {
+	//_CrtDumpMemoryLeaks();
    // No-op
-	OutputDebugString(L"-----------_CrtDumpMemoryLeaks ---------");
-	_CrtDumpMemoryLeaks();
 }
 
 Game Game::instance;    // Singleton instance
@@ -285,22 +284,20 @@ ErrorType Game::StartOfGame()
    // **********************************************************************
 	om = std::make_shared<ObjectManager>();
 	// Create Ship
-	auto pShip = std::make_unique<Spaceship>(Vector2D(-1000, 0), Vector2D(0, 0), 3.14f / 2, 3.5f, false);
-	pShip->Activate();
-	pShip->Initialize(om);
-	om->AddObject(std::move(pShip));
+	//auto pShip = std::make_unique<Spaceship>(Vector2D(-1000, 0), Vector2D(0, 0), 3.14f / 2, 3.5f, false);
+	//pShip->Activate();
+	//pShip->Initialize(om);
+	//om->AddObject(std::move(pShip));
+	om->Add(L"Ship", { -1000.0f, 0.0f }, { 0.0f, 0.0f }, 3.14f / 2.0f, 3.5f, 1, om);
 
 	// Create 8 asteroids
-	for (int i = 1; i <= 20; i++) {
-		std::wstring nameAss = L"assets\\rock" + std::to_wstring((i%4) + 1) + L".bmp";
-		auto thisrock = std::make_unique<Asteroid>(	Vector2D(rand() % 600, rand() % 1200 - 600),
-													Vector2D(rand() % 1000+50, rand() % 1000 + 50), 
-													rand() % 628 / 100.0f, 2.0f, false,
-													nameAss);
-		thisrock->Activate();
-		thisrock->Initialize();
-		om->AddObject(std::move(thisrock));
+	for (int i = 1; i <= 10; i++) {
+		om->Add(L"Random Flying Asteroid");
 	}
+
+	OutputDebugString(std::to_wstring(om.use_count()).c_str());
+
+
 
 	gt.mark();
 	gt.mark();
@@ -327,10 +324,14 @@ ErrorType Game::Update()
 	else
 		escapepressed=false;
 
+	//om->DeleteInactive();
+
+
 
    // Your code goes here *************************************************
    // *********************************************************************
 
+	om->DeleteInactive();
 	om->UpdateAll(gt.mdFrameTime);
 	om->RenderAll();
 
@@ -355,11 +356,17 @@ ErrorType Game::EndOfGame()
    // *********************************************************************
 	MySoundEngine* pSE = MySoundEngine::GetInstance();
 	pSE->StopAllSounds();
+
+	OutputDebugString(std::to_wstring(om.use_count()).c_str());
 	if(om)
 		om->DeleteAll();
-	
+	OutputDebugString(std::to_wstring(om.use_count()).c_str());
+	if(om.use_count()>0)
+		om.reset(); // Set reference counter to 0, to avoid memory leak, when checking it after Winmain. It deletes Object Manager here. 
 
+	OutputDebugString(std::to_wstring(om.use_count()).c_str());
 	return SUCCESS;
+
 }
 
 std::shared_ptr<ObjectManager> Game::getObjectManager()

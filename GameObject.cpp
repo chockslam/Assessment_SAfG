@@ -20,6 +20,11 @@ GameObject::~GameObject()
 {
 }
 
+bool GameObject::IsActive() const
+{
+	return this->active;
+}
+
 void GameObject::Activate()
 {
 	if (!active) {

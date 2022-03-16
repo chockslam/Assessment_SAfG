@@ -30,6 +30,13 @@ void Bullet::Updated(float timeFrame)
 		if (timer <= 0) {
 			this->active = false;
 		}
+		this->boundingCircle.PlaceAt(this->position, this->scale * MyDrawEngine::GetInstance()->GetWidth(this->image) / 2);
 	}
 	
+}
+
+IShape2D& Bullet::GetShape()
+{
+	// TODO: insert return statement here
+	return this->boundingCircle;
 }
