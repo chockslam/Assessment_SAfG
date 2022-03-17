@@ -146,8 +146,7 @@ public:
 	Camera theCamera;          // Camera objects is used to translate world coordinates to/from
                               // screen coordinates
 	
-
-	int GetWidth(PictureIndex ind);
+	
 
 
 	// Some standard colours.

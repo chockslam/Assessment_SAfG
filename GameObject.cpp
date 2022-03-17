@@ -59,3 +59,7 @@ void GameObject::Render()
 	}
 }
 
+void GameObject::ProcessCollision(std::shared_ptr<GameObject> other)
+{
+}
+

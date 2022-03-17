@@ -23,7 +23,7 @@ public:
    // void Initialize();
     void Initialize(std::shared_ptr<ObjectManager> om);
     void Updated(float timeFrame);
-
+    void ProcessCollision(std::shared_ptr<GameObject> other);
 protected:
     //void Render(); 
 private:

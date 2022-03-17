@@ -331,9 +331,9 @@ ErrorType Game::Update()
    // Your code goes here *************************************************
    // *********************************************************************
 
-	om->DeleteInactive();
 	om->UpdateAll(gt.mdFrameTime);
 	om->RenderAll();
+	om->DeleteInactive();
 
 	gt.mark();
 
@@ -357,12 +357,8 @@ ErrorType Game::EndOfGame()
 	MySoundEngine* pSE = MySoundEngine::GetInstance();
 	pSE->StopAllSounds();
 
-	OutputDebugString(std::to_wstring(om.use_count()).c_str());
-	if(om)
-		om->DeleteAll();
-	OutputDebugString(std::to_wstring(om.use_count()).c_str());
-	if(om.use_count()>0)
-		om.reset(); // Set reference counter to 0, to avoid memory leak, when checking it after Winmain. It deletes Object Manager here. 
+	om->DeleteAll();
+	om.reset(); // Set reference counter to 0, to avoid memory leak, when checking it after Winmain. It deletes Object Manager here. 
 
 	OutputDebugString(std::to_wstring(om.use_count()).c_str());
 	return SUCCESS;

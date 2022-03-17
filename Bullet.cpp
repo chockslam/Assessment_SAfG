@@ -6,6 +6,8 @@ Bullet::Bullet(Vector2D initPos, Vector2D vel, float rotation, float sc, bool ac
 	GameObject::GameObject(initPos, rotation, sc, activated, path),
 	velocity(vel)
 {
+	type = ObjectType::BULLET;
+	this->collidable = true;
 }
 
 void Bullet::Updated(float timeFrame)
@@ -30,7 +32,12 @@ void Bullet::Updated(float timeFrame)
 		if (timer <= 0) {
 			this->active = false;
 		}
-		this->boundingCircle.PlaceAt(this->position, this->scale * MyDrawEngine::GetInstance()->GetWidth(this->image) / 2);
+
+		int width = 0;
+		int height = 0;
+		MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
+	
+		this->boundingRect.PlaceAt(Vector2D(this->position.XValue - width/2 * this->scale, this->position.YValue - height / 2 * this->scale), Vector2D(this->position.XValue + width / 2 * this->scale, this->position.YValue + height / 2 * this->scale));
 	}
 	
 }
@@ -38,5 +45,5 @@ void Bullet::Updated(float timeFrame)
 IShape2D& Bullet::GetShape()
 {
 	// TODO: insert return statement here
-	return this->boundingCircle;
+	return this->boundingRect;
 }

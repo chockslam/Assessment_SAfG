@@ -358,20 +358,6 @@ void MyDrawEngine::ReloadFonts()
 	}
 }	// Reload fonts
 
-int MyDrawEngine::GetWidth(PictureIndex ind)
-{
-	std::map<PictureIndex, MyPicture>::iterator picit = m_MyPictureList.find(ind);
-
-	// If could not find the picture requested.
-	if (picit == m_MyPictureList.end())
-	{
-		ErrorLogger::Writeln(L"Width could not be resolved, because picture was not found");
-		return -1;
-	}
-
-	return picit->second.m_width;
-}
-
 
 // **************************************************************
 

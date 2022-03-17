@@ -12,13 +12,16 @@
 #define PATH L"assets\\ship.bmp"
 
 
+
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float sc, float rotation, bool activated, std::wstring path)
 	:
 	GameObject::GameObject(initPos, rotation, sc, activated, path),
 	velocity(vel)
 {
+	type = ObjectType::SHIP;
 	this->om = nullptr;
 	image = 0;
+	this->collidable = true;
 }
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated)
@@ -156,8 +159,15 @@ void Spaceship::Updated(float timeFrame)
 		{
 			this->rotation += this->rotOffset * timeFrame;
 		}
-		this->boundingCircle.PlaceAt(this->position, this->scale * MyDrawEngine::GetInstance()->GetWidth(this->image) / 2);
 
+		int width = 0;
+		int height = 0;
+		MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
+		this->boundingCircle.PlaceAt(this->position, this->scale * width / 2);
+
+	}
+	else {
+		om = nullptr;
 	}
 	
 /*
@@ -179,6 +189,17 @@ void Spaceship::Updated(float timeFrame)
 */
 	// this->boundingRect.PlaceAt(this->position.YValue+ 5 * this->scale, this->position.XValue - 5 * this->scale, this->position.YValue - 5 * this->scale, this->position.XValue + 5 * this->scale);
 
+}
+
+void Spaceship::ProcessCollision(std::shared_ptr<GameObject> other)
+{
+
+	if(other->GetType() == ObjectType::ASTEROID) {
+		if (this->active)
+			this->Deactivate();
+		if (this->om)
+			this->om->Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scale);
+	}
 }
 
 //void Spaceship::Render()

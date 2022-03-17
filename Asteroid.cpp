@@ -7,6 +7,8 @@ Asteroid::Asteroid(Vector2D initPos, Vector2D vel, float rotation, float sc, boo
 	GameObject::GameObject(initPos, rotation, sc, activated, path),
 	velocity(vel)
 {
+	type = ObjectType::ASTEROID;
+	this->collidable = true;
 }
 
 void Asteroid::Updated(float timeFrame)
@@ -28,7 +30,10 @@ void Asteroid::Updated(float timeFrame)
 		if (this->position.YValue < -MyDrawEngine::GetInstance()->GetScreenHeight()) {
 			this->position.YValue = MyDrawEngine::GetInstance()->GetScreenHeight();
 		}
-		this->boundingCircle.PlaceAt(this->position, this->scale * MyDrawEngine::GetInstance()->GetWidth(this->image) / 2);
+		int width = 0;
+		int height = 0;
+		MyDrawEngine::GetInstance()->GetDimensions(this->image,height,width);
+		this->boundingCircle.PlaceAt(this->position, this->scale * width / 2);
 	}
 	
 	
@@ -38,4 +43,13 @@ IShape2D& Asteroid::GetShape()
 {
 	// TODO: insert return statement here
 	return this->boundingCircle;
+}
+
+void Asteroid::ProcessCollision(std::shared_ptr<GameObject> other)
+{
+	if (other->GetType() == ObjectType::BULLET) {
+		OutputDebugString(L"Asteroid collided with bullet \n");
+		if (this->active)
+			this->Deactivate();
+	}
 }
