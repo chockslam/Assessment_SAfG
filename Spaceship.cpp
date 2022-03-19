@@ -15,13 +15,12 @@
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float sc, float rotation, bool activated, std::wstring path)
 	:
-	GameObject::GameObject(initPos, rotation, sc, activated, path),
+	CollidableObject::CollidableObject(initPos, rotation, sc, activated, path),
 	velocity(vel)
 {
 	type = ObjectType::SHIP;
 	this->om = nullptr;
 	image = 0;
-	this->collidable = true;
 }
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated)
@@ -71,13 +70,6 @@ Spaceship::~Spaceship()
 	
 }
 
-
-
-//void Spaceship::Initialize()
-//{
-//
-//	
-//}
 
 void Spaceship::Initialize(std::shared_ptr<ObjectManager> om)
 {
@@ -129,7 +121,7 @@ void Spaceship::Updated(float timeFrame)
 		if (pInputs->NewKeyPressed(DIK_SPACE))
 		{
 			if (this->om)
-				om->Add(L"Bullet", this->position, this->velocity, this->rotation, 10.0f);
+				om->Add(L"Bullet", this->position, this->velocity, this->rotation, 10.0f, 1, this->om);
 		}
 
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
@@ -138,18 +130,7 @@ void Spaceship::Updated(float timeFrame)
 		this->position += this->velocity * timeFrame;
 
 		// Wrap around
-		if (this->position.XValue > MyDrawEngine::GetInstance()->GetScreenWidth()) {
-			this->position.XValue = -MyDrawEngine::GetInstance()->GetScreenWidth();
-		}
-		if (this->position.XValue < -MyDrawEngine::GetInstance()->GetScreenWidth()) {
-			this->position.XValue = MyDrawEngine::GetInstance()->GetScreenWidth();
-		}
-		if (this->position.YValue > MyDrawEngine::GetInstance()->GetScreenHeight()) {
-			this->position.YValue = -MyDrawEngine::GetInstance()->GetScreenHeight();
-		}
-		if (this->position.YValue < -MyDrawEngine::GetInstance()->GetScreenHeight()) {
-			this->position.YValue = MyDrawEngine::GetInstance()->GetScreenHeight();
-		}
+		
 		//Rotation
 		if (pInputs->KeyPressed(DIK_LEFT))
 		{
@@ -164,6 +145,7 @@ void Spaceship::Updated(float timeFrame)
 		int height = 0;
 		MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
 		this->boundingCircle.PlaceAt(this->position, this->scale * width / 2);
+		MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue + 500.0f, -position.YValue));
 
 	}
 	else {
@@ -191,14 +173,14 @@ void Spaceship::Updated(float timeFrame)
 
 }
 
-void Spaceship::ProcessCollision(std::shared_ptr<GameObject> other)
+void Spaceship::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
 
 	if(other->GetType() == ObjectType::ASTEROID) {
 		if (this->active)
 			this->Deactivate();
 		if (this->om)
-			this->om->Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scale);
+			this->om->Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scale, 1);
 	}
 }
 

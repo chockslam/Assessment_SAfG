@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "CollidableObject.h"
 
 #include <memory>
 #include <string>
@@ -7,7 +7,7 @@
 
 
 class Spaceship :
-    public GameObject
+    public CollidableObject
 {
 public:
     Spaceship(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated, std::wstring path);
@@ -23,7 +23,7 @@ public:
    // void Initialize();
     void Initialize(std::shared_ptr<ObjectManager> om);
     void Updated(float timeFrame);
-    void ProcessCollision(std::shared_ptr<GameObject> other);
+    void ProcessCollision(std::shared_ptr<CollidableObject> other);
 protected:
     //void Render(); 
 private:

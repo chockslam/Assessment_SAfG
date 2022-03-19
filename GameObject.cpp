@@ -59,7 +59,20 @@ void GameObject::Render()
 	}
 }
 
-void GameObject::ProcessCollision(std::shared_ptr<GameObject> other)
+void GameObject::wrap()
 {
+	if (this->position.XValue > MyDrawEngine::GetInstance()->GetScreenWidth()) {
+		this->position.XValue = -MyDrawEngine::GetInstance()->GetScreenWidth();
+	}
+	if (this->position.XValue < -MyDrawEngine::GetInstance()->GetScreenWidth()) {
+		this->position.XValue = MyDrawEngine::GetInstance()->GetScreenWidth();
+	}
+	if (this->position.YValue > MyDrawEngine::GetInstance()->GetScreenHeight()) {
+		this->position.YValue = -MyDrawEngine::GetInstance()->GetScreenHeight();
+	}
+	if (this->position.YValue < -MyDrawEngine::GetInstance()->GetScreenHeight()) {
+		this->position.YValue = MyDrawEngine::GetInstance()->GetScreenHeight();
+	}
 }
+
 

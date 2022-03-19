@@ -284,19 +284,13 @@ ErrorType Game::StartOfGame()
    // **********************************************************************
 	om = std::make_shared<ObjectManager>();
 	// Create Ship
-	//auto pShip = std::make_unique<Spaceship>(Vector2D(-1000, 0), Vector2D(0, 0), 3.14f / 2, 3.5f, false);
-	//pShip->Activate();
-	//pShip->Initialize(om);
-	//om->AddObject(std::move(pShip));
+	
 	om->Add(L"Ship", { -1000.0f, 0.0f }, { 0.0f, 0.0f }, 3.14f / 2.0f, 3.5f, 1, om);
 
 	// Create 8 asteroids
 	for (int i = 1; i <= 10; i++) {
 		om->Add(L"Random Flying Asteroid");
 	}
-
-	OutputDebugString(std::to_wstring(om.use_count()).c_str());
-
 
 
 	gt.mark();

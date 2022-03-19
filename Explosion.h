@@ -11,7 +11,6 @@ public:
     Explosion(Vector2D initPos, float rotation, float sc, bool activated, std::list<std::wstring> paths);
     ~Explosion() {};
     void Updated(float timeFrame);
-    IShape2D& GetShape();
     void Initialize();
 private:
     float coolDownAnim;

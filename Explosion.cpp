@@ -9,7 +9,6 @@ Explosion::Explosion(Vector2D initPos, float rotation, float sc, bool activated,
 	picturePaths(paths),
 	coolDownAnim(COOLDOWN)
 {
-	this->collidable = false;
 }
 
 void Explosion::Updated(float timeFrame)
@@ -25,16 +24,8 @@ void Explosion::Updated(float timeFrame)
 		}
 		coolDownAnim -= timeFrame;
 	}
-	
-	
-	
 }
 
-IShape2D& Explosion::GetShape()
-{
-	Circle2D itDoesNotMakeSense;
-	return itDoesNotMakeSense;
-}
 
 void Explosion::Initialize()
 {

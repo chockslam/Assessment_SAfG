@@ -3,31 +3,18 @@
 
 Bullet::Bullet(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated, std::wstring path)
 	:
-	GameObject::GameObject(initPos, rotation, sc, activated, path),
+	CollidableObject::CollidableObject(initPos, rotation, sc, activated, path),
 	velocity(vel)
 {
 	type = ObjectType::BULLET;
-	this->collidable = true;
 }
 
 void Bullet::Updated(float timeFrame)
 {
 	if (this->active) {
-		this->velocity.setBearing(this->rotation, 500.0f);
+		this->velocity.setBearing(this->rotation, 10500.0f);
 		this->position += this->velocity * timeFrame;
-		// Wrap around
-		if (this->position.XValue > MyDrawEngine::GetInstance()->GetScreenWidth()) {
-			this->position.XValue = -MyDrawEngine::GetInstance()->GetScreenWidth();
-		}
-		if (this->position.XValue < -MyDrawEngine::GetInstance()->GetScreenWidth()) {
-			this->position.XValue = MyDrawEngine::GetInstance()->GetScreenWidth();
-		}
-		if (this->position.YValue > MyDrawEngine::GetInstance()->GetScreenHeight()) {
-			this->position.YValue = -MyDrawEngine::GetInstance()->GetScreenHeight();
-		}
-		if (this->position.YValue < -MyDrawEngine::GetInstance()->GetScreenHeight()) {
-			this->position.YValue = MyDrawEngine::GetInstance()->GetScreenHeight();
-		}
+		
 		timer -= timeFrame;
 		if (timer <= 0) {
 			this->active = false;
@@ -40,6 +27,23 @@ void Bullet::Updated(float timeFrame)
 		this->boundingRect.PlaceAt(Vector2D(this->position.XValue - width/2 * this->scale, this->position.YValue - height / 2 * this->scale), Vector2D(this->position.XValue + width / 2 * this->scale, this->position.YValue + height / 2 * this->scale));
 	}
 	
+}
+
+void Bullet::ProcessCollision(std::shared_ptr<CollidableObject> other)
+{
+	if (other->GetType() == ObjectType::ASTEROID) {
+		if (this->active)
+			this->Deactivate();
+		if (this->om)
+			this->om->Add(L"Puff", this->position, Vector2D(), this->rotation, this->scale/2.0f);
+	}
+}
+
+void Bullet::Initialize(std::shared_ptr<ObjectManager> om)
+{
+	GameObject::Initialize();
+
+	this->om = om;
 }
 
 IShape2D& Bullet::GetShape()
