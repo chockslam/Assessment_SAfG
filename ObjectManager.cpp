@@ -46,7 +46,22 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	if (name == L"Bullet") 
 	{
-		cgo = std::make_shared<Bullet>(pos, vel, rot, size, false, L"assets\\bullet.bmp");
+		cgo = std::make_shared<Bullet>(pos, vel, rot, size, false, std::list<std::wstring>{
+				L"assets\\fire\\fire_1.png",
+				L"assets\\fire\\fire_2.png",
+				L"assets\\fire\\fire_3.png",
+				L"assets\\fire\\fire_4.png",
+				L"assets\\fire\\fire_5.png",
+				L"assets\\fire\\fire_6.png",
+				L"assets\\fire\\fire_7.png",
+				L"assets\\fire\\fire_9.png",
+				L"assets\\fire\\fire_10.png",
+				L"assets\\fire\\fire_11.png",
+				L"assets\\fire\\fire_12.png",
+				L"assets\\fire\\fire_13.png",
+				L"assets\\fire\\fire_14.png",
+				L"assets\\fire\\fire_15.png"
+		});
 		
 		pObjectCollidable.push_back(cgo);
 
@@ -91,6 +106,14 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		go = std::move(lm);
 	}
 
+	if (name == L"Star Background") {
+		
+	
+	}
+	if (name == L"Fire") {
+		
+	
+	}
 	
 	go->Initialize();
 	go->Activate();

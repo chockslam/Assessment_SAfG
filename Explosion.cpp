@@ -24,6 +24,7 @@ void Explosion::Updated(float timeFrame)
 		}
 		coolDownAnim -= timeFrame;
 	}
+
 }
 
 
