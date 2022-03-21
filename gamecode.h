@@ -11,7 +11,6 @@
 #include "mydrawengine.h"
 #include "mysoundengine.h"
 #include "gametimer.h"
-#include "ObjectManager.h"
 
 // This is a hack for reading keyboard in situations where you don't want to
 // use a full input system.
@@ -84,9 +83,9 @@ public:
 	ErrorType EndOfGame();
 
 
-	std::shared_ptr<ObjectManager> getObjectManager();
+	
 private:
-	std::shared_ptr<ObjectManager> om;
+	
 	//GameObject* pRock;
 	float rot;
 

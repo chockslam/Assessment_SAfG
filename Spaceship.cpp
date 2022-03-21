@@ -6,6 +6,9 @@
 #include "mysoundengine.h"
 #include "LevelManager.h"
 
+
+#include "ObjectManager.h"
+
 // #include "Bullet.h"
 
 
@@ -19,7 +22,6 @@ Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float sc, float rotation, b
 	velocity(vel)
 {
 	type = ObjectType::SHIP;
-	this->om = nullptr;
 	image = 0;
 }
 
@@ -71,13 +73,6 @@ Spaceship::~Spaceship()
 }
 
 
-void Spaceship::Initialize(std::shared_ptr<ObjectManager> om)
-{
-	GameObject::Initialize();
-	
-	this->om = om;
-
-}
 
 
 void Spaceship::Updated(float timeFrame)
@@ -121,8 +116,7 @@ void Spaceship::Updated(float timeFrame)
 
 		if (pInputs->NewKeyPressed(DIK_SPACE))
 		{
-			if (this->om)
-				om->Add(L"Bullet", this->position, this->velocity, this->rotation, 10.0f, 1, this->om);
+			ObjectManager::getInstance().Add(L"Bullet", this->position, this->velocity, this->rotation, 10.0f, 1);
 		}
 
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
@@ -148,9 +142,6 @@ void Spaceship::Updated(float timeFrame)
 		this->boundingCircle.PlaceAt(this->position, this->scale * width / 2);
 		MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue + 500.0f, -position.YValue));
 
-	}
-	else {
-		om = nullptr;
 	}
 	
 /*
@@ -180,8 +171,7 @@ void Spaceship::ProcessCollision(std::shared_ptr<CollidableObject> other)
 	if(other->GetType() == ObjectType::ASTEROID) {
 		if (this->active) {
 			this->Deactivate();
-			if (this->om)
-				this->om->Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scale, 1);
+			ObjectManager::getInstance().Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scale, 1);
 
 			LevelManager::getInstance()->PlayerDead();
 

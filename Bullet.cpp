@@ -1,5 +1,6 @@
 #include "Bullet.h"
 #include "mydrawengine.h"
+#include "ObjectManager.h"
 
 Bullet::Bullet(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated, std::wstring path)
 	:
@@ -34,17 +35,10 @@ void Bullet::ProcessCollision(std::shared_ptr<CollidableObject> other)
 	if (other->GetType() == ObjectType::ASTEROID) {
 		if (this->active)
 			this->Deactivate();
-		if (this->om)
-			this->om->Add(L"Puff", this->position, Vector2D(), this->rotation, this->scale/2.0f);
+		ObjectManager::getInstance().Add(L"Puff", this->position, Vector2D(), this->rotation, this->scale/2.0f);
 	}
 }
 
-void Bullet::Initialize(std::shared_ptr<ObjectManager> om)
-{
-	GameObject::Initialize();
-
-	this->om = om;
-}
 
 IShape2D& Bullet::GetShape()
 {

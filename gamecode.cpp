@@ -11,6 +11,8 @@
 #include <math.h>
 #include "shapes.h"
 
+#include "ObjectManager.h"
+
 
 Game::Game()
 {
@@ -280,10 +282,10 @@ ErrorType Game::StartOfGame()
 {
    // Code to set up your game *********************************************
    // **********************************************************************
-	om = std::make_shared<ObjectManager>();
+	
 	// Create Ship
 	
-	om->Add(L"Level Manager", Vector2D(), Vector2D(), 0.0f, 0.0f, 0, this->om);
+	ObjectManager::getInstance().Add(L"Level Manager", Vector2D(), Vector2D(), 0.0f, 0.0f, 0);
 	
 
 
@@ -319,9 +321,9 @@ ErrorType Game::Update()
    // Your code goes here *************************************************
    // *********************************************************************
 
-	om->UpdateAll(gt.mdFrameTime);
-	om->RenderAll();
-	om->DeleteInactive();
+	ObjectManager::getInstance().UpdateAll(gt.mdFrameTime);
+	ObjectManager::getInstance().RenderAll();
+	ObjectManager::getInstance().DeleteInactive();
 
 	gt.mark();
 
@@ -345,16 +347,10 @@ ErrorType Game::EndOfGame()
 	MySoundEngine* pSE = MySoundEngine::GetInstance();
 	pSE->StopAllSounds();
 
-	om->DeleteAll();
-	om.reset(); // Set reference counter to 0, to avoid memory leak, when checking it after Winmain. It deletes Object Manager here. 
+	ObjectManager::getInstance().DeleteAll();
 
-	OutputDebugString(std::to_wstring(om.use_count()).c_str());
 	return SUCCESS;
 
 }
 
-std::shared_ptr<ObjectManager> Game::getObjectManager()
-{
-	return this->om;
-}
 

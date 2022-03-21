@@ -1,6 +1,6 @@
 #include "LevelManager.h"
 #include "mydrawengine.h"
-
+#include "ObjectManager.h"
 std::shared_ptr<LevelManager> LevelManager::d(new LevelManager);
 
 LevelManager::LevelManager()
@@ -24,10 +24,7 @@ void LevelManager::Initialize()
 
 }
 
-void LevelManager::Initialize(std::shared_ptr<ObjectManager> om)
-{
-	this->om = om;
-}
+
 
 void LevelManager::Updated(float timeFrame)
 {
@@ -53,14 +50,14 @@ void LevelManager::Render()
 void LevelManager::RespawnEnemies()
 {
 	for (int i = 1; i <= 10; i++) {
-		om->Add(L"Random Flying Asteroid");
+		ObjectManager::getInstance().Add(L"Random Flying Asteroid");
 		numEnemies = i;
 	}
 }
 
 void LevelManager::RespawnPlayer()
 {
-	om->Add(L"Ship", { -1000.0f, 0.0f }, { 0.0f, 0.0f }, 3.14f / 2.0f, 3.5f, 1, om);
+	ObjectManager::getInstance().Add(L"Ship", { -1000.0f, 0.0f }, { 0.0f, 0.0f }, 3.14f / 2.0f, 3.5f, 1);
 }
 
 void LevelManager::AddScore()

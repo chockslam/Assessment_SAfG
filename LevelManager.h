@@ -1,6 +1,5 @@
 #pragma once
 #include "GameObject.h"
-#include "ObjectManager.h"
 class LevelManager :
     public GameObject
 {
@@ -14,7 +13,6 @@ public:
 
     void StartLevel();
     void Initialize();
-    void Initialize(std::shared_ptr<ObjectManager> om);
     void Updated(float timeFrame);
     void Render();
     void RespawnEnemies();
@@ -32,6 +30,5 @@ private:
     int endTimer;
     int numEnemies;
     int playerLives; 
-    std::shared_ptr<ObjectManager> om; 
 };
 

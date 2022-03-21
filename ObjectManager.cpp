@@ -9,21 +9,11 @@
 #include <string>
 
 
-ObjectManager::ObjectManager()
-{
-}
 
-void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot, float size, int appearance, std::shared_ptr<ObjectManager> om)
+void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot, float size, int appearance)
 {
 	std::shared_ptr<GameObject> go;
 	std::shared_ptr<CollidableObject> cgo;
-	bool needOmInside = false;
-	//bool lmExists = false;
-	//LevelManager* lm;
-	//std::shared_ptr<LevelManager> lm;
-
-
-
 	
 
 	if (name == L"Asteroid") 
@@ -47,23 +37,20 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	if (name == L"Ship") 
 	{
-		auto ship = std::make_shared<Spaceship>(pos, vel, rot, size, false);
-		ship->Initialize(std::move(om));
-		ship->Activate();
-		pObjectCollidable.push_back(ship);
-		pObjectList.push_back(std::move(ship));
-		needOmInside = true;
+		cgo = std::make_shared<Spaceship>(pos, vel, rot, size, false);
+		
+		pObjectCollidable.push_back(cgo);
+
+		go = cgo;
+		
 	}
 	if (name == L"Bullet") 
 	{
-		auto bul = std::make_shared<Bullet>(pos, vel, rot, size, false, L"assets\\bullet.bmp");
+		cgo = std::make_shared<Bullet>(pos, vel, rot, size, false, L"assets\\bullet.bmp");
 		
-		bul->Initialize(std::move(om));
-		bul->Activate();
-		
-		pObjectCollidable.push_back(bul);
-		pObjectList.push_back(std::move(bul));
-		needOmInside = true;
+		pObjectCollidable.push_back(cgo);
+
+		go = cgo;
 
 	}
 
@@ -98,22 +85,17 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 
 	if (name == L"Level Manager") {
 		auto lm = LevelManager::getInstance();
-		lm->Initialize(om);
-		//lm->Initialize(std::move(om));
+		lm->Initialize();
 		lm->Activate();
 		lm->StartLevel();
-		pObjectList.push_back(std::move(lm));
-	
-		needOmInside = true;
+		go = std::move(lm);
 	}
 
 	
-	if (!needOmInside) 
-	{
-		go->Initialize();
-		go->Activate();
-		pObjectList.push_back(std::move(go));
-	}
+	go->Initialize();
+	go->Activate();
+	pObjectList.push_back(std::move(go));
+	
 
 }
 

@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <string>
-#include "ObjectManager.h"
 
 
 class Spaceship :
@@ -21,7 +20,6 @@ public:
     ~Spaceship();
 
    // void Initialize();
-    void Initialize(std::shared_ptr<ObjectManager> om = nullptr);
     void Updated(float timeFrame);
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
 protected:
@@ -29,7 +27,6 @@ protected:
 private:
     Vector2D velocity;
 
-    std::shared_ptr<ObjectManager> om;
     Circle2D boundingCircle;
     
     const float frictionPower = 0.5f;
