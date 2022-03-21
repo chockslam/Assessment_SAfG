@@ -4,7 +4,7 @@
 #include "mydrawengine.h"
 #include "myinputs.h"
 #include "mysoundengine.h"
-
+#include "LevelManager.h"
 
 // #include "Bullet.h"
 
@@ -78,6 +78,7 @@ void Spaceship::Initialize(std::shared_ptr<ObjectManager> om)
 	this->om = om;
 
 }
+
 
 void Spaceship::Updated(float timeFrame)
 {
@@ -177,10 +178,15 @@ void Spaceship::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
 
 	if(other->GetType() == ObjectType::ASTEROID) {
-		if (this->active)
+		if (this->active) {
 			this->Deactivate();
-		if (this->om)
-			this->om->Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scale, 1);
+			if (this->om)
+				this->om->Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scale, 1);
+
+			LevelManager::getInstance()->PlayerDead();
+
+		}
+
 	}
 }
 

@@ -1,6 +1,7 @@
 #include "Asteroid.h"
 #include "mydrawengine.h"
 #include <random>
+#include "LevelManager.h"
 
 Asteroid::Asteroid(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated, std::wstring path)
 	:
@@ -35,8 +36,9 @@ IShape2D& Asteroid::GetShape()
 void Asteroid::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
 	if (other->GetType() == ObjectType::BULLET) {
-		OutputDebugString(L"Asteroid collided with bullet \n");
-		if (this->active)
+		if (this->active) {
 			this->Deactivate();
+			LevelManager::getInstance()->EnemyDead();
+		}
 	}
 }

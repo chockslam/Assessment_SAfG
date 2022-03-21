@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include "ObjectManager.h";
+#include "ObjectManager.h"
 
 
 class Spaceship :
@@ -21,7 +21,7 @@ public:
     ~Spaceship();
 
    // void Initialize();
-    void Initialize(std::shared_ptr<ObjectManager> om);
+    void Initialize(std::shared_ptr<ObjectManager> om = nullptr);
     void Updated(float timeFrame);
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
 protected:

@@ -10,8 +10,6 @@
 #include "errorlogger.h"
 #include <math.h>
 #include "shapes.h"
-#include "Spaceship.h"
-#include "Asteroid.h"
 
 
 Game::Game()
@@ -285,12 +283,8 @@ ErrorType Game::StartOfGame()
 	om = std::make_shared<ObjectManager>();
 	// Create Ship
 	
-	om->Add(L"Ship", { -1000.0f, 0.0f }, { 0.0f, 0.0f }, 3.14f / 2.0f, 3.5f, 1, om);
-
-	// Create 8 asteroids
-	for (int i = 1; i <= 10; i++) {
-		om->Add(L"Random Flying Asteroid");
-	}
+	om->Add(L"Level Manager", Vector2D(), Vector2D(), 0.0f, 0.0f, 0, this->om);
+	
 
 
 	gt.mark();

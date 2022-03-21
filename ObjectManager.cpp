@@ -3,8 +3,10 @@
 #include "Asteroid.h"
 #include "Spaceship.h"
 #include "Explosion.h"
+#include "LevelManager.h"
 #include "Bullet.h"
 #include <iostream>
+#include <string>
 
 
 ObjectManager::ObjectManager()
@@ -16,6 +18,14 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	std::shared_ptr<GameObject> go;
 	std::shared_ptr<CollidableObject> cgo;
 	bool needOmInside = false;
+	//bool lmExists = false;
+	//LevelManager* lm;
+	//std::shared_ptr<LevelManager> lm;
+
+
+
+	
+
 	if (name == L"Asteroid") 
 	{
 		std::wstring nameAss = L"assets\\rock" + std::to_wstring((appearance % 4) + 1) + L".bmp";
@@ -47,8 +57,10 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	if (name == L"Bullet") 
 	{
 		auto bul = std::make_shared<Bullet>(pos, vel, rot, size, false, L"assets\\bullet.bmp");
+		
 		bul->Initialize(std::move(om));
 		bul->Activate();
+		
 		pObjectCollidable.push_back(bul);
 		pObjectList.push_back(std::move(bul));
 		needOmInside = true;
@@ -83,6 +95,19 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		});
 		
 	}
+
+	if (name == L"Level Manager") {
+		auto lm = LevelManager::getInstance();
+		lm->Initialize(om);
+		//lm->Initialize(std::move(om));
+		lm->Activate();
+		lm->StartLevel();
+		pObjectList.push_back(std::move(lm));
+	
+		needOmInside = true;
+	}
+
+	
 	if (!needOmInside) 
 	{
 		go->Initialize();
@@ -99,6 +124,10 @@ void ObjectManager::AddObject(std::shared_ptr<GameObject> object)
 
 void ObjectManager::UpdateAll(float frameTime)
 {
+	//auto p = QueryObject<Spaceship>();
+	//if (p) {
+	//	if()
+	//}
 	for (auto& obj : this->pObjectList) {
 		obj->Updated(frameTime);
 	}
@@ -112,8 +141,6 @@ void ObjectManager::RenderAll()
 	for (auto& obj : this->pObjectList) {
 		obj->Render();
 	}
-	MyDrawEngine::GetInstance()->WriteInt(50, 50, pObjectList.size(),
-		MyDrawEngine::GREEN);
 
 }
 

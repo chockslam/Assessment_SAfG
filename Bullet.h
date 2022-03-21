@@ -10,7 +10,7 @@ public:
     ~Bullet() {};
     void Updated(float timeFrame);
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
-    void Initialize(std::shared_ptr<ObjectManager> om);
+    void Initialize(std::shared_ptr<ObjectManager> om = nullptr);
     IShape2D& GetShape();
 private:
 

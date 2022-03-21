@@ -3,7 +3,6 @@
 #include "mydrawengine.h"
 
 
-
 GameObject::GameObject(Vector2D initPos, float rotation, float sc, bool activated, std::wstring path)
 	:
 	position(initPos),
