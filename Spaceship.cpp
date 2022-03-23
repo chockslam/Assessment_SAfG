@@ -15,6 +15,7 @@
 #define PATH L"assets\\ship.bmp"
 
 #define IDLE_SPEED 0.1f
+#define KNOCKOUT_TIMER 2.0f
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
@@ -88,78 +89,94 @@ void Spaceship::Updated(float timeFrame)
 		MyInputs* pInputs = MyInputs::GetInstance();
 		pInputs->SampleKeyboard();
 
+		//if (currentAnimation == L"FALL") {
+		//	if (it == anims[L"FALL"].end()) {
+		//		currentAnimation = L"IDLE";
+		//		it = anims[L"IDLE"].begin();
+		//	}
+		//}
+
+
 		this->AnimUtilityUpdate(IDLE_SPEED, timeFrame);
 		//pos += move;
 		//rot += rotOff;
+		
 
 		//Acceleration
-		if (pInputs->KeyPressed(DIK_LSHIFT))
-		{
-			this->posOffsetPower = 50.0f;
-			currentAnimation = L"RUN";
+		if (!knocked) {
+			
+		}
+		
+		if (!knocked) {
+
+			if (pInputs->KeyPressed(DIK_LSHIFT))
+			{
+				this->posOffsetPower = 50.0f;
+				currentAnimation = L"RUN";
+			}
+			else {
+				this->posOffsetPower = 5.0f;
+				currentAnimation = L"IDLE";
+			}
+
+			if (pInputs->KeyPressed(DIK_W))
+			{
+				Vector2D acc;
+				acc.setBearing(this->rotation, this->AccPower);
+				this->velocity += acc * timeFrame * posOffsetPower;
+
+			}
+			if (pInputs->KeyPressed(DIK_S))
+			{
+
+				Vector2D acc;
+				acc.setBearing(this->rotation + 3.1415f, this->AccPower);
+				this->velocity += acc * timeFrame * posOffsetPower;
+
+			}
+			if (pInputs->KeyPressed(DIK_D))
+			{
+
+				if (this->scaleX < 0)
+					this->scaleX = -this->scaleX;
+				Vector2D acc;
+				acc.setBearing(this->rotation + 3.1415f / 2, this->AccPower);
+				this->velocity += acc * timeFrame * posOffsetPower;
+
+			}
+			if (pInputs->KeyPressed(DIK_A))
+			{
+
+				if (this->scaleX >= 0)
+					this->scaleX = -this->scaleX;
+				Vector2D acc;
+				acc.setBearing(this->rotation - 3.1415f / 2, this->AccPower);
+				this->velocity += acc * timeFrame * posOffsetPower;
+
+			}
+
+			if (pInputs->NewKeyPressed(DIK_SPACE))
+			{
+				float rotation = this->rotation;
+				if (this->scaleX < 0) {
+					rotation = this->rotation + 3.1415f;
+				}
+				ObjectManager::getInstance().Add(L"Bullet", this->position, this->velocity, rotation + 3.1415f / 2, this->scaleX * 2, -this->scaleY * 2, 1);
+			}
 		}
 		else {
-			this->posOffsetPower = 5.0f;
-			currentAnimation = L"IDLE";
-		}
-
-		if (pInputs->KeyPressed(DIK_W))
-		{
-			Vector2D acc;
-			acc.setBearing(this->rotation, this->AccPower);
-			this->velocity += acc * timeFrame * posOffsetPower;
-
-		}
-		if (pInputs->KeyPressed(DIK_S))
-		{
-
-			Vector2D acc;
-			acc.setBearing(this->rotation + 3.1415f, this->AccPower);
-			this->velocity += acc * timeFrame * posOffsetPower;
-
-		}
-		if (pInputs->KeyPressed(DIK_D))
-		{
-
-			Vector2D acc;
-			acc.setBearing(this->rotation + 3.1415f/2, this->AccPower);
-			this->velocity += acc * timeFrame * posOffsetPower;
-
-		}
-		if (pInputs->KeyPressed(DIK_A))
-		{
-
-			Vector2D acc;
-			acc.setBearing(this->rotation - 3.1415f/2, this->AccPower);
-			this->velocity += acc * timeFrame * posOffsetPower;
-
-		}
-
-		if (pInputs->NewKeyPressed(DIK_SPACE))
-		{
-			ObjectManager::getInstance().Add(L"Bullet", this->position, this->velocity, this->rotation + 3.1415f/2, this->scaleX*2, this->scaleY * 2, 1);
+			knockedTimer -= timeFrame;
+			if (knockedTimer <= 0) {
+				knocked = false;
+				knockedTimer = anims[L"FALL"].size()*IDLE_SPEED;
+			}
 		}
 
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
-		//this->velocity += friction + this->down;
 		this->velocity += friction;
 		this->position += this->velocity * timeFrame;
-
-		// Wrap around
 		
-		//Rotation
-		if (pInputs->NewKeyPressed(DIK_LEFT))
-		{
-			//this->velocity.isPerpendicularTo
-			//float newX = this->position.XValue * cos(3.14f) - this->position.YValue * sin(3.14f);
-			//float newY = this->position.XValue * sin(3.14f) + this->position.YValue * cos(3.14f);
-			//this->position = Vector2D(newX, newY);
-			this->scaleX = -this->scaleX;
-		}
-		if (pInputs->NewKeyPressed(DIK_RIGHT))
-		{
-			
-		}
+		
 
 		int width = 0;
 		int height = 0;
@@ -195,11 +212,14 @@ void Spaceship::ProcessCollision(std::shared_ptr<CollidableObject> other)
 
 	if(other->GetType() == ObjectType::ASTEROID) {
 		if (this->active) {
-			this->Deactivate();
-			ObjectManager::getInstance().Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scaleX,this->scaleY, 1);
-
-			LevelManager::getInstance()->PlayerDead();
-
+			currentAnimation = L"FALL";
+			Vector2D acc;
+			float direction = -3.1415f / 2;
+			if (this->scaleX < 0)
+				direction = -direction;
+			acc.setBearing(this->rotation + direction, this->AccPower);
+			this->velocity += acc  *  posOffsetPower;
+			knocked = true;
 		}
 
 	}

@@ -42,10 +42,10 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	if (name == L"Ship") 
 	{
 		anims[L"IDLE"] = std::list<std::wstring>{
-			L"assets\\player\\idle_1.png",
+				L"assets\\player\\idle_1.png",
 				L"assets\\player\\idle_2.png",
-				L"assets\\player\\idle_3.png",
-				L"assets\\player\\idle_4.png",
+				//L"assets\\player\\idle_3.png",
+				//L"assets\\player\\idle_4.png",
 				L"assets\\player\\idle_5.png",
 				L"assets\\player\\idle_6.png",
 				L"assets\\player\\idle_7.png",
@@ -60,6 +60,18 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\player\\run_6.png",
 				L"assets\\player\\run_7.png",
 				L"assets\\player\\run_8.png",
+		};
+		anims[L"FALL"] = std::list<std::wstring>{
+				L"assets\\player\\fall_1.png",
+				L"assets\\player\\fall_1.png",
+				L"assets\\player\\fall_1.png",
+				L"assets\\player\\fall_1.png",
+				L"assets\\player\\fall_1.png",
+				L"assets\\player\\fall_2.png",
+				L"assets\\player\\fall_2.png",
+				L"assets\\player\\fall_3.png",
+				L"assets\\player\\fall_3_5.png",
+				L"assets\\player\\idle_1.png",
 		};
 		cgo = std::make_shared<Spaceship>(pos, vel, rot, sizeX, sizeY, false, anims);
 		

@@ -28,7 +28,8 @@ protected:
 private:
     Vector2D velocity;
 
-    
+    bool knocked;
+    float knockedTimer;
 
     Circle2D boundingCircle;
     
