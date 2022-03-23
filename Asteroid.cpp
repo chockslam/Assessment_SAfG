@@ -3,9 +3,9 @@
 #include <random>
 #include "LevelManager.h"
 
-Asteroid::Asteroid(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated, std::wstring path)
+Asteroid::Asteroid(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
-	CollidableObject::CollidableObject(initPos, rotation, sc, activated, path),
+	CollidableObject::CollidableObject(initPos, rotation, scX, scY, activated, paths),
 	velocity(vel)
 {
 	type = ObjectType::ASTEROID;
@@ -21,7 +21,7 @@ void Asteroid::Updated(float timeFrame)
 		int width = 0;
 		int height = 0;
 		MyDrawEngine::GetInstance()->GetDimensions(this->image,height,width);
-		this->boundingCircle.PlaceAt(this->position, this->scale * width / 2);
+		this->boundingCircle.PlaceAt(this->position, this->scaleY * width / 2);
 	}
 	
 	

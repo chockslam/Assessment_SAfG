@@ -14,32 +14,35 @@
 
 #define PATH L"assets\\ship.bmp"
 
+#define IDLE_SPEED 0.1f
 
-
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float sc, float rotation, bool activated, std::wstring path)
+Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
-	CollidableObject::CollidableObject(initPos, rotation, sc, activated, path),
+	CollidableObject::CollidableObject(initPos, rotation, scX, scY, activated, paths),
 	velocity(vel)
 {
+	this->animLooped = true;
+	this->animated = true;
 	type = ObjectType::SHIP;
 	image = 0;
 }
 
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated)
+Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated)
 	:
-	Spaceship::Spaceship(initPos,vel, sc,rotation,activated,PATH)
+	Spaceship::Spaceship(initPos, vel, scX, scY, rotation, activated, std::unordered_map<std::wstring, std::list<std::wstring>>())
 {
+	animPaths[L"IDLE"] = std::list<std::wstring>{L""};
 }
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation)
 	:
-	Spaceship::Spaceship(initPos, vel, rotation, 5.0f, false)
+	Spaceship::Spaceship(initPos, vel, rotation, 5.0f,5.0f, false)
 {
 }
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, bool activated)
 	:
-	Spaceship::Spaceship(initPos,vel,0.0f,5.0f,activated)
+	Spaceship::Spaceship(initPos,vel,0.0f,5.0f,5.0f,activated)
 {
 }
 
@@ -85,7 +88,7 @@ void Spaceship::Updated(float timeFrame)
 		MyInputs* pInputs = MyInputs::GetInstance();
 		pInputs->SampleKeyboard();
 
-
+		this->AnimUtilityUpdate(IDLE_SPEED, timeFrame);
 		//pos += move;
 		//rot += rotOff;
 
@@ -93,9 +96,11 @@ void Spaceship::Updated(float timeFrame)
 		if (pInputs->KeyPressed(DIK_LSHIFT))
 		{
 			this->posOffsetPower = 50.0f;
+			currentAnimation = L"RUN";
 		}
 		else {
 			this->posOffsetPower = 5.0f;
+			currentAnimation = L"IDLE";
 		}
 
 		if (pInputs->KeyPressed(DIK_W))
@@ -109,14 +114,30 @@ void Spaceship::Updated(float timeFrame)
 		{
 
 			Vector2D acc;
-			acc.setBearing(this->rotation, (-this->AccPower));
+			acc.setBearing(this->rotation + 3.1415f, this->AccPower);
+			this->velocity += acc * timeFrame * posOffsetPower;
+
+		}
+		if (pInputs->KeyPressed(DIK_D))
+		{
+
+			Vector2D acc;
+			acc.setBearing(this->rotation + 3.1415f/2, this->AccPower);
+			this->velocity += acc * timeFrame * posOffsetPower;
+
+		}
+		if (pInputs->KeyPressed(DIK_A))
+		{
+
+			Vector2D acc;
+			acc.setBearing(this->rotation - 3.1415f/2, this->AccPower);
 			this->velocity += acc * timeFrame * posOffsetPower;
 
 		}
 
 		if (pInputs->NewKeyPressed(DIK_SPACE))
 		{
-			ObjectManager::getInstance().Add(L"Bullet", this->position, this->velocity, this->rotation, 10.0f, 1);
+			ObjectManager::getInstance().Add(L"Bullet", this->position, this->velocity, this->rotation + 3.1415f/2, this->scaleX*2, this->scaleY * 2, 1);
 		}
 
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
@@ -127,19 +148,23 @@ void Spaceship::Updated(float timeFrame)
 		// Wrap around
 		
 		//Rotation
-		if (pInputs->KeyPressed(DIK_LEFT))
+		if (pInputs->NewKeyPressed(DIK_LEFT))
 		{
-			this->rotation -= this->rotOffset * timeFrame;
+			//this->velocity.isPerpendicularTo
+			//float newX = this->position.XValue * cos(3.14f) - this->position.YValue * sin(3.14f);
+			//float newY = this->position.XValue * sin(3.14f) + this->position.YValue * cos(3.14f);
+			//this->position = Vector2D(newX, newY);
+			this->scaleX = -this->scaleX;
 		}
-		if (pInputs->KeyPressed(DIK_RIGHT))
+		if (pInputs->NewKeyPressed(DIK_RIGHT))
 		{
-			this->rotation += this->rotOffset * timeFrame;
+			
 		}
 
 		int width = 0;
 		int height = 0;
 		MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
-		this->boundingCircle.PlaceAt(this->position, this->scale * width / 2);
+		this->boundingCircle.PlaceAt(this->position, this->scaleY * width / 2);
 		MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue + 500.0f, -position.YValue));
 
 	}
@@ -171,7 +196,7 @@ void Spaceship::ProcessCollision(std::shared_ptr<CollidableObject> other)
 	if(other->GetType() == ObjectType::ASTEROID) {
 		if (this->active) {
 			this->Deactivate();
-			ObjectManager::getInstance().Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scale, 1);
+			ObjectManager::getInstance().Add(L"Explosion", this->position, Vector2D(), this->rotation, this->scaleX,this->scaleY, 1);
 
 			LevelManager::getInstance()->PlayerDead();
 

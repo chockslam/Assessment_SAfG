@@ -895,7 +895,7 @@ ErrorType MyDrawEngine::WriteDouble(Vector2D position, double num, int colour, F
 // **************************************************************
 
 // Draw a picture at the requested location
-ErrorType MyDrawEngine::DrawAt(Vector2D position, PictureIndex pic, float scale, float angle, float transparency)
+ErrorType MyDrawEngine::DrawAt(Vector2D position, PictureIndex pic, float scaleX, float scaleY, float angle, float transparency)
 {
 	// Find the picture
 	std::map<PictureIndex, MyPicture>::iterator picit = m_MyPictureList.find(pic);
@@ -904,74 +904,72 @@ ErrorType MyDrawEngine::DrawAt(Vector2D position, PictureIndex pic, float scale,
 	if (m_CameraActive)
 	{
 		position = theCamera.Transform(position);
-		scale = theCamera.Transform(scale);
-      angle = -angle;
-	}
+		scaleX = theCamera.Transform(scaleX);
+		scaleY = theCamera.Transform(scaleY);
+		if (picit == m_MyPictureList.end())
+		{
+			ErrorLogger::Writeln(L"Attempting to draw an invalid PictureIndex in DrawAt.");
+			WriteText(originalPosition, L"No Image", WHITE);
+			return FAILURE;
+		}
 
-	// If not found
-	if(picit==m_MyPictureList.end())
-	{
-		ErrorLogger::Writeln(L"Attempting to draw an invalid PictureIndex in DrawAt.");
-		WriteText(originalPosition, L"No Image", WHITE);
-		return FAILURE;	
-	}
-	
-	MyPicture& thePicture = picit->second;		// Reference to the picture for easy coding
+		MyPicture& thePicture = picit->second;		// Reference to the picture for easy coding
 
-	// Check texture is loaded
-	if(!thePicture.lpTheTexture)
-	{
-		ErrorLogger::Writeln(L"Cannot render MyPicture in DrawAt. MyPicture not initialised.");
-		return FAILURE;
-	}
+		// Check texture is loaded
+		if (!thePicture.lpTheTexture)
+		{
+			ErrorLogger::Writeln(L"Cannot render MyPicture in DrawAt. MyPicture not initialised.");
+			return FAILURE;
+		}
 
-	// Start drawing
-	HRESULT err = m_lpSprite->Begin(D3DXSPRITE_ALPHABLEND);		// Alpha Blending requested
-	if(FAILED(err))
-	{
-		ErrorLogger::Writeln(L"Failed to begin sprite render in DrawAt");
-		ErrorLogger::Writeln(ERRORSTRING(err));
-		return FAILURE;
-	}
+		// Start drawing
+		HRESULT err = m_lpSprite->Begin(D3DXSPRITE_ALPHABLEND);		// Alpha Blending requested
+		if (FAILED(err))
+		{
+			ErrorLogger::Writeln(L"Failed to begin sprite render in DrawAt");
+			ErrorLogger::Writeln(ERRORSTRING(err));
+			return FAILURE;
+		}
 
-	// Specify the centre of the sprite - will be (height/2,width/2) unless user has asked for something 
-	// different.
-	D3DXVECTOR2 centre (thePicture.m_Centre.XValue, thePicture.m_Centre.YValue);
+		// Specify the centre of the sprite - will be (height/2,width/2) unless user has asked for something 
+		// different.
+		D3DXVECTOR2 centre(thePicture.m_Centre.XValue, thePicture.m_Centre.YValue);
 
-	// Create a transformation matrix for the requested scale, rotation and position.
-	D3DXMATRIX transform;
-	D3DXVECTOR2 scaling(scale, scale);
-	D3DXVECTOR2 pos;
-	pos.x = (position - thePicture.m_Centre).XValue;
-	pos.y = (position - thePicture.m_Centre).YValue;
-	D3DXMatrixTransformation2D(&transform, &centre, 0.0, &scaling, &centre, -angle, &pos);
-	
-	// Set the transformation matrix
-	m_lpSprite->SetTransform(&transform);
+		// Create a transformation matrix for the requested scale, rotation and position.
+		D3DXMATRIX transform;
+		D3DXVECTOR2 scaling(scaleX, scaleY);
+		D3DXVECTOR2 pos;
+		pos.x = (position - thePicture.m_Centre).XValue;
+		pos.y = (position - thePicture.m_Centre).YValue;
+		D3DXMatrixTransformation2D(&transform, &centre, 0.0, &scaling, &centre, -angle, &pos);
 
-	// Modulate the colour to add transparency
-	unsigned int alpha = int(255-255*transparency)%256;
-	unsigned int colour = 0xFFFFFF+(alpha<<24);
+		// Set the transformation matrix
+		m_lpSprite->SetTransform(&transform);
 
-	// Draw the sprite
-	err = m_lpSprite->Draw(thePicture.lpTheTexture, NULL, NULL, NULL, colour);
+		// Modulate the colour to add transparency
+		unsigned int alpha = int(255 - 255 * transparency) % 256;
+		unsigned int colour = 0xFFFFFF + (alpha << 24);
 
-	if(FAILED(err))
-	{
-		ErrorLogger::Writeln(L"Failed to draw sprite in DrawAt");
-		ErrorLogger::Writeln(ERRORSTRING(err));
-	
+		// Draw the sprite
+		err = m_lpSprite->Draw(thePicture.lpTheTexture, NULL, NULL, NULL, colour);
+
+		if (FAILED(err))
+		{
+			ErrorLogger::Writeln(L"Failed to draw sprite in DrawAt");
+			ErrorLogger::Writeln(ERRORSTRING(err));
+
+			m_lpSprite->End();
+			return FAILURE;
+		}
+
+		// Complete the sprite
 		m_lpSprite->End();
-		return FAILURE;
-	}
 
-	// Complete the sprite
-	m_lpSprite->End();
-
-	return SUCCESS;
-}	// DrawAt
+		return SUCCESS;
+	}	// DrawAt
 
 
+}
 
 // **************************************************************
 

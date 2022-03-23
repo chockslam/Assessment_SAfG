@@ -7,19 +7,22 @@
 #include "Bullet.h"
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 
 
-void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot, float size, int appearance)
+void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot, float sizeX, float sizeY, int appearance)
 {
 	std::shared_ptr<GameObject> go;
 	std::shared_ptr<CollidableObject> cgo;
-	
+
+	std::unordered_map<std::wstring, std::list<std::wstring>> anims;
 
 	if (name == L"Asteroid") 
 	{
 		std::wstring nameAss = L"assets\\rock" + std::to_wstring((appearance % 4) + 1) + L".bmp";
-		cgo = std::make_shared<Asteroid>(pos, vel, rot, size, false, nameAss);
+		anims[L"IDLE"] = std::list<std::wstring>{ nameAss };
+		cgo = std::make_shared<Asteroid>(pos, vel, rot, sizeX, sizeY, false, anims );
 		pObjectCollidable.push_back(cgo);
 		go = cgo;
 	}
@@ -27,17 +30,38 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	{
 		int i = rand() % 4;
 		std::wstring nameAss = L"assets\\rock" + std::to_wstring((i % 4) + 1) + L".bmp";
+		anims[L"IDLE"] = std::list<std::wstring>{ nameAss };
 		cgo = std::make_shared<Asteroid>(Vector2D(rand() % 600, rand() % 1200 - 600),
 			Vector2D(rand() % 1000 + 50, rand() % 1000 + 50),
-			rand() % 628 / 100.0f, 2.0f, false,
-			nameAss);
+			rand() % 628 / 100.0f, 2.0f,2.0f, false,
+			anims);
 		pObjectCollidable.push_back(cgo);
 		go = cgo;
 
 	}
 	if (name == L"Ship") 
 	{
-		cgo = std::make_shared<Spaceship>(pos, vel, rot, size, false);
+		anims[L"IDLE"] = std::list<std::wstring>{
+			L"assets\\player\\idle_1.png",
+				L"assets\\player\\idle_2.png",
+				L"assets\\player\\idle_3.png",
+				L"assets\\player\\idle_4.png",
+				L"assets\\player\\idle_5.png",
+				L"assets\\player\\idle_6.png",
+				L"assets\\player\\idle_7.png",
+		};
+
+		anims[L"RUN"] = std::list<std::wstring>{
+				L"assets\\player\\run_1.png",
+				L"assets\\player\\run_2.png",
+				L"assets\\player\\run_3.png",
+				L"assets\\player\\run_4.png",
+				L"assets\\player\\run_5.png",
+				L"assets\\player\\run_6.png",
+				L"assets\\player\\run_7.png",
+				L"assets\\player\\run_8.png",
+		};
+		cgo = std::make_shared<Spaceship>(pos, vel, rot, sizeX, sizeY, false, anims);
 		
 		pObjectCollidable.push_back(cgo);
 
@@ -46,7 +70,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	if (name == L"Bullet") 
 	{
-		cgo = std::make_shared<Bullet>(pos, vel, rot, size, false, std::list<std::wstring>{
+		anims[L"IDLE"] = std::list<std::wstring>{
 				L"assets\\fire\\fire_1.png",
 				L"assets\\fire\\fire_2.png",
 				L"assets\\fire\\fire_3.png",
@@ -54,6 +78,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\fire\\fire_5.png",
 				L"assets\\fire\\fire_6.png",
 				L"assets\\fire\\fire_7.png",
+				L"assets\\fire\\fire_8.png",
 				L"assets\\fire\\fire_9.png",
 				L"assets\\fire\\fire_10.png",
 				L"assets\\fire\\fire_11.png",
@@ -61,17 +86,17 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\fire\\fire_13.png",
 				L"assets\\fire\\fire_14.png",
 				L"assets\\fire\\fire_15.png"
-		});
+		};
+		cgo = std::make_shared<Bullet>(pos, vel, rot, sizeX, sizeY, false, anims);
 		
 		pObjectCollidable.push_back(cgo);
 
 		go = cgo;
 
 	}
-
+	
 	if (name == L"Explosion") {
-		go = std::make_shared<Explosion>(pos, rot, size, false,
-			std::list<std::wstring>{
+		anims[L"IDLE"] = std::list<std::wstring>{
 				L"assets\\explosion1.bmp",
 				L"assets\\explosion2.bmp",
 				L"assets\\explosion3.bmp",
@@ -80,12 +105,12 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\explosion6.bmp",
 				L"assets\\explosion7.bmp",
 				L"assets\\explosion8.bmp"
-		});
+		};
+		go = std::make_shared<Explosion>(pos, rot, sizeX, sizeY, false, anims);
 		
 	}
 	if (name == L"Puff") {
-		go = std::make_shared<Explosion>(pos, rot, size, false,
-			std::list<std::wstring>{
+		anims[L"IDLE"] = std::list<std::wstring>{
 				L"assets\\puff1.bmp",
 				L"assets\\puff2.bmp",
 				L"assets\\puff3.bmp",
@@ -94,7 +119,8 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\puff6.bmp",
 				L"assets\\puff7.bmp",
 				L"assets\\puff8.bmp"
-		});
+		};
+		go = std::make_shared<Explosion>(pos, rot, sizeX, sizeY, false, anims);
 		
 	}
 

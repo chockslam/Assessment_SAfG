@@ -5,7 +5,7 @@ std::shared_ptr<LevelManager> LevelManager::d(new LevelManager);
 
 LevelManager::LevelManager()
 	:
-	GameObject::GameObject(Vector2D(0, 0), 0, 0, false, L""),
+	GameObject::GameObject(Vector2D(0, 0), 0, 0, 0, false, {}),
 	numEnemies(0),
 	playerLives(1)
 {
@@ -57,7 +57,7 @@ void LevelManager::RespawnEnemies()
 
 void LevelManager::RespawnPlayer()
 {
-	ObjectManager::getInstance().Add(L"Ship", { -1000.0f, 0.0f }, { 0.0f, 0.0f }, 3.14f / 2.0f, 3.5f, 1);
+	ObjectManager::getInstance().Add(L"Ship", { -1000.0f, 0.0f }, { 0.0f, 0.0f }, 2.5f, 2.5f, 0.0f, 1);
 }
 
 void LevelManager::AddScore()

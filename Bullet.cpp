@@ -3,14 +3,13 @@
 #include "ObjectManager.h"
 
 
-#define BULLET_COOLDOWN 0.1f
-#define ROT_COMPENSATION 3.1415f/2
+#define BULLET_COOLDOWN 0.05f
 
-Bullet::Bullet(Vector2D initPos, Vector2D vel, float rotation, float sc, bool activated, std::list<std::wstring> paths)
+Bullet::Bullet(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY , bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
-	CollidableObject::CollidableObject(initPos, rotation, sc, activated, L""),
-	picturePaths(paths)
+	CollidableObject::CollidableObject(initPos, rotation, scX, scY, activated, paths)
 {
+	animated = true;
 	type = ObjectType::BULLET;
 }
 
@@ -19,15 +18,7 @@ void Bullet::Updated(float timeFrame)
 	if (this->active) {
 
 
-		if (it == pictures.end()) {
-			this->active = false;
-		}
-		if (coolDownAnim <= 0) {
-			image = *it;
-			it++;
-			coolDownAnim = BULLET_COOLDOWN;
-		}
-		coolDownAnim -= timeFrame;
+		this->AnimUtilityUpdate(BULLET_COOLDOWN, timeFrame);
 
 
 		this->velocity.setBearing(this->rotation, 1000.0f);
@@ -39,37 +30,19 @@ void Bullet::Updated(float timeFrame)
 		int height = 0;
 		MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
 	
-		this->boundingRect.PlaceAt(Vector2D(this->position.XValue - width/2 * this->scale, this->position.YValue - height / 2 * this->scale), Vector2D(this->position.XValue + width / 2 * this->scale, this->position.YValue + height / 2 * this->scale));
+		this->boundingRect.PlaceAt(Vector2D(this->position.XValue - width/2 * this->scaleY, this->position.YValue - height / 2 * this->scaleY), Vector2D(this->position.XValue + width / 2 * this->scaleY, this->position.YValue + height / 2 * this->scaleY));
 	}
 	
 }
 
-void Bullet::Initialize()
-{
-	MyDrawEngine* pDE = MyDrawEngine::GetInstance();
 
-	for (auto path : picturePaths)
-	{
-		pictures.push_back(pDE->LoadPicture(path.c_str()));
-	}
-	it = pictures.begin();
-	image = *it;
-}
-
-void Bullet::Render()
-{
-	if (this->active) {
-		MyDrawEngine* pDE = MyDrawEngine::GetInstance();
-		pDE->DrawAt(this->position, this->image, this->scale, this->rotation-ROT_COMPENSATION);
-	}
-}
 
 void Bullet::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
 	if (other->GetType() == ObjectType::ASTEROID) {
 		if (this->active)
 			this->Deactivate();
-		ObjectManager::getInstance().Add(L"Puff", this->position, Vector2D(), this->rotation, this->scale/2.0f);
+		ObjectManager::getInstance().Add(L"Puff", this->position, Vector2D(), this->rotation, this->scaleX/2.0f);
 	}
 }
 

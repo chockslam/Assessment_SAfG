@@ -8,14 +8,8 @@ class Explosion :
     public GameObject
 {
 public:
-    Explosion(Vector2D initPos, float rotation, float sc, bool activated, std::list<std::wstring> paths);
+    Explosion(Vector2D initPos, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths);
     ~Explosion() {};
     void Updated(float timeFrame);
-    void Initialize();
-private:
-    float coolDownAnim;
-    std::list<std::wstring> picturePaths;
-    std::list<int> pictures;
-    std::list<int>::iterator it;
 };
 

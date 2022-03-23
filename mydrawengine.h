@@ -317,7 +317,7 @@ public:
 		//					transparency - the transparency of the image. 0.0 is opaque. 1.0 is
 		//						fully transparent. Behaviour for transparency values greater
 		//						than 1.0 or less than 0.0 is undefined.
-	ErrorType DrawAt(Vector2D position, PictureIndex pic, float scale=1.0, float angle=0, float transparency=0);
+	ErrorType DrawAt(Vector2D position, PictureIndex pic, float scaleX=1.0, float scaleY = 1.0, float angle=0, float transparency=0);
 
 	// Precondition:	A window for the application has been created
 	//					Direct3D has not already been initialised.
