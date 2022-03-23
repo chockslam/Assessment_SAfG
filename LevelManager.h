@@ -1,5 +1,8 @@
 #pragma once
 #include "GameObject.h"
+
+#include <list>;
+
 class LevelManager :
     public GameObject
 {
@@ -24,6 +27,10 @@ private:
 
     LevelManager();
     static std::shared_ptr<LevelManager> d;
+   
+    Vector2D playerPos;
+    
+    std::list<Vector2D> velocity;
 
     int currentLevel;
     int score;

@@ -39,7 +39,7 @@ void Bullet::Updated(float timeFrame)
 
 void Bullet::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
-	if (other->GetType() == ObjectType::ASTEROID) {
+	if (other->GetType() == ObjectType::ZOMBIE_WEAK) {
 		if (this->active)
 			this->Deactivate();
 		ObjectManager::getInstance().Add(L"Puff", this->position, Vector2D(), this->rotation, this->scaleX/2.0f, this->scaleY / 2.0f);

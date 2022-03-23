@@ -35,8 +35,11 @@ public:
 	void RenderAll();										// Render all objects in the pObjectList
 	void DeleteAll();										// Delete all objects in the pObjectList && pObjectCollidable
 	void DeleteInactive();									// Delete all objects that became 'inactive'
-	void CheckCollisions();
+	void CheckCollisions();									
+	void checkProximity(std::wstring objType1, std::wstring objType2, float threshold);
+	Vector2D getPosition(std::wstring objType);
 	template<class T> std::shared_ptr<T> QueryObject();
+	template<class T> std::list<std::shared_ptr<T>> QueryObjectList();
 	~ObjectManager();
 private:
 	std::list<std::shared_ptr<GameObject>> pObjectList;
@@ -46,6 +49,7 @@ private:
 template<class T>
 inline std::shared_ptr<T> ObjectManager::QueryObject()
 {
+	
 	for (auto& pb : pObjectList)
 		{
 			if (auto pt = std::dynamic_pointer_cast<T>(pb))
@@ -54,4 +58,17 @@ inline std::shared_ptr<T> ObjectManager::QueryObject()
 			}
 		}
 		return nullptr;
+}
+template<class T>
+inline std::list<std::shared_ptr<T>> ObjectManager::QueryObjectList()
+{
+	std::list<std::shared_ptr<T>> list;
+	for (auto& pb : pObjectList)
+		{
+			if (auto pt = std::dynamic_pointer_cast<T>(pb))
+			{
+				list.push_back(pt);
+			}
+		}
+		return list;
 }

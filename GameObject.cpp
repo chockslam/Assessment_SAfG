@@ -17,6 +17,7 @@ GameObject::GameObject(Vector2D initPos, float rotation, float scX, float scY, b
 	animPaths(paths),
 	animLooped(false)
 {
+
 	currentAnimation = L"IDLE";
 	previousAnimation = L"IDLE";
 }

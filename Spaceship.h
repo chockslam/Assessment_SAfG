@@ -18,9 +18,9 @@ public:
     IShape2D& GetShape();
     Spaceship();
     ~Spaceship();
-    //void loadRunningAnim();
 
-   // void Initialize();
+    Vector2D getVel() const { return this->velocity; };
+
     void Updated(float timeFrame);
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
 protected:

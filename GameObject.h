@@ -5,6 +5,7 @@
 #include <memory>
 #include <list>
 #include <unordered_map>
+#include "TypeGO.h"
 
 class GameObject
 {
@@ -18,11 +19,17 @@ public:
 	virtual void Initialize();
 	virtual void Updated(float timeFrame) = 0;
 	virtual void Render();
+	Vector2D getPos() const { return this->position; };
 	void wrap();
+	const ObjectType GetType() const { return this->type; };
+	virtual void ProcessProximity(std::shared_ptr<GameObject> other) {};
 
 protected:
 	void LoadPicture();
 	void AnimUtilityUpdate(float animSpeed, float timeFrame);
+
+
+	ObjectType type = ObjectType::UNKNOWN;
 
 	bool animLooped;
 	bool animated;

@@ -1,6 +1,6 @@
 #include "ObjectManager.h"
 #include "mydrawengine.h"
-#include "Asteroid.h"
+#include "Zombie.h"
 #include "Spaceship.h"
 #include "Explosion.h"
 #include "LevelManager.h"
@@ -18,28 +18,31 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 
 	std::unordered_map<std::wstring, std::list<std::wstring>> anims;
 
-	if (name == L"Asteroid") 
+	if (name == L"Zombie") 
 	{
-		std::wstring nameAss = L"assets\\rock" + std::to_wstring((appearance % 4) + 1) + L".bmp";
-		anims[L"IDLE"] = std::list<std::wstring>{ nameAss };
-		cgo = std::make_shared<Asteroid>(pos, vel, rot, sizeX, sizeY, false, anims );
-		pObjectCollidable.push_back(cgo);
-		go = cgo;
-	}
-	if (name == L"Random Flying Asteroid") 
-	{
-		int i = rand() % 4;
-		std::wstring nameAss = L"assets\\rock" + std::to_wstring((i % 4) + 1) + L".bmp";
-		anims[L"IDLE"] = std::list<std::wstring>{ nameAss };
-		cgo = std::make_shared<Asteroid>(Vector2D(rand() % 600, rand() % 1200 - 600),
-			Vector2D(rand() % 1000 + 50, rand() % 1000 + 50),
-			rand() % 628 / 100.0f, 2.0f,2.0f, false,
-			anims);
-		pObjectCollidable.push_back(cgo);
-		go = cgo;
 
+
+		anims[L"IDLE"] = std::list<std::wstring>{ 
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_5.png",
+		};
+		anims[L"RUN"] = std::list<std::wstring>{ 
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_6.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_7.png"
+		};
+		cgo = std::make_shared<Zombie>(pos, vel, rot, sizeX, sizeY, false, anims );
+		pObjectCollidable.push_back(cgo);
+		go = cgo;
 	}
-	if (name == L"Ship") 
+	if (name == L"Player") 
 	{
 		anims[L"IDLE"] = std::list<std::wstring>{
 				L"assets\\player\\idle_1.png",
@@ -235,6 +238,22 @@ void ObjectManager::CheckCollisions()
 		
 	}
 
+}
+
+void ObjectManager::checkProximity(std::wstring objType1, std::wstring objType2, float threshold)
+{
+	if (objType1 == L"Zombies" && objType2 == L"Player") {
+		auto list = QueryObjectList<Zombie>();
+		auto p = QueryObject<Spaceship>();
+		for (auto obj : list) {
+			// FILL IN THE LIST IF PROXIM	
+			Vector2D disp = obj->getPos() - p->getPos();
+			float magn = disp.magnitude();
+			if (magn<=threshold) {
+				obj->ProcessProximity(p);
+			}
+		}
+	}
 }
 
 ObjectManager::~ObjectManager()

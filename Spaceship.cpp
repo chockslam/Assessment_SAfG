@@ -210,7 +210,7 @@ void Spaceship::Updated(float timeFrame)
 void Spaceship::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
 
-	if(other->GetType() == ObjectType::ASTEROID) {
+	if(other->GetType() == ObjectType::ZOMBIE_WEAK) {
 		if (this->active) {
 			currentAnimation = L"FALL";
 			Vector2D acc;
