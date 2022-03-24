@@ -31,6 +31,9 @@ private:
     bool knocked;
     float knockedTimer;
 
+    float health;
+    float invincTimer;
+
     Circle2D boundingCircle;
     
     const float frictionPower = 5.5f;

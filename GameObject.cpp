@@ -15,7 +15,8 @@ GameObject::GameObject(Vector2D initPos, float rotation, float scX, float scY, b
 	coolDownAnim(-1.0f),
 	animated(false),
 	animPaths(paths),
-	animLooped(false)
+	animLooped(false),
+	animTime(0.0f)
 {
 
 	currentAnimation = L"IDLE";

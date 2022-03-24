@@ -52,7 +52,7 @@ void LevelManager::Render()
 void LevelManager::RespawnEnemies()
 {
 	for (int i = 1; i <= 10; i++) {
-		ObjectManager::getInstance().Add(L"Zombie", Vector2D(i * 100.0f, 0.0f), {}, 0.0f, 2.5f, 2.5f);
+		ObjectManager::getInstance().Add(L"Normal Crawler", Vector2D(i * 100.0f, 0.0f), {}, 0.0f, 2.5f, 2.5f,2);
 		numEnemies = i;
 	}
 }

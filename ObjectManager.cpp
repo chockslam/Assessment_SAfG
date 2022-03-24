@@ -18,7 +18,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 
 	std::unordered_map<std::wstring, std::list<std::wstring>> anims;
 
-	if (name == L"Zombie") 
+	if (name == L"Weak Zombie") 
 	{
 
 
@@ -38,7 +38,190 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_6.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_7.png"
 		};
-		cgo = std::make_shared<Zombie>(pos, vel, rot, sizeX, sizeY, false, anims );
+		anims[L"FALL"] = std::list<std::wstring>{ 
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png"
+		};
+
+		anims[L"DEATH"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_6.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png"
+		};
+		auto z = std::make_shared<Zombie>(pos, vel, rot, sizeX, sizeY, false, anims);
+		z->setLevel(rand() % 5 + 1);
+		cgo = z;
+		pObjectCollidable.push_back(cgo);
+		go = cgo;
+	}
+	if (name == L"Normal Zombie") 
+	{
+
+
+		anims[L"IDLE"] = std::list<std::wstring>{ 
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_5.png",
+		};
+		anims[L"RUN"] = std::list<std::wstring>{ 
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_6.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_7.png"
+		};
+		anims[L"FALL"] = std::list<std::wstring>{ 
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png"
+		};
+
+		anims[L"DEATH"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_6.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png"
+		};
+		auto z = std::make_shared<Zombie>(pos, vel, rot, sizeX, sizeY, false, anims);
+		z->setLevel(rand() % 5 + 5);
+		cgo = z;
+		pObjectCollidable.push_back(cgo);
+		go = cgo;
+	}
+
+	if (name == L"Weak Crawler")
+	{
+		anims[L"IDLE"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_5.png",
+		};
+		anims[L"RUN"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_6.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_7.png"
+		};
+		anims[L"FALL"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png"
+		};
+		anims[L"DEATH"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_6.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png"
+		};
+		auto z = std::make_shared<Zombie>(pos, vel, rot, sizeX, sizeY, false, anims);
+		z->setLevel(rand() % 5 + 1);
+		cgo = z;
+		pObjectCollidable.push_back(cgo);
+		go = cgo;
+	}
+	if (name == L"Normal Crawler")
+	{
+		anims[L"IDLE"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_5.png",
+		};
+		anims[L"RUN"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_6.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_7.png"
+		};
+		anims[L"FALL"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png"
+		};
+		anims[L"DEATH"] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_6.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png"
+		};
+		auto z = std::make_shared<Zombie>(pos, vel, rot, sizeX, sizeY, false, anims);
+		z->setLevel(rand() % 5 + 5);
+		cgo = z;
 		pObjectCollidable.push_back(cgo);
 		go = cgo;
 	}
@@ -222,12 +405,15 @@ void ObjectManager::CheckCollisions()
 	for (it1 = pObjectCollidable.begin(); it1 != pObjectCollidable.end(); it1++)
 	{
 		if ((*it1) && 
-			(*it1)->IsActive()) 
+			(*it1)->IsActive() &&
+			(*it1)->DoesShapeExist()
+			) 
 		{
 			for (it2 = std::next(it1); it2 != pObjectCollidable.end(); it2++)
 			{
 				if ((*it2) &&
 					(*it2)->IsActive() &&
+					(*it2)->DoesShapeExist() &&
 					(*it1)->GetShape().Intersects((*it2)->GetShape())) 
 				{
 					(*it1)->ProcessCollision(*it2);

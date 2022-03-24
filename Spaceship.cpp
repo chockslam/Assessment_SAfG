@@ -14,18 +14,23 @@
 
 #define PATH L"assets\\ship.bmp"
 
-#define IDLE_SPEED 0.1f
-#define KNOCKOUT_TIMER 2.0f
+#define IDLE_SPEED 0.08f
+#define RUN_SPEED 0.07f
+#define KNOCKOUT_SPEED 0.05f
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
 	CollidableObject::CollidableObject(initPos, rotation, scX, scY, activated, paths),
-	velocity(vel)
+	velocity(vel),
+	knocked(false)
 {
 	this->animLooped = true;
 	this->animated = true;
 	type = ObjectType::SHIP;
 	image = 0;
+	animTime = IDLE_SPEED;
+	this->health = 1000;
+	this->invincTimer = -1.0f;
 }
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated)
@@ -97,15 +102,11 @@ void Spaceship::Updated(float timeFrame)
 		//}
 
 
-		this->AnimUtilityUpdate(IDLE_SPEED, timeFrame);
+		this->AnimUtilityUpdate(animTime, timeFrame);
 		//pos += move;
 		//rot += rotOff;
 		
 
-		//Acceleration
-		if (!knocked) {
-			
-		}
 		
 		if (!knocked) {
 
@@ -113,10 +114,12 @@ void Spaceship::Updated(float timeFrame)
 			{
 				this->posOffsetPower = 50.0f;
 				currentAnimation = L"RUN";
+				animTime = RUN_SPEED;
 			}
 			else {
 				this->posOffsetPower = 5.0f;
 				currentAnimation = L"IDLE";
+				animTime = IDLE_SPEED;
 			}
 
 			if (pInputs->KeyPressed(DIK_W))
@@ -168,8 +171,13 @@ void Spaceship::Updated(float timeFrame)
 			knockedTimer -= timeFrame;
 			if (knockedTimer <= 0) {
 				knocked = false;
-				knockedTimer = anims[L"FALL"].size()*IDLE_SPEED;
+				knockedTimer = anims[currentAnimation].size()*animTime;
+				//invincTimer = knockedTimer * 10;
 			}
+		}
+
+		if (invincTimer >= 0.0f) {
+			invincTimer -= timeFrame;
 		}
 
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
@@ -177,13 +185,14 @@ void Spaceship::Updated(float timeFrame)
 		this->position += this->velocity * timeFrame;
 		
 		
+		if (this->shapeExist) {
+			int width = 0;
+			int height = 0;
+			MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
+			this->boundingCircle.PlaceAt(this->position, this->scaleY * width / 2);
+			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue + 500.0f, -position.YValue));
 
-		int width = 0;
-		int height = 0;
-		MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
-		this->boundingCircle.PlaceAt(this->position, this->scaleY * width / 2);
-		MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue + 500.0f, -position.YValue));
-
+		}
 	}
 	
 /*
@@ -209,20 +218,44 @@ void Spaceship::Updated(float timeFrame)
 
 void Spaceship::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
+	if (this->active) {
+		if (other->DoesShapeExist()) {
+			if (this->invincTimer<=0.0f) {
 
-	if(other->GetType() == ObjectType::ZOMBIE_WEAK) {
-		if (this->active) {
-			currentAnimation = L"FALL";
-			Vector2D acc;
-			float direction = -3.1415f / 2;
-			if (this->scaleX < 0)
-				direction = -direction;
-			acc.setBearing(this->rotation + direction, this->AccPower);
-			this->velocity += acc  *  posOffsetPower;
-			knocked = true;
+				if (other->GetType() == ObjectType::ZOMBIE_WEAK) {
+					currentAnimation = L"FALL";
+					Vector2D acc;
+					float direction = -3.1415f / 2;
+					if (this->scaleX < 0)
+						direction = -direction;
+					acc.setBearing(this->rotation + direction, this->AccPower / 10.0f);
+					this->velocity += acc * 7.0f;
+					knocked = true;
+					animTime = KNOCKOUT_SPEED;
+					knockedTimer = anims[currentAnimation].size() * animTime;
+					invincTimer = knockedTimer * 3;
+					this->health -= 100;
+				}
+				if (other->GetType() == ObjectType::ZOMBIE_NORMAL) {
+					currentAnimation = L"FALL";
+					Vector2D acc;
+					float direction = -3.1415f / 2;
+					if (this->scaleX < 0)
+						direction = -direction;
+					acc.setBearing(this->rotation + direction, this->AccPower / 10.0f);
+					this->velocity += acc * 14.0f;
+					knocked = true;
+					animTime = KNOCKOUT_SPEED;
+					knockedTimer = anims[currentAnimation].size() * animTime;
+					invincTimer = knockedTimer * 3;
+					this->health -= 100;
+				}
+
+			}
 		}
-
 	}
+
+	
 }
 
 //void Spaceship::Render()

@@ -5,6 +5,7 @@ class Zombie :
 {
 public:
     Zombie(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths);
+    void setLevel(int level);
     void Updated(float timeFrame);
     IShape2D& GetShape();
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
@@ -12,6 +13,14 @@ public:
     virtual void ProcessProximity(std::shared_ptr<GameObject> other);
 private:
     void goTo(Vector2D pos);
+
+    bool knocked;
+    float knockedTimer;
+    
+    
+    float health;
+    int level;
+
 
     Vector2D velocity;
     Rectangle2D boundingRect;

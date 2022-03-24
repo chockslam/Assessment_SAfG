@@ -30,7 +30,7 @@ protected:
 
 
 	ObjectType type = ObjectType::UNKNOWN;
-
+	float animTime;
 	bool animLooped;
 	bool animated;
 	float coolDownAnim;
