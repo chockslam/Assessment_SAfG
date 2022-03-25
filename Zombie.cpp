@@ -6,20 +6,21 @@
 
 #define IDLE_Z_SPEED 0.1f
 #define RUN_Z_SPEED 0.05f
-#define KNOCK_Z_SPEED 0.05f
+#define KNOCK_Z_SPEED 0.1f
 #define KNOCK_Z_POWER 5.0f
 
 Zombie::Zombie(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
-	CollidableObject::CollidableObject(initPos, rotation, scX, scY, activated, paths),
+	Character::Character(initPos, rotation, scX, scY, activated, paths),
 	velocity(vel),
-	knocked(false)
+	level(1)
 {
 	type = ObjectType::ZOMBIE_WEAK;
 	this->animLooped = true;
 	this->animated = true;
 	this->animTime = IDLE_Z_SPEED;
 	this->health = 100;
+	this->chasing = false;
 }
 
 void Zombie::setLevel(int level)
@@ -46,16 +47,16 @@ void Zombie::Updated(float timeFrame)
 	if (this->active)
 	{
 		this->AnimUtilityUpdate(animTime, timeFrame);
-		this->position += this->velocity * timeFrame;
+		
+		if(this->chasing)
+			this->position += this->velocity * timeFrame;
 		
 		if (knocked) {
-
 			knockedTimer -= timeFrame;
 			if (knockedTimer <= 0) {
 				knocked = false;
 				knockedTimer = anims[currentAnimation].size() * animTime;
 			}
-		
 		}
 		else {
 			if(animLooped)
@@ -68,6 +69,18 @@ void Zombie::Updated(float timeFrame)
 			width /= 2.3f;
 			this->boundingRect.PlaceAt(Vector2D(this->position.XValue - width / 2 * this->scaleY, this->position.YValue - height / 2 * this->scaleY), Vector2D(this->position.XValue + width / 2 * this->scaleY, this->position.YValue + height / 2 * this->scaleY));
 		}
+		// Process death
+		if (this->health <= 0) {
+			if (this->currentAnimation != L"DEATH" && this->animLooped)
+				LevelManager::getInstance()->EnemyDead();
+			currentAnimation = L"DEATH";
+			this->shapeExist = false;
+			this->animLooped = false;
+		}
+
+		// reset chasing
+		this->chasing = false;
+		
 	}
 	
 	
@@ -89,18 +102,13 @@ void Zombie::ProcessCollision(std::shared_ptr<CollidableObject> other)
 				direction = -direction;
 			acc.setBearing(this->rotation + direction, KNOCK_Z_POWER*100);
 			this->velocity += acc * posOffsetPower;
+			
 			knocked = true;
 			animTime = KNOCK_Z_SPEED;
 
 			knockedTimer = anims[currentAnimation].size() * animTime;
 			this->health -=40;
-			if (health <= 0) {
-				if(this->currentAnimation != L"DEATH" && this->animLooped)
-					LevelManager::getInstance()->EnemyDead();
-				currentAnimation = L"DEATH";
-				this->shapeExist = false;
-				this->animLooped = false;
-			}
+			
 		}
 	}
 
@@ -110,11 +118,14 @@ void Zombie::ProcessCollision(std::shared_ptr<CollidableObject> other)
 void Zombie::ProcessProximity(std::shared_ptr<GameObject> other)
 {
 	if (other->GetType() == ObjectType::SHIP) {
-		if (this->active) {
-			if(!knocked && animLooped)
+		if (this->active && other->IsActive()) {
+			if (!knocked && animLooped) {
 				this->goTo(other->getPos());
+				this->chasing = true;
+			}
 		}
 	}
+
 }
 
 void Zombie::goTo(Vector2D pos)

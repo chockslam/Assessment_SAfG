@@ -18,19 +18,20 @@ public:
     void Initialize();
     void Updated(float timeFrame);
     void Render();
-    void RespawnEnemies();
-    void RespawnPlayer();
+    
     void AddScore();
     void EnemyDead();
     void PlayerDead();
 private:
 
+    void CreateBackground(int length);
+
+    void RespawnEnemies();
+    void RespawnPlayer();
+    
     LevelManager();
     static std::shared_ptr<LevelManager> d;
    
-    Vector2D playerPos;
-    
-    std::list<Vector2D> velocity;
 
     int currentLevel;
     int score;

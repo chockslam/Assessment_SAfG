@@ -15,8 +15,11 @@ LevelManager::LevelManager()
 void LevelManager::StartLevel()
 {
 	RespawnPlayer();
-	// Create 8 asteroids
 	RespawnEnemies();
+
+	this->CreateBackground(2);
+	
+
 }
 
 void LevelManager::Initialize()
@@ -49,9 +52,19 @@ void LevelManager::Render()
 		MyDrawEngine::GREEN);
 }
 
+void LevelManager::CreateBackground(int length)
+{
+	float size = 2047.0f;				// hardcoded. Should be dependent on the width of the picture
+	float widthScale = 5.0f;			// hardcoded
+	for (int i = 0; i < length; i++) {
+		ObjectManager::getInstance().Add(L"Fog", { -250.0f + size * i *widthScale, 0.0f }, { 0.0f, 0.0f }, 0.0f, widthScale, 9.0f, 1);
+	}
+}
+
 void LevelManager::RespawnEnemies()
 {
 	for (int i = 1; i <= 10; i++) {
+		ObjectManager::getInstance().Add(L"Normal Zombie", Vector2D(i * 100.0f, 300.0f), {}, 0.0f, 2.5f, 2.5f,1);
 		ObjectManager::getInstance().Add(L"Normal Crawler", Vector2D(i * 100.0f, 0.0f), {}, 0.0f, 2.5f, 2.5f,2);
 		numEnemies = i;
 	}

@@ -116,7 +116,7 @@ void GameObject::AnimUtilityUpdate(float animSpeed, float timeFrame)
 				this->active = false;
 			}
 		}
-		if (coolDownAnim <= 0) {
+		if (coolDownAnim <= 0 && this->active) {
 			image = *it;
 			it++;
 			coolDownAnim = animSpeed;

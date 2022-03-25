@@ -1,12 +1,10 @@
 #pragma once
-#include "CollidableObject.h"
-
+#include "PlayableCharacter.h"
 #include <memory>
 #include <string>
 
-
 class Spaceship :
-    public CollidableObject
+    public PlayableCharacter
 {
 public:
     Spaceship(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths);
@@ -28,12 +26,7 @@ protected:
 private:
     Vector2D velocity;
 
-    bool knocked;
-    float knockedTimer;
-
-    float health;
     float invincTimer;
-
     Circle2D boundingCircle;
     
     const float frictionPower = 5.5f;

@@ -321,9 +321,9 @@ ErrorType Game::Update()
    // Your code goes here *************************************************
    // *********************************************************************
 
+	ObjectManager::getInstance().DeleteInactive();
 	ObjectManager::getInstance().UpdateAll(gt.mdFrameTime);
 	ObjectManager::getInstance().RenderAll();
-	ObjectManager::getInstance().DeleteInactive();
 
 	gt.mark();
 

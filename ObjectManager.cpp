@@ -2,7 +2,7 @@
 #include "mydrawengine.h"
 #include "Zombie.h"
 #include "Spaceship.h"
-#include "Explosion.h"
+#include "Sprite.h"
 #include "LevelManager.h"
 #include "Bullet.h"
 #include <iostream>
@@ -73,8 +73,6 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	if (name == L"Normal Zombie") 
 	{
-
-
 		anims[L"IDLE"] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
@@ -230,8 +228,6 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		anims[L"IDLE"] = std::list<std::wstring>{
 				L"assets\\player\\idle_1.png",
 				L"assets\\player\\idle_2.png",
-				//L"assets\\player\\idle_3.png",
-				//L"assets\\player\\idle_4.png",
 				L"assets\\player\\idle_5.png",
 				L"assets\\player\\idle_6.png",
 				L"assets\\player\\idle_7.png",
@@ -258,6 +254,14 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\player\\fall_3.png",
 				L"assets\\player\\fall_3_5.png",
 				L"assets\\player\\idle_1.png",
+		};
+		anims[L"DEATH"] = std::list<std::wstring>{
+				L"assets\\player\\fall_2.png",
+				L"assets\\player\\fall_2.png",
+				L"assets\\player\\fall_2.png",
+				L"assets\\player\\fall_3.png",
+				L"assets\\player\\fall_3.png",
+				L"assets\\player\\fall_3.png",
 		};
 		cgo = std::make_shared<Spaceship>(pos, vel, rot, sizeX, sizeY, false, anims);
 		
@@ -304,7 +308,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\explosion7.bmp",
 				L"assets\\explosion8.bmp"
 		};
-		go = std::make_shared<Explosion>(pos, rot, sizeX, sizeY, false, anims);
+		go = std::make_shared<Sprite>(pos, rot, sizeX, sizeY, false, anims);
 		
 	}
 	if (name == L"Puff") {
@@ -318,8 +322,18 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\puff7.bmp",
 				L"assets\\puff8.bmp"
 		};
-		go = std::make_shared<Explosion>(pos, rot, sizeX, sizeY, false, anims);
+		go = std::make_shared<Sprite>(pos, rot, sizeX, sizeY, false, anims);
 		
+	}
+	if (name == L"Fog") {
+		anims[L"IDLE"] = std::list<std::wstring>{
+				L"assets\\fog\\g_fog_1.png",
+				L"assets\\fog\\g_fog_2.png",
+				L"assets\\fog\\g_fog_3.png",
+		};
+		auto sp  = std::make_shared<Sprite>(pos, rot, sizeX, sizeY, false, anims);
+		sp->repeatOn(true);
+		go = sp;
 	}
 
 	if (name == L"Level Manager") {
@@ -432,12 +446,16 @@ void ObjectManager::checkProximity(std::wstring objType1, std::wstring objType2,
 		auto list = QueryObjectList<Zombie>();
 		auto p = QueryObject<Spaceship>();
 		for (auto obj : list) {
-			// FILL IN THE LIST IF PROXIM	
-			Vector2D disp = obj->getPos() - p->getPos();
-			float magn = disp.magnitude();
-			if (magn<=threshold) {
-				obj->ProcessProximity(p);
+			// FILL IN THE LIST IF PROXIM
+			if (p && obj &&
+				p->IsActive() && obj->IsActive()) {
+				Vector2D disp = obj->getPos() - p->getPos();
+				float magn = disp.magnitude();
+				if (magn <= threshold) {
+					obj->ProcessProximity(p);
+				}
 			}
+			
 		}
 	}
 }

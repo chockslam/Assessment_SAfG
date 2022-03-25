@@ -21,9 +21,10 @@
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="CollidableObject.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
-    <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="gamecode.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="gametimer.cpp" />
@@ -32,6 +33,7 @@
     <ClCompile Include="myinputs.cpp" />
     <ClCompile Include="mysoundengine.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="PlayableCharacter.cpp" />
     <ClCompile Include="Zombie.cpp" />
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="Spaceship.cpp" />
@@ -41,14 +43,16 @@
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Character.h" />
     <ClInclude Include="CollidableObject.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="errortype.h" />
-    <ClInclude Include="Explosion.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="gamecode.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="gametimer.h" />
     <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="PlayableCharacter.h" />
     <ClInclude Include="TypeGO.h" />
     <ClInclude Include="mydrawengine.h" />
     <ClInclude Include="myinputs.h" />

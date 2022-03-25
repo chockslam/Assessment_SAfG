@@ -1,7 +1,7 @@
 #pragma once
-#include "CollidableObject.h"
+#include "Character.h"
 class Zombie :
-    public CollidableObject
+    public Character
 {
 public:
     Zombie(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths);
@@ -14,12 +14,9 @@ public:
 private:
     void goTo(Vector2D pos);
 
-    bool knocked;
-    float knockedTimer;
-    
-    
-    float health;
     int level;
+
+    bool chasing;
 
 
     Vector2D velocity;

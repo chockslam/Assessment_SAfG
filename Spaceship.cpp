@@ -16,13 +16,13 @@
 
 #define IDLE_SPEED 0.08f
 #define RUN_SPEED 0.07f
+#define DEATH_SPEED 0.5f
 #define KNOCKOUT_SPEED 0.05f
 
 Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
-	CollidableObject::CollidableObject(initPos, rotation, scX, scY, activated, paths),
-	velocity(vel),
-	knocked(false)
+	PlayableCharacter::PlayableCharacter(initPos, rotation, scX, scY, activated, paths),
+	velocity(vel)
 {
 	this->animLooped = true;
 	this->animated = true;
@@ -107,7 +107,6 @@ void Spaceship::Updated(float timeFrame)
 		//rot += rotOff;
 		
 
-		
 		if (!knocked) {
 
 			if (pInputs->KeyPressed(DIK_LSHIFT))
@@ -171,7 +170,7 @@ void Spaceship::Updated(float timeFrame)
 			knockedTimer -= timeFrame;
 			if (knockedTimer <= 0) {
 				knocked = false;
-				knockedTimer = anims[currentAnimation].size()*animTime;
+				knockedTimer = anims[currentAnimation].size() * animTime;
 				//invincTimer = knockedTimer * 10;
 			}
 		}
@@ -183,8 +182,8 @@ void Spaceship::Updated(float timeFrame)
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
 		this->velocity += friction;
 		this->position += this->velocity * timeFrame;
-		
-		
+
+
 		if (this->shapeExist) {
 			int width = 0;
 			int height = 0;
@@ -193,7 +192,19 @@ void Spaceship::Updated(float timeFrame)
 			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue + 500.0f, -position.YValue));
 
 		}
+
+		if (health <= 0) {
+			//if (this->currentAnimation != L"DEATH" && this->animLooped)
+			//	LevelManager::getInstance()->PlayerDead();
+			currentAnimation = L"DEATH";
+			this->shapeExist = false;
+			this->animLooped = false;
+			this->animTime = DEATH_SPEED;
+		}
+		
+		
 	}
+
 	
 /*
 	//Sounds
@@ -248,7 +259,8 @@ void Spaceship::ProcessCollision(std::shared_ptr<CollidableObject> other)
 					animTime = KNOCKOUT_SPEED;
 					knockedTimer = anims[currentAnimation].size() * animTime;
 					invincTimer = knockedTimer * 3;
-					this->health -= 100;
+					this->health -= 200;
+					
 				}
 
 			}
