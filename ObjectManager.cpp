@@ -335,6 +335,13 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		sp->repeatOn(true);
 		go = sp;
 	}
+	if (name == L"Dungeon Background") {
+		anims[L"IDLE"] = std::list<std::wstring>{
+				L"assets\\backgrounds\\battleback8.png",
+		};
+		auto sp  = std::make_shared<Sprite>(pos, rot, sizeX, sizeY, false, anims);
+		go = sp;
+	}
 
 	if (name == L"Level Manager") {
 		auto lm = LevelManager::getInstance();

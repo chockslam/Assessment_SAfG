@@ -25,6 +25,7 @@ public:
 private:
 
     void CreateBackground(int length);
+    void CreateForeground(int length);
 
     void RespawnEnemies();
     void RespawnPlayer();

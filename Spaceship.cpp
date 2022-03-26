@@ -189,7 +189,7 @@ void Spaceship::Updated(float timeFrame)
 			int height = 0;
 			MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
 			this->boundingCircle.PlaceAt(this->position, this->scaleY * width / 2);
-			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue + 500.0f, -position.YValue));
+			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue + 500.0f, 0));
 
 		}
 

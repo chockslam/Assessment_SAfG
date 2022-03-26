@@ -14,10 +14,12 @@ LevelManager::LevelManager()
 
 void LevelManager::StartLevel()
 {
+	this->CreateBackground(2);
+	
 	RespawnPlayer();
 	RespawnEnemies();
 
-	this->CreateBackground(2);
+	this->CreateForeground(2);
 	
 
 }
@@ -54,7 +56,16 @@ void LevelManager::Render()
 
 void LevelManager::CreateBackground(int length)
 {
-	float size = 2047.0f;				// hardcoded. Should be dependent on the width of the picture
+	float size = 2048.0f;				// hardcoded. Should be dependent on the width of the picture
+	float widthScale = 2.0f;			// hardcoded
+	for (int i = 0; i < length; i++) {
+		ObjectManager::getInstance().Add(L"Dungeon Background", { -250.0f + size * i * widthScale, 0.0f }, { 0.0f, 0.0f }, 0.0f, widthScale, 2.0f, 1);
+	}
+}
+
+void LevelManager::CreateForeground(int length)
+{
+	float size = 2048.0f;				// hardcoded. Should be dependent on the width of the picture
 	float widthScale = 5.0f;			// hardcoded
 	for (int i = 0; i < length; i++) {
 		ObjectManager::getInstance().Add(L"Fog", { -250.0f + size * i *widthScale, 0.0f }, { 0.0f, 0.0f }, 0.0f, widthScale, 9.0f, 1);

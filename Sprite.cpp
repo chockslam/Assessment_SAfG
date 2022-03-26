@@ -13,7 +13,7 @@ Sprite::Sprite(Vector2D initPos, float rotation, float scX, float scY, bool acti
 
 void Sprite::Updated(float timeFrame)
 {
-	if (this->active) 
+	if (this->active && this->animLooped) 
 	{
 		this->AnimUtilityUpdate(animTime, timeFrame);
 	}
