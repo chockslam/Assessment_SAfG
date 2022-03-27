@@ -1,4 +1,4 @@
-#include "Spaceship.h"
+#include "Hero.h"
 
 
 #include "mydrawengine.h"
@@ -19,7 +19,7 @@
 #define DEATH_SPEED 0.5f
 #define KNOCKOUT_SPEED 0.05f
 
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
+Hero::Hero(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
 	PlayableCharacter::PlayableCharacter(initPos, rotation, scX, scY, activated, paths),
 	velocity(vel)
@@ -29,54 +29,55 @@ Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float scX, float scY, float
 	type = ObjectType::SHIP;
 	image = 0;
 	animTime = IDLE_SPEED;
-	this->health = 1000;
+	this->maxHealth = 2000;
+	this->health = this->maxHealth;
 	this->invincTimer = -1.0f;
 }
 
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated)
+Hero::Hero(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated)
 	:
-	Spaceship::Spaceship(initPos, vel, scX, scY, rotation, activated, std::unordered_map<std::wstring, std::list<std::wstring>>())
+	Hero::Hero(initPos, vel, scX, scY, rotation, activated, std::unordered_map<std::wstring, std::list<std::wstring>>())
 {
 	animPaths[L"IDLE"] = std::list<std::wstring>{L""};
 }
 
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel, float rotation)
+Hero::Hero(Vector2D initPos, Vector2D vel, float rotation)
 	:
-	Spaceship::Spaceship(initPos, vel, rotation, 5.0f,5.0f, false)
+	Hero::Hero(initPos, vel, rotation, 5.0f,5.0f, false)
 {
 }
 
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel, bool activated)
+Hero::Hero(Vector2D initPos, Vector2D vel, bool activated)
 	:
-	Spaceship::Spaceship(initPos,vel,0.0f,5.0f,5.0f,activated)
+	Hero::Hero(initPos,vel,0.0f,5.0f,5.0f,activated)
 {
 }
 
-Spaceship::Spaceship(Vector2D initPos, Vector2D vel)
+Hero::Hero(Vector2D initPos, Vector2D vel)
 	:
-	Spaceship::Spaceship(initPos,vel, false)
+	Hero::Hero(initPos,vel, false)
 {
 
 }
 
-Spaceship::Spaceship(Vector2D initPos)
+Hero::Hero(Vector2D initPos)
 	:
-	Spaceship::Spaceship(initPos,Vector2D(1,0))
+	Hero::Hero(initPos,Vector2D(1,0))
 {
 }
 
-IShape2D& Spaceship::GetShape()
+IShape2D& Hero::GetShape()
 {
 	return this->boundingCircle;
 }
 
-Spaceship::Spaceship()
+Hero::Hero()
 	:
-	Spaceship::Spaceship(Vector2D(0, 0))
+	Hero::Hero(Vector2D(0, 0))
 {
 }
 
-Spaceship::~Spaceship()
+Hero::~Hero()
 {
 	
 }
@@ -84,7 +85,7 @@ Spaceship::~Spaceship()
 
 
 
-void Spaceship::Updated(float timeFrame)
+void Hero::Updated(float timeFrame)
 {
 
 	if (this->active)
@@ -94,19 +95,14 @@ void Spaceship::Updated(float timeFrame)
 		MyInputs* pInputs = MyInputs::GetInstance();
 		pInputs->SampleKeyboard();
 
-		//if (currentAnimation == L"FALL") {
-		//	if (it == anims[L"FALL"].end()) {
-		//		currentAnimation = L"IDLE";
-		//		it = anims[L"IDLE"].begin();
-		//	}
-		//}
-
+	
+		LevelManager::getInstance()->SetYPos(this->position.YValue);
+		LevelManager::getInstance()->SetMaxHP(this->maxHealth);
+		LevelManager::getInstance()->SetHP(this->health);
+		LevelManager::getInstance()->SetYPos(this->maxHealth);
 
 		this->AnimUtilityUpdate(animTime, timeFrame);
-		//pos += move;
-		//rot += rotOff;
-		
-
+	
 		if (!knocked) {
 
 			if (pInputs->KeyPressed(DIK_LSHIFT))
@@ -181,6 +177,13 @@ void Spaceship::Updated(float timeFrame)
 
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
 		this->velocity += friction;
+
+		if (this->position.YValue <= LevelManager::getInstance()->getMinY()) {
+			this->position.YValue = LevelManager::getInstance()->getMinY();
+		}
+		if (this->position.YValue >= LevelManager::getInstance()->getMaxY()) {
+			this->position.YValue = LevelManager::getInstance()->getMaxY();
+		}
 		this->position += this->velocity * timeFrame;
 
 
@@ -194,8 +197,6 @@ void Spaceship::Updated(float timeFrame)
 		}
 
 		if (health <= 0) {
-			//if (this->currentAnimation != L"DEATH" && this->animLooped)
-			//	LevelManager::getInstance()->PlayerDead();
 			currentAnimation = L"DEATH";
 			this->shapeExist = false;
 			this->animLooped = false;
@@ -227,7 +228,7 @@ void Spaceship::Updated(float timeFrame)
 
 }
 
-void Spaceship::ProcessCollision(std::shared_ptr<CollidableObject> other)
+void Hero::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
 	if (this->active) {
 		if (other->DoesShapeExist()) {

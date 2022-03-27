@@ -30,20 +30,16 @@ protected:
 
 
 	ObjectType type = ObjectType::UNKNOWN;
+
+
 	float animTime;
 	bool animLooped;
 	bool animated;
 	float coolDownAnim;
 	std::wstring currentAnimation;
 	std::wstring previousAnimation;
-
 	std::unordered_map<std::wstring, std::list<std::wstring>> animPaths;
-	//std::list<std::wstring> picturePaths;
-
-
 	std::unordered_map<std::wstring, std::list<int>> anims;
-	//std::list<int> pictures;
-	
 	std::list<int>::iterator it;
 
 	float scaleX;

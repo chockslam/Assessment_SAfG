@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 #include <list>;
+#include <vector>;
 
 class LevelManager :
     public GameObject
@@ -22,8 +23,18 @@ public:
     void AddScore();
     void EnemyDead();
     void PlayerDead();
+    int getMinY() const { return minY; };
+    int getMaxY() const { return maxY; };
+    void SetYPos(int Ypos);
+    void SetHP(int hp);
+    void SetMaxHP(int hp);
+    float getHeroHealth() const { return heroHealth; };
+    float getMaxHeroHealth() const { return maxHeroHealth; };
+
+
 private:
 
+    void makeUI();
     void CreateBackground(int length);
     void CreateForeground(int length);
 
@@ -32,11 +43,19 @@ private:
     
     LevelManager();
     static std::shared_ptr<LevelManager> d;
-   
+    
+    int YPos;
+    int maxY;
+    int minY;
 
+    int level;
     int currentLevel;
+    
     int score;
     int endTimer;
+
+    int heroHealth;
+    int maxHeroHealth;
     int numEnemies;
     int playerLives; 
 };

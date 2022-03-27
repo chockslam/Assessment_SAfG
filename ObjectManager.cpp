@@ -1,9 +1,10 @@
 #include "ObjectManager.h"
 #include "mydrawengine.h"
 #include "Zombie.h"
-#include "Spaceship.h"
+#include "Hero.h"
 #include "Sprite.h"
 #include "LevelManager.h"
+#include "HealthBar.h"
 #include "Bullet.h"
 #include <iostream>
 #include <string>
@@ -263,7 +264,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\player\\fall_3.png",
 				L"assets\\player\\fall_3.png",
 		};
-		cgo = std::make_shared<Spaceship>(pos, vel, rot, sizeX, sizeY, false, anims);
+		cgo = std::make_shared<Hero>(pos, vel, rot, sizeX, sizeY, false, anims);
 		
 		pObjectCollidable.push_back(cgo);
 
@@ -351,13 +352,12 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		go = std::move(lm);
 	}
 
-	if (name == L"Star Background") {
-		
-	
-	}
-	if (name == L"Fire") {
-		
-	
+	if (name == L"Health Bar") {
+		anims[L"IDLE"] = std::list<std::wstring>{
+				L"assets\\ui\\blood_bar.png",
+		};
+		auto sp = std::make_shared<HealthBar>(pos, rot, sizeX, sizeY, false, anims);
+		go = sp;
 	}
 	
 	go->Initialize();
@@ -442,7 +442,6 @@ void ObjectManager::CheckCollisions()
 				}
 			}
 		}
-		
 	}
 
 }
@@ -451,7 +450,7 @@ void ObjectManager::checkProximity(std::wstring objType1, std::wstring objType2,
 {
 	if (objType1 == L"Zombies" && objType2 == L"Player") {
 		auto list = QueryObjectList<Zombie>();
-		auto p = QueryObject<Spaceship>();
+		auto p = QueryObject<Hero>();
 		for (auto obj : list) {
 			// FILL IN THE LIST IF PROXIM
 			if (p && obj &&
