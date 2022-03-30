@@ -2,6 +2,7 @@
 #include <list>
 #include <memory>
 #include "CollidableObject.h"
+#include "LevelManager.h"
 
 class ObjectManager
 {
@@ -29,19 +30,22 @@ public:
     //       due to the compilers behavior to check accessibility
     //       before deleted status
 public:
+	std::shared_ptr<LevelManager> getLevelManager() const { return this->lm; };
 	void Add(std::wstring name, Vector2D pos = { 0.0f, 0.0f }, Vector2D vel = { 0.0f, 0.0f }, float rot = 0.0f, float sizeX = 1.0f, float sizeY = 1.0f, int appearance = 1); // ObjectFactory related method
 	void AddObject(std::shared_ptr<GameObject> object);
 	void UpdateAll(float frameTime);						// Update all objects in the pObjectList
 	void RenderAll();										// Render all objects in the pObjectList
 	void DeleteAll();										// Delete all objects in the pObjectList && pObjectCollidable
 	void DeleteInactive();									// Delete all objects that became 'inactive'
+	void InactivateAll();									// Delete all objects that became 'inactive'
 	void CheckCollisions();									
-	void checkProximity(std::wstring objType1, std::wstring objType2, float threshold);
+	void checkOtherInteraction(std::wstring objType1, std::wstring objType2, float threshold);
 	Vector2D getPosition(std::wstring objType);
 	template<class T> std::shared_ptr<T> QueryObject();
 	template<class T> std::list<std::shared_ptr<T>> QueryObjectList();
 	~ObjectManager();
 private:
+	std::shared_ptr<LevelManager> lm;
 	std::list<std::shared_ptr<GameObject>> pObjectList;
 	std::list<std::shared_ptr<CollidableObject>> pObjectCollidable;
 };

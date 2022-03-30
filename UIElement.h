@@ -5,7 +5,7 @@ class UIElement :
 {
 public:
     UIElement(Vector2D initPos, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths);
-    virtual void Updated(float timeFrame);
+    virtual void Render();
 protected:
     Vector2D localPosition;
 };

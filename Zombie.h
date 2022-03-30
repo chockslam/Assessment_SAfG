@@ -16,10 +16,6 @@ private:
 
     int level;
 
-    bool chasing;
-
-
-    Vector2D velocity;
     Rectangle2D boundingRect;
 };
 

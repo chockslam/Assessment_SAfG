@@ -2,6 +2,7 @@
 #include "ErrorLogger.h"
 #include "mydrawengine.h"
 
+#include "AnimMasks.h"
 
 GameObject::GameObject(Vector2D initPos, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
@@ -19,8 +20,8 @@ GameObject::GameObject(Vector2D initPos, float rotation, float scX, float scY, b
 	animTime(0.0f)
 {
 
-	currentAnimation = L"IDLE";
-	previousAnimation = L"IDLE";
+	currentAnimation = IDLE;
+	previousAnimation = IDLE;
 }
 
 

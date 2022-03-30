@@ -5,17 +5,22 @@
 #include "Sprite.h"
 #include "LevelManager.h"
 #include "HealthBar.h"
+#include "DeadScreen.h"
+#include "StartScreen.h"
+#include "EndScreen.h"
 #include "Bullet.h"
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include "AnimMasks.h"
 
+#include <typeinfo>
 
 
 void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot, float sizeX, float sizeY, int appearance)
 {
-	std::shared_ptr<GameObject> go;
-	std::shared_ptr<CollidableObject> cgo;
+	std::shared_ptr<GameObject> go = nullptr;
+	std::shared_ptr<CollidableObject> cgo = nullptr;
 
 	std::unordered_map<std::wstring, std::list<std::wstring>> anims;
 
@@ -23,14 +28,14 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	{
 
 
-		anims[L"IDLE"] = std::list<std::wstring>{ 
+		anims[IDLE] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_3.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_4.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_5.png",
 		};
-		anims[L"RUN"] = std::list<std::wstring>{ 
+		anims[RUN] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_3.png",
@@ -39,7 +44,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_6.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_7.png"
 		};
-		anims[L"FALL"] = std::list<std::wstring>{ 
+		anims[FALL] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
@@ -47,8 +52,16 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png"
 		};
+		anims[ATTACK] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_6.png"
+		};
 
-		anims[L"DEATH"] = std::list<std::wstring>{
+		anims[DEATH] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_3.png",
@@ -74,14 +87,14 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	if (name == L"Normal Zombie") 
 	{
-		anims[L"IDLE"] = std::list<std::wstring>{ 
+		anims[IDLE] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_3.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_4.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_5.png",
 		};
-		anims[L"RUN"] = std::list<std::wstring>{ 
+		anims[RUN] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_3.png",
@@ -90,7 +103,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_6.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_7.png"
 		};
-		anims[L"FALL"] = std::list<std::wstring>{ 
+		anims[FALL] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
@@ -98,8 +111,16 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png"
 		};
+		anims[ATTACK] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_6.png"
+		};
 
-		anims[L"DEATH"] = std::list<std::wstring>{
+		anims[DEATH] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_3.png",
@@ -126,14 +147,14 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 
 	if (name == L"Weak Crawler")
 	{
-		anims[L"IDLE"] = std::list<std::wstring>{
+		anims[IDLE] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_3.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_4.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_5.png",
 		};
-		anims[L"RUN"] = std::list<std::wstring>{
+		anims[RUN] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_3.png",
@@ -142,7 +163,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_6.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_7.png"
 		};
-		anims[L"FALL"] = std::list<std::wstring>{
+		anims[FALL] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
@@ -150,7 +171,15 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png"
 		};
-		anims[L"DEATH"] = std::list<std::wstring>{
+		anims[ATTACK] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_6.png"
+		};
+		anims[DEATH] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_3.png",
@@ -176,14 +205,14 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	if (name == L"Normal Crawler")
 	{
-		anims[L"IDLE"] = std::list<std::wstring>{
+		anims[IDLE] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_3.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_4.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_5.png",
 		};
-		anims[L"RUN"] = std::list<std::wstring>{
+		anims[RUN] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_3.png",
@@ -192,7 +221,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_6.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\crawl\\crawl_7.png"
 		};
-		anims[L"FALL"] = std::list<std::wstring>{
+		anims[FALL] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
@@ -200,7 +229,15 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png"
 		};
-		anims[L"DEATH"] = std::list<std::wstring>{
+		anims[ATTACK] = std::list<std::wstring>{
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_1.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_2.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_3.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_4.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_5.png",
+			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_6.png"
+		};
+		anims[DEATH] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_3.png",
@@ -226,7 +263,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	if (name == L"Player") 
 	{
-		anims[L"IDLE"] = std::list<std::wstring>{
+		anims[IDLE] = std::list<std::wstring>{
 				L"assets\\player\\idle_1.png",
 				L"assets\\player\\idle_2.png",
 				L"assets\\player\\idle_5.png",
@@ -234,7 +271,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\player\\idle_7.png",
 		};
 
-		anims[L"RUN"] = std::list<std::wstring>{
+		anims[RUN] = std::list<std::wstring>{
 				L"assets\\player\\run_1.png",
 				L"assets\\player\\run_2.png",
 				L"assets\\player\\run_3.png",
@@ -244,7 +281,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\player\\run_7.png",
 				L"assets\\player\\run_8.png",
 		};
-		anims[L"FALL"] = std::list<std::wstring>{
+		anims[FALL] = std::list<std::wstring>{
 				L"assets\\player\\fall_1.png",
 				L"assets\\player\\fall_1.png",
 				L"assets\\player\\fall_1.png",
@@ -256,7 +293,13 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 				L"assets\\player\\fall_3_5.png",
 				L"assets\\player\\idle_1.png",
 		};
-		anims[L"DEATH"] = std::list<std::wstring>{
+		anims[ATTACK] = std::list<std::wstring>{
+				L"assets\\player\\attack_1.png",
+				L"assets\\player\\attack_2.png",
+				L"assets\\player\\attack_3.png",
+				L"assets\\player\\attack_4.png"
+		};
+		anims[DEATH] = std::list<std::wstring>{
 				L"assets\\player\\fall_2.png",
 				L"assets\\player\\fall_2.png",
 				L"assets\\player\\fall_2.png",
@@ -273,7 +316,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	if (name == L"Bullet") 
 	{
-		anims[L"IDLE"] = std::list<std::wstring>{
+		anims[IDLE] = std::list<std::wstring>{
 				L"assets\\fire\\fire_1.png",
 				L"assets\\fire\\fire_2.png",
 				L"assets\\fire\\fire_3.png",
@@ -299,7 +342,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	
 	if (name == L"Explosion") {
-		anims[L"IDLE"] = std::list<std::wstring>{
+		anims[IDLE] = std::list<std::wstring>{
 				L"assets\\explosion1.bmp",
 				L"assets\\explosion2.bmp",
 				L"assets\\explosion3.bmp",
@@ -313,7 +356,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		
 	}
 	if (name == L"Puff") {
-		anims[L"IDLE"] = std::list<std::wstring>{
+		anims[IDLE] = std::list<std::wstring>{
 				L"assets\\puff1.bmp",
 				L"assets\\puff2.bmp",
 				L"assets\\puff3.bmp",
@@ -327,7 +370,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		
 	}
 	if (name == L"Fog") {
-		anims[L"IDLE"] = std::list<std::wstring>{
+		anims[IDLE] = std::list<std::wstring>{
 				L"assets\\fog\\g_fog_1.png",
 				L"assets\\fog\\g_fog_2.png",
 				L"assets\\fog\\g_fog_3.png",
@@ -337,7 +380,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		go = sp;
 	}
 	if (name == L"Dungeon Background") {
-		anims[L"IDLE"] = std::list<std::wstring>{
+		anims[IDLE] = std::list<std::wstring>{
 				L"assets\\backgrounds\\battleback8.png",
 		};
 		auto sp  = std::make_shared<Sprite>(pos, rot, sizeX, sizeY, false, anims);
@@ -345,24 +388,48 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 
 	if (name == L"Level Manager") {
-		auto lm = LevelManager::getInstance();
-		lm->Initialize();
-		lm->Activate();
-		lm->StartLevel();
-		go = std::move(lm);
+		this->lm = std::make_shared<LevelManager>();
+		this->lm->Initialize();
+		this->lm->Activate();
+		this->lm->StartLevel();
+		//go = std::move(lm);
 	}
 
 	if (name == L"Health Bar") {
-		anims[L"IDLE"] = std::list<std::wstring>{
+		anims[IDLE] = std::list<std::wstring>{
 				L"assets\\ui\\blood_bar.png",
 		};
 		auto sp = std::make_shared<HealthBar>(pos, rot, sizeX, sizeY, false, anims);
 		go = sp;
 	}
+
+	if (name == L"Dead Screen") {
+		anims[IDLE] = std::list<std::wstring>{
+				L"assets\\ui\\dead_skull.png",
+		};
+		auto sp = std::make_shared<DeadScreen>(pos, rot, sizeX, sizeY, false, anims);
+		go = sp;
+	}
+	if (name == L"Start Screen") {
+		anims[IDLE] = std::list<std::wstring>{
+				L"assets\\ui\\zombies_screen.png",
+		};
+		auto sp = std::make_shared<StartScreen>(pos, rot, sizeX, sizeY, false, anims);
+		go = sp;
+	}
+	if (name == L"End Screen") {
+		anims[IDLE] = std::list<std::wstring>{
+				L"assets\\ui\\level_complete.png",
+		};
+		auto sp = std::make_shared<EndScreen>(pos, rot, sizeX, sizeY, false, anims);
+		go = sp;
+	}
 	
-	go->Initialize();
-	go->Activate();
-	pObjectList.push_back(std::move(go));
+	if (go) {
+		go->Initialize();
+		go->Activate();
+		pObjectList.push_back(std::move(go));
+	}
 	
 
 }
@@ -381,6 +448,10 @@ void ObjectManager::UpdateAll(float frameTime)
 	for (auto& obj : this->pObjectList) {
 		obj->Updated(frameTime);
 	}
+
+	// should be rendered the last.
+	lm->Updated(frameTime);
+	
 	CheckCollisions();
 }
 
@@ -391,6 +462,9 @@ void ObjectManager::RenderAll()
 	for (auto& obj : this->pObjectList) {
 		obj->Render();
 	}
+
+	// should be rendered the last.
+	lm->Render();
 
 }
 
@@ -417,6 +491,14 @@ void ObjectManager::DeleteInactive()
 	
 	pObjectCollidable.remove(NULL);
 	pObjectList.remove(NULL);
+}
+
+void ObjectManager::InactivateAll()
+{
+	for(auto pObj: pObjectList){
+		if(pObj->GetType() != ObjectType::LEVEL_MANAGER)
+			pObj->Deactivate();
+	}
 }
 
 void ObjectManager::CheckCollisions() 
@@ -446,7 +528,7 @@ void ObjectManager::CheckCollisions()
 
 }
 
-void ObjectManager::checkProximity(std::wstring objType1, std::wstring objType2, float threshold)
+void ObjectManager::checkOtherInteraction(std::wstring objType1, std::wstring objType2, float threshold)
 {
 	if (objType1 == L"Zombies" && objType2 == L"Player") {
 		auto list = QueryObjectList<Zombie>();

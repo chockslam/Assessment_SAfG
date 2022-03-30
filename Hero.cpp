@@ -5,6 +5,7 @@
 #include "myinputs.h"
 #include "mysoundengine.h"
 #include "LevelManager.h"
+#include "AnimMasks.h"
 
 
 #include "ObjectManager.h"
@@ -15,30 +16,33 @@
 #define PATH L"assets\\ship.bmp"
 
 #define IDLE_SPEED 0.08f
-#define RUN_SPEED 0.07f
+#define RUN_SPEED 0.1f
 #define DEATH_SPEED 0.5f
+#define ATTACK_SPEED 0.05f
 #define KNOCKOUT_SPEED 0.05f
+#define KNOCKOUT_POWER 25.0f
 
 Hero::Hero(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
-	PlayableCharacter::PlayableCharacter(initPos, rotation, scX, scY, activated, paths),
-	velocity(vel)
+	PlayableCharacter::PlayableCharacter(initPos,vel, rotation, scX, scY, activated, paths)
 {
 	this->animLooped = true;
 	this->animated = true;
+	this->dead = false;
 	type = ObjectType::SHIP;
 	image = 0;
 	animTime = IDLE_SPEED;
-	this->maxHealth = 2000;
+	this->maxHealth = 1200;
 	this->health = this->maxHealth;
 	this->invincTimer = -1.0f;
+	this->frictionPower = 5.5f;
 }
 
 Hero::Hero(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated)
 	:
 	Hero::Hero(initPos, vel, scX, scY, rotation, activated, std::unordered_map<std::wstring, std::list<std::wstring>>())
 {
-	animPaths[L"IDLE"] = std::list<std::wstring>{L""};
+	//animPaths[L"IDLE"] = std::list<std::wstring>{L""};
 }
 
 Hero::Hero(Vector2D initPos, Vector2D vel, float rotation)
@@ -88,88 +92,42 @@ Hero::~Hero()
 void Hero::Updated(float timeFrame)
 {
 
+	ObjectManager::getInstance().getLevelManager()->SetXPos(this->position.XValue);
 	if (this->active)
 	{
 		//Vector2D move(2.0f, 2.0f);
 		float rotOff = 0.06f;
-		MyInputs* pInputs = MyInputs::GetInstance();
-		pInputs->SampleKeyboard();
 
 	
-		LevelManager::getInstance()->SetYPos(this->position.YValue);
-		LevelManager::getInstance()->SetMaxHP(this->maxHealth);
-		LevelManager::getInstance()->SetHP(this->health);
-		LevelManager::getInstance()->SetYPos(this->maxHealth);
+		ObjectManager::getInstance().getLevelManager()->SetYPos(this->position.YValue);
+		ObjectManager::getInstance().getLevelManager()->SetMaxHP(this->maxHealth);
+		ObjectManager::getInstance().getLevelManager()->SetHP(this->health);
+		ObjectManager::getInstance().getLevelManager()->SetYPos(this->maxHealth);
+
+		if (this->posOffsetPower > 30.0f) {
+			if (this->currentAnimation == RUN) {
+				animTime = RUN_SPEED / 2;
+			}
+		}
 
 		this->AnimUtilityUpdate(animTime, timeFrame);
 	
-		if (!knocked) {
 
-			if (pInputs->KeyPressed(DIK_LSHIFT))
-			{
-				this->posOffsetPower = 50.0f;
-				currentAnimation = L"RUN";
-				animTime = RUN_SPEED;
-			}
-			else {
-				this->posOffsetPower = 5.0f;
-				currentAnimation = L"IDLE";
+		
+		if (!knocked && this->shapeExist) {
+			if (!attacking) {
+				currentAnimation = IDLE;
 				animTime = IDLE_SPEED;
 			}
-
-			if (pInputs->KeyPressed(DIK_W))
-			{
-				Vector2D acc;
-				acc.setBearing(this->rotation, this->AccPower);
-				this->velocity += acc * timeFrame * posOffsetPower;
-
-			}
-			if (pInputs->KeyPressed(DIK_S))
-			{
-
-				Vector2D acc;
-				acc.setBearing(this->rotation + 3.1415f, this->AccPower);
-				this->velocity += acc * timeFrame * posOffsetPower;
-
-			}
-			if (pInputs->KeyPressed(DIK_D))
-			{
-
-				if (this->scaleX < 0)
-					this->scaleX = -this->scaleX;
-				Vector2D acc;
-				acc.setBearing(this->rotation + 3.1415f / 2, this->AccPower);
-				this->velocity += acc * timeFrame * posOffsetPower;
-
-			}
-			if (pInputs->KeyPressed(DIK_A))
-			{
-
-				if (this->scaleX >= 0)
-					this->scaleX = -this->scaleX;
-				Vector2D acc;
-				acc.setBearing(this->rotation - 3.1415f / 2, this->AccPower);
-				this->velocity += acc * timeFrame * posOffsetPower;
-
-			}
-
-			if (pInputs->NewKeyPressed(DIK_SPACE))
-			{
-				float rotation = this->rotation;
-				if (this->scaleX < 0) {
-					rotation = this->rotation + 3.1415f;
-				}
-				ObjectManager::getInstance().Add(L"Bullet", this->position, this->velocity, rotation + 3.1415f / 2, this->scaleX * 2, -this->scaleY * 2, 1);
-			}
+			if(ObjectManager::getInstance().getLevelManager()->getStartTimer()<=0.0f)
+				this->control(timeFrame);
 		}
-		else {
-			knockedTimer -= timeFrame;
-			if (knockedTimer <= 0) {
-				knocked = false;
-				knockedTimer = anims[currentAnimation].size() * animTime;
-				//invincTimer = knockedTimer * 10;
-			}
-		}
+
+		if(knocked)
+			playAnimOnce(FALL, timeFrame);
+		if(attacking)
+			playAnimOnce(ATTACK, timeFrame);
+
 
 		if (invincTimer >= 0.0f) {
 			invincTimer -= timeFrame;
@@ -178,11 +136,29 @@ void Hero::Updated(float timeFrame)
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
 		this->velocity += friction;
 
-		if (this->position.YValue <= LevelManager::getInstance()->getMinY()) {
-			this->position.YValue = LevelManager::getInstance()->getMinY();
+		if (this->position.YValue <= ObjectManager::getInstance().getLevelManager()->getMinY()) {
+			this->position.YValue = ObjectManager::getInstance().getLevelManager()->getMinY();
 		}
-		if (this->position.YValue >= LevelManager::getInstance()->getMaxY()) {
-			this->position.YValue = LevelManager::getInstance()->getMaxY();
+		else
+		if (this->position.YValue >= ObjectManager::getInstance().getLevelManager()->getMaxY()) {
+			this->position.YValue = ObjectManager::getInstance().getLevelManager()->getMaxY();
+		}
+
+		if (this->position.XValue <= ObjectManager::getInstance().getLevelManager()->getMinCameraX()) {
+			if (this->position.XValue <= ObjectManager::getInstance().getLevelManager()->getMinPlayerX()) {
+				this->position.XValue = ObjectManager::getInstance().getLevelManager()->getMinPlayerX();
+			}
+			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(ObjectManager::getInstance().getLevelManager()->getMinCameraX(), 0));
+		}
+		else
+		if (this->position.XValue >= ObjectManager::getInstance().getLevelManager()->getMaxCameraX()) {
+			if (this->position.XValue >= ObjectManager::getInstance().getLevelManager()->getMaxPlayerX()) {
+				this->position.XValue = ObjectManager::getInstance().getLevelManager()->getMaxPlayerX();
+			}
+			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(ObjectManager::getInstance().getLevelManager()->getMaxCameraX(), 0));
+		}
+		else {
+			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue, 0));
 		}
 		this->position += this->velocity * timeFrame;
 
@@ -192,15 +168,19 @@ void Hero::Updated(float timeFrame)
 			int height = 0;
 			MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
 			this->boundingCircle.PlaceAt(this->position, this->scaleY * width / 2);
-			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue + 500.0f, 0));
 
 		}
 
 		if (health <= 0) {
-			currentAnimation = L"DEATH";
+			currentAnimation = DEATH;
 			this->shapeExist = false;
 			this->animLooped = false;
 			this->animTime = DEATH_SPEED;
+			if (!this->dead) {
+				ObjectManager::getInstance().getLevelManager()->PlayerDead();
+				ObjectManager::getInstance().Add(L"Dead Screen", { 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 10.0f, 10.0f);
+				this->dead = true;
+			}
 		}
 		
 		
@@ -235,30 +215,16 @@ void Hero::ProcessCollision(std::shared_ptr<CollidableObject> other)
 			if (this->invincTimer<=0.0f) {
 
 				if (other->GetType() == ObjectType::ZOMBIE_WEAK) {
-					currentAnimation = L"FALL";
-					Vector2D acc;
-					float direction = -3.1415f / 2;
-					if (this->scaleX < 0)
-						direction = -direction;
-					acc.setBearing(this->rotation + direction, this->AccPower / 10.0f);
-					this->velocity += acc * 7.0f;
-					knocked = true;
-					animTime = KNOCKOUT_SPEED;
-					knockedTimer = anims[currentAnimation].size() * animTime;
+
+					this->currentAnimation = FALL;
+					this->knockBack(KNOCKOUT_POWER/2, KNOCKOUT_SPEED, other);
 					invincTimer = knockedTimer * 3;
 					this->health -= 100;
 				}
 				if (other->GetType() == ObjectType::ZOMBIE_NORMAL) {
-					currentAnimation = L"FALL";
-					Vector2D acc;
-					float direction = -3.1415f / 2;
-					if (this->scaleX < 0)
-						direction = -direction;
-					acc.setBearing(this->rotation + direction, this->AccPower / 10.0f);
-					this->velocity += acc * 14.0f;
-					knocked = true;
-					animTime = KNOCKOUT_SPEED;
-					knockedTimer = anims[currentAnimation].size() * animTime;
+
+					this->currentAnimation = FALL;
+					this->knockBack(KNOCKOUT_POWER, KNOCKOUT_SPEED, other);
 					invincTimer = knockedTimer * 3;
 					this->health -= 200;
 					
@@ -271,7 +237,87 @@ void Hero::ProcessCollision(std::shared_ptr<CollidableObject> other)
 	
 }
 
-//void Spaceship::Render()
-//{
-//	
-//}
+void Hero::control(float timeFrame, int up, int left, int down, int right, int run, int shoot)
+{
+	MyInputs::GetInstance()->SampleKeyboard();
+	if (MyInputs::GetInstance()->KeyPressed(run))
+	{
+		this->posOffsetPower = 50.0f;
+		
+	}
+	else {
+		this->posOffsetPower = 30.0f;
+	}
+	if (MyInputs::GetInstance()->KeyPressed(up))
+	{
+		Vector2D acc;
+		acc.setBearing(this->rotation, this->AccPower);
+		this->velocity += acc * timeFrame * posOffsetPower;
+		if (!this->attacking) {
+			currentAnimation = RUN;
+			animTime = RUN_SPEED;
+		}
+
+	}
+	if (MyInputs::GetInstance()->KeyPressed(down))
+	{
+
+		Vector2D acc;
+		acc.setBearing(this->rotation + 3.1415f, this->AccPower);
+		this->velocity += acc * timeFrame * posOffsetPower;
+		if (!this->attacking) {
+			currentAnimation = RUN;
+			animTime = RUN_SPEED;
+		}
+
+
+	}
+	if (MyInputs::GetInstance()->KeyPressed(right))
+	{
+
+		if (this->scaleX < 0)
+			this->scaleX = -this->scaleX;
+		Vector2D acc;
+		acc.setBearing(this->rotation + 3.1415f / 2, this->AccPower);
+		this->velocity += acc * timeFrame * posOffsetPower;
+		if (!this->attacking) {
+			currentAnimation = RUN;
+			animTime = RUN_SPEED;
+		}
+
+
+	}
+	if (MyInputs::GetInstance()->KeyPressed(left))
+	{
+
+		if (this->scaleX >= 0)
+			this->scaleX = -this->scaleX;
+		Vector2D acc;
+		acc.setBearing(this->rotation - 3.1415f / 2, this->AccPower);
+		this->velocity += acc * timeFrame * posOffsetPower;
+		if (!this->attacking) {
+			currentAnimation = RUN;
+			animTime = RUN_SPEED;
+		}
+
+
+	}
+
+	if (MyInputs::GetInstance()->NewKeyPressed(shoot)&&this->shapeExist)
+	{
+		this->currentAnimation = ATTACK;
+		this->attacking = true;
+		this->animTime = ATTACK_SPEED;
+		this->attackTimer = anims[currentAnimation].size() * animTime;
+
+		float rotation = this->rotation;
+		if (this->scaleX < 0) {
+			rotation = this->rotation + 3.1415f;
+		}
+		ObjectManager::getInstance().Add(L"Bullet", this->position, this->velocity, rotation + 3.1415f / 2, this->scaleX * 2, -this->scaleY * 2, 1);
+	}
+
+	
+
+}
+

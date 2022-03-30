@@ -8,7 +8,9 @@ UIElement::UIElement(Vector2D initPos, float rotation, float scX, float scY, boo
 	this->animLooped = true;
 }
 
-void UIElement::Updated(float timeFrame)
+
+void UIElement::Render()
 {
 	this->position = MyDrawEngine::GetInstance()->theCamera.getWorldPosition() + this->localPosition;
+	GameObject::Render();
 }

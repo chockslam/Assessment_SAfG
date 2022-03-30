@@ -22,16 +22,14 @@ public:
     void Updated(float timeFrame);
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
 protected:
-    //void Render(); 
+    void control(float timeFrame, int up = DIK_W, int left = DIK_A, int down = DIK_S, int right = DIK_D, int run = DIK_LSHIFT, int shoot = DIK_SPACE);
 private:
-    Vector2D velocity;
 
     float invincTimer;
     Circle2D boundingCircle;
     
-    const float frictionPower = 5.5f;
     const float AccPower = 200.0f;
-
+    bool dead;
 
     const Vector2D right = Vector2D(100.0f, 0.0f);     
     const Vector2D left = Vector2D(-100.0f, 0.0f);
