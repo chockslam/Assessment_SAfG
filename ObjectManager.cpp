@@ -677,13 +677,12 @@ void ObjectManager::checkOtherInteraction(std::wstring objType1, std::wstring ob
 		auto list = QueryObjectList<Zombie>();
 		auto p = QueryObject<Hero>();
 		for (auto obj : list) {
-			// FILL IN THE LIST IF PROXIM
 			if (p && obj &&
 				p->IsActive() && obj->IsActive()) {
 				Vector2D disp = obj->getPos() - p->getPos();
 				float magn = disp.magnitude();
 				if (magn <= threshold) {
-					obj->ProcessProximity(p,0.0f);
+					obj->ProcessProximity(p,magn, threshold);
 				}
 			}
 			

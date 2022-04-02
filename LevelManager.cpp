@@ -13,14 +13,14 @@
 #define LEVEL_ONE 1
 #define LEVEL_ONE_BACKGROUND L"Dungeon Background"
 #define LEVEL_ONE_FOREGROUND L"Green Fog"
-#define LEVEL_ONE_MAX_REACH 1000.0f
+#define LEVEL_ONE_MAX_REACH 2000.0f
 
-#define LEVEL_ONE_WEAK_ZOMBIE_NUMBER 0;
-#define LEVEL_ONE_WEAK_CRAWLER_NUMBER 0;
-#define LEVEL_ONE_NORMAL_ZOMBIE_NUMBER 0;
+#define LEVEL_ONE_WEAK_ZOMBIE_NUMBER 10;
+#define LEVEL_ONE_WEAK_CRAWLER_NUMBER 5;
+#define LEVEL_ONE_NORMAL_ZOMBIE_NUMBER 1;
 #define LEVEL_ONE_NORMAL_CRAWLER_NUMBER 1;
-#define LEVEL_ONE_HARD_ZOMBIE_NUMBER 0;
-#define LEVEL_ONE_HARD_CRAWLER_NUMBER 0;
+#define LEVEL_ONE_HARD_ZOMBIE_NUMBER 1;
+#define LEVEL_ONE_HARD_CRAWLER_NUMBER 1;
 
 #define LEVEL_ONE_MAX_Y 492
 #define LEVEL_ONE_MIN_Y -877
@@ -32,14 +32,14 @@
 #define LEVEL_TWO 2
 #define LEVEL_TWO_BACKGROUND L"Forrest Background"
 #define LEVEL_TWO_FOREGROUND L"Yellow Fog"
-#define LEVEL_TWO_MAX_REACH 1500.0f
+#define LEVEL_TWO_MAX_REACH 3000.0f
 
-#define LEVEL_TWO_WEAK_ZOMBIE_NUMBER 10;
-#define LEVEL_TWO_WEAK_CRAWLER_NUMBER 5;
-#define LEVEL_TWO_NORMAL_ZOMBIE_NUMBER 3;
-#define LEVEL_TWO_NORMAL_CRAWLER_NUMBER 4;
-#define LEVEL_TWO_HARD_ZOMBIE_NUMBER 2;
-#define LEVEL_TWO_HARD_CRAWLER_NUMBER 1;
+#define LEVEL_TWO_WEAK_ZOMBIE_NUMBER 15;
+#define LEVEL_TWO_WEAK_CRAWLER_NUMBER 9;
+#define LEVEL_TWO_NORMAL_ZOMBIE_NUMBER 7;
+#define LEVEL_TWO_NORMAL_CRAWLER_NUMBER 5;
+#define LEVEL_TWO_HARD_ZOMBIE_NUMBER 3;
+#define LEVEL_TWO_HARD_CRAWLER_NUMBER 2;
 
 #define LEVEL_TWO_MAX_Y 500
 #define LEVEL_TWO_MIN_Y -550
@@ -126,7 +126,8 @@ void LevelManager::Updated(float timeFrame)
 		endGameTimer -= timeFrame;
 		if (endGameTimer <= 0.0f) {
 			ObjectManager::getInstance().InactivateAll();
-			StartLevel(++this->level);
+			this->level = (this->level < NUMBER_OF_LEVELS) ? this->level + 1 : LEVEL_ONE;
+			StartLevel(this->level);
 		}
 	}
 	else

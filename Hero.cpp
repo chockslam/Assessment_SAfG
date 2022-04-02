@@ -20,7 +20,17 @@
 #define DEATH_SPEED 0.5f
 #define ATTACK_SPEED 0.05f
 #define KNOCKOUT_SPEED 0.05f
+
+
 #define KNOCKOUT_POWER 25.0f
+
+
+#define W_Z_DAMAGE 100.0f
+#define N_Z_DAMAGE 200.0f
+#define H_Z_DAMAGE 300.0f
+
+
+#define SHOOT_COOLDOWN 0.3f
 
 Hero::Hero(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
@@ -36,6 +46,7 @@ Hero::Hero(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation,
 	this->health = this->maxHealth;
 	this->invincTimer = -1.0f;
 	this->frictionPower = 5.5f;
+	this->shootCoolDown = SHOOT_COOLDOWN;
 }
 
 Hero::Hero(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated)
@@ -123,6 +134,9 @@ void Hero::Updated(float timeFrame)
 				this->control(timeFrame);
 		}
 
+		if(this->shootCoolDown>=0.0f)
+			shootCoolDown -= timeFrame;
+
 		if(knocked)
 			playAnimOnce(FALL, timeFrame);
 		if(attacking)
@@ -136,30 +150,6 @@ void Hero::Updated(float timeFrame)
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
 		this->velocity += friction;
 
-		//if (this->position.YValue <= ObjectManager::getInstance().getLevelManager()->getMinY()) {
-		//	this->position.YValue = ObjectManager::getInstance().getLevelManager()->getMinY();
-		//}
-		//else
-		//if (this->position.YValue >= ObjectManager::getInstance().getLevelManager()->getMaxY()) {
-		//	this->position.YValue = ObjectManager::getInstance().getLevelManager()->getMaxY();
-		//}
-		//
-		//if (this->position.XValue <= ObjectManager::getInstance().getLevelManager()->getMinCameraX()) {
-		//	if (this->position.XValue <= ObjectManager::getInstance().getLevelManager()->getMinPlayerX()) {
-		//		this->position.XValue = ObjectManager::getInstance().getLevelManager()->getMinPlayerX();
-		//	}
-		//	MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(ObjectManager::getInstance().getLevelManager()->getMinCameraX(), 0));
-		//}
-		//else
-		//if (this->position.XValue >= ObjectManager::getInstance().getLevelManager()->getMaxCameraX()) {
-		//	if (this->position.XValue >= ObjectManager::getInstance().getLevelManager()->getMaxPlayerX()) {
-		//		this->position.XValue = ObjectManager::getInstance().getLevelManager()->getMaxPlayerX();
-		//	}
-		//	MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(ObjectManager::getInstance().getLevelManager()->getMaxCameraX(), 0));
-		//}
-		//else {
-		//	MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue, 0));
-		//}
 		RestrictMovement(ObjectManager::getInstance().getLevelManager()->getMinY(),
 						 ObjectManager::getInstance().getLevelManager()->getMinPlayerX(),
 						 ObjectManager::getInstance().getLevelManager()->getMaxY(),
@@ -227,14 +217,22 @@ void Hero::ProcessCollision(std::shared_ptr<CollidableObject> other)
 					this->currentAnimation = FALL;
 					this->knockBack(KNOCKOUT_POWER/2, KNOCKOUT_SPEED, other);
 					invincTimer = knockedTimer * 3;
-					this->health -= 100;
+					this->health -= W_Z_DAMAGE;
 				}
 				if (other->GetType() == ObjectType::ZOMBIE_NORMAL) {
 
 					this->currentAnimation = FALL;
 					this->knockBack(KNOCKOUT_POWER, KNOCKOUT_SPEED, other);
 					invincTimer = knockedTimer * 3;
-					this->health -= 200;
+					this->health -= N_Z_DAMAGE;
+					
+				}
+				if (other->GetType() == ObjectType::ZOMBIE_HARD) {
+
+					this->currentAnimation = FALL;
+					this->knockBack(KNOCKOUT_POWER, KNOCKOUT_SPEED, other);
+					invincTimer = knockedTimer * 3;
+					this->health -= H_Z_DAMAGE;
 					
 				}
 
@@ -311,7 +309,7 @@ void Hero::control(float timeFrame, int up, int left, int down, int right, int r
 
 	}
 
-	if (MyInputs::GetInstance()->NewKeyPressed(shoot)&&this->shapeExist)
+	if (MyInputs::GetInstance()->NewKeyPressed(shoot)&&this->shapeExist&&this->shootCoolDown<=0.0f)
 	{
 		this->currentAnimation = ATTACK;
 		this->attacking = true;
@@ -323,6 +321,7 @@ void Hero::control(float timeFrame, int up, int left, int down, int right, int r
 			rotation = this->rotation + 3.1415f;
 		}
 		ObjectManager::getInstance().Add(L"Bullet", this->position, this->velocity, rotation + 3.1415f / 2, this->scaleX * 2, -this->scaleY * 2, 1);
+		this->shootCoolDown = SHOOT_COOLDOWN;
 	}
 
 	

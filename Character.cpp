@@ -38,23 +38,39 @@ void Character::playAnimOnce(std::wstring animName, float timeFrame)
 void Character::knockBack(float power, float animSpeed, std::shared_ptr<GameObject> otherObj)
 {
 
-	Vector2D normal(0.5f, 0.866f);
-
-
-	Vector2D acc;
-	float direction = -3.1415f / 2;
-	if (otherObj && (this->position - otherObj->getPos()).XValue > 0) {
-		direction = -direction;
-	}
-	else
-	if (this->scaleX < 0)
-		direction = -direction;
-	acc.setBearing(this->rotation + direction, this->AccPower);
-	this->velocity += acc * power;
-	//this->velocity = this->velocity - 2 * (this->velocity * normal) * normal;
-	this->knocked = true;
-	this->animTime = animSpeed;
-	this->knockedTimer = anims[currentAnimation].size() * animTime;
+	//int diceR = rand() % 11;
+	//bool toKnock = false;
+	//if (this->type == ObjectType::ZOMBIE_HARD && diceR < 3) {
+	//	toKnock = true;
+	//}
+	//if (this->type == ObjectType::ZOMBIE_NORMAL && diceR < 6) {
+	//	toKnock = true;
+	//}
+	//if (this->type == ObjectType::ZOMBIE_WEAK && diceR < 9) {
+	//	toKnock = true;
+	//}
+	//if (this->type == ObjectType::SHIP) {
+	//	toKnock = true;
+	//}
+	//
+	//
+	//if (toKnock) {
+		Vector2D acc;
+		float direction = -3.1415f / 2;
+		if (otherObj && (this->position - otherObj->getPos()).XValue > 0) {
+			direction = -direction;
+		}
+		else
+			if (this->scaleX < 0)
+				direction = -direction;
+		acc.setBearing(this->rotation + direction, this->AccPower);
+		this->velocity += acc * power;
+		//this->velocity = this->velocity - 2 * (this->velocity * normal) * normal;
+		this->knocked = true;
+		this->animTime = animSpeed;
+		this->knockedTimer = anims[currentAnimation].size() * animTime;
+	//}
+	
 
 }
 

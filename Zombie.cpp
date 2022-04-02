@@ -123,13 +123,29 @@ void Zombie::ProcessCollision(std::shared_ptr<CollidableObject> other)
 	
 }
 
-void Zombie::ProcessProximity(std::shared_ptr<GameObject> other, float dist)
+void Zombie::ProcessProximity(std::shared_ptr<GameObject> other, float dist, float maxDist)
 {
 	if (other->GetType() == ObjectType::SHIP) {
+
 		if (this->active && other->IsActive()) {
 			if (!knocked && !attacking && animLooped) {
 				//if(this->type == ZOMBIE_WEAK)
-				this->goTo(other->getPos());
+				bool chase = false;
+				if (dist / maxDist < 0.5f) {
+					if (this->type == ObjectType::ZOMBIE_WEAK)
+						chase = true;
+				}
+				
+				if (dist / maxDist < 0.7f) {
+					if (this->type == ObjectType::ZOMBIE_NORMAL)
+						chase = true;
+				}
+				
+				if (this->type == ObjectType::ZOMBIE_HARD)
+					chase = true;
+
+				if(chase)
+					this->goTo(other->getPos());
 			}
 		}
 	}

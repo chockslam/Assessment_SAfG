@@ -10,7 +10,7 @@ public:
     IShape2D& GetShape();
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
     Vector2D getVel() const { return this->velocity; };
-    virtual void ProcessProximity(std::shared_ptr<GameObject> other, float dist);
+    virtual void ProcessProximity(std::shared_ptr<GameObject> other, float dist, float maxDist);
 private:
     void goTo(Vector2D pos);
 
