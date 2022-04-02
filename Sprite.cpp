@@ -1,7 +1,7 @@
 #include "Sprite.h"
 #include "mydrawengine.h"
 
-#define COOLDOWN 0.5f
+#define COOLDOWN 0.2f
 
 Sprite::Sprite(Vector2D initPos, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:	
@@ -19,7 +19,8 @@ void Sprite::Updated(float timeFrame)
 	}
 }
 
-void Sprite::repeatOn(bool flag)
+void Sprite::repeatOn(bool flag, float customSpeed)
 {
 	this->animLooped = flag;
+	this->animTime = customSpeed;
 }

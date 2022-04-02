@@ -11,4 +11,3 @@ private:
     float maxHealth;
     float currHealth;
 };
-

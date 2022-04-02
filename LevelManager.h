@@ -43,7 +43,7 @@ public:
     int getMinPlayerX() const { return minX - PLAYER_OFFSET_X; };
     int getMaxPlayerX() const { return maxX + PLAYER_OFFSET_X; };
 
-    float getDeathCoolDown() const { return screenDeathCoolDownTimer; };
+    float getDeathCoolDown() const { return playerDeathCoolDownTimer; };
     float getStartTimer() const { return startGameTimer; };
     float getEndTimer() const { return endGameTimer; };
 
@@ -72,10 +72,11 @@ private:
     
     int score;
     int playerDeathCoolDownTimer;
-    int screenDeathCoolDownTimer;
     int startGameTimer;
     int endGameTimer;
     bool isAction;
+
+    float maxReach;
 
     int heroHealth;
     int maxHeroHealth;

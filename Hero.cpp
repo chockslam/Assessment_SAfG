@@ -136,30 +136,38 @@ void Hero::Updated(float timeFrame)
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
 		this->velocity += friction;
 
-		if (this->position.YValue <= ObjectManager::getInstance().getLevelManager()->getMinY()) {
-			this->position.YValue = ObjectManager::getInstance().getLevelManager()->getMinY();
-		}
-		else
-		if (this->position.YValue >= ObjectManager::getInstance().getLevelManager()->getMaxY()) {
-			this->position.YValue = ObjectManager::getInstance().getLevelManager()->getMaxY();
-		}
-
-		if (this->position.XValue <= ObjectManager::getInstance().getLevelManager()->getMinCameraX()) {
-			if (this->position.XValue <= ObjectManager::getInstance().getLevelManager()->getMinPlayerX()) {
-				this->position.XValue = ObjectManager::getInstance().getLevelManager()->getMinPlayerX();
-			}
-			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(ObjectManager::getInstance().getLevelManager()->getMinCameraX(), 0));
-		}
-		else
-		if (this->position.XValue >= ObjectManager::getInstance().getLevelManager()->getMaxCameraX()) {
-			if (this->position.XValue >= ObjectManager::getInstance().getLevelManager()->getMaxPlayerX()) {
-				this->position.XValue = ObjectManager::getInstance().getLevelManager()->getMaxPlayerX();
-			}
-			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(ObjectManager::getInstance().getLevelManager()->getMaxCameraX(), 0));
-		}
-		else {
-			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue, 0));
-		}
+		//if (this->position.YValue <= ObjectManager::getInstance().getLevelManager()->getMinY()) {
+		//	this->position.YValue = ObjectManager::getInstance().getLevelManager()->getMinY();
+		//}
+		//else
+		//if (this->position.YValue >= ObjectManager::getInstance().getLevelManager()->getMaxY()) {
+		//	this->position.YValue = ObjectManager::getInstance().getLevelManager()->getMaxY();
+		//}
+		//
+		//if (this->position.XValue <= ObjectManager::getInstance().getLevelManager()->getMinCameraX()) {
+		//	if (this->position.XValue <= ObjectManager::getInstance().getLevelManager()->getMinPlayerX()) {
+		//		this->position.XValue = ObjectManager::getInstance().getLevelManager()->getMinPlayerX();
+		//	}
+		//	MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(ObjectManager::getInstance().getLevelManager()->getMinCameraX(), 0));
+		//}
+		//else
+		//if (this->position.XValue >= ObjectManager::getInstance().getLevelManager()->getMaxCameraX()) {
+		//	if (this->position.XValue >= ObjectManager::getInstance().getLevelManager()->getMaxPlayerX()) {
+		//		this->position.XValue = ObjectManager::getInstance().getLevelManager()->getMaxPlayerX();
+		//	}
+		//	MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(ObjectManager::getInstance().getLevelManager()->getMaxCameraX(), 0));
+		//}
+		//else {
+		//	MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue, 0));
+		//}
+		RestrictMovement(ObjectManager::getInstance().getLevelManager()->getMinY(),
+						 ObjectManager::getInstance().getLevelManager()->getMinPlayerX(),
+						 ObjectManager::getInstance().getLevelManager()->getMaxY(),
+						 ObjectManager::getInstance().getLevelManager()->getMaxPlayerX(),
+						 ObjectManager::getInstance().getLevelManager()->getMaxCameraX(),
+						 ObjectManager::getInstance().getLevelManager()->getMinCameraX(),
+						 true
+						);
 		this->position += this->velocity * timeFrame;
 
 

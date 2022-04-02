@@ -8,6 +8,7 @@ protected:
 
     void playAnimOnce(std::wstring animName, float timeFrame);
     void knockBack(float power, float animSpeed, std::shared_ptr<GameObject> otherObj = nullptr);
+    void RestrictMovement(int minY,int minX, int maxY,int maxX, int maxCameraX = 0, int minCameraX = 0, bool trackedByCamera = false);
 
 
     Vector2D velocity;

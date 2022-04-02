@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "AnimMasks.h"
+#include "mydrawengine.h"
 
 Character::Character(Vector2D initPos, Vector2D velocity, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
@@ -55,4 +56,44 @@ void Character::knockBack(float power, float animSpeed, std::shared_ptr<GameObje
 	this->animTime = animSpeed;
 	this->knockedTimer = anims[currentAnimation].size() * animTime;
 
+}
+
+void Character::RestrictMovement(int minY, int minX, int maxY, int maxX, int maxCameraX, int minCameraX, bool trackedByCamera)
+{
+	if (this->position.YValue <= minY) {
+		this->position.YValue = minY;
+	}
+	else
+	if (this->position.YValue >= maxY) {
+		this->position.YValue = maxY;
+	}
+	
+	if (trackedByCamera) {
+		if (this->position.XValue <= minCameraX) {
+			if (this->position.XValue <= minX) {
+				this->position.XValue = minX;
+			}
+			MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(minCameraX, 0));
+		}
+		else
+			if (this->position.XValue >= maxCameraX) {
+				if (this->position.XValue >= maxX) {
+					this->position.XValue = maxX;
+				}
+				MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(maxCameraX, 0));
+			}
+			else {
+				MyDrawEngine::GetInstance()->theCamera.PlaceAt(Vector2D(position.XValue, 0));
+			}
+	}
+	else {
+		if (this->position.XValue <= minX) {
+			this->position.XValue = minX;
+		}
+		else if(this->position.XValue >= maxX){
+			this->position.XValue = maxX;
+		}
+	}
+
+	
 }

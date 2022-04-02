@@ -12,7 +12,7 @@ void DeadScreen::Updated(float timeFrame)
 	if (this->duration<=0.0f) {
 		this->active = false;
 	}
-	this->duration -= timeFrame;
+	this->duration = ObjectManager::getInstance().getLevelManager()->getDeathCoolDown();
 
 }
 

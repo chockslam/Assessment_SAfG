@@ -5,6 +5,8 @@
 #include "AnimMasks.h"
 
 
+#define VISUAL_BUG_FIXING_MACRO_TO_STOP_FLIPPING_IMAGE 10.0f
+
 #define IDLE_Z_SPEED 0.1f
 #define RUN_Z_SPEED 0.05f
 #define KNOCK_Z_SPEED 0.2f
@@ -53,6 +55,11 @@ void Zombie::Updated(float timeFrame)
 		//if(this->chasing)
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
 		this->velocity += friction;
+		RestrictMovement(ObjectManager::getInstance().getLevelManager()->getMinY(),
+			ObjectManager::getInstance().getLevelManager()->getMinPlayerX(),
+			ObjectManager::getInstance().getLevelManager()->getMaxY(),
+			ObjectManager::getInstance().getLevelManager()->getMaxPlayerX()
+		);
 		this->position += this->velocity * timeFrame;
 
 		if (knocked)
@@ -116,11 +123,12 @@ void Zombie::ProcessCollision(std::shared_ptr<CollidableObject> other)
 	
 }
 
-void Zombie::ProcessProximity(std::shared_ptr<GameObject> other)
+void Zombie::ProcessProximity(std::shared_ptr<GameObject> other, float dist)
 {
 	if (other->GetType() == ObjectType::SHIP) {
 		if (this->active && other->IsActive()) {
 			if (!knocked && !attacking && animLooped) {
+				//if(this->type == ZOMBIE_WEAK)
 				this->goTo(other->getPos());
 			}
 		}
@@ -133,16 +141,33 @@ void Zombie::goTo(Vector2D pos)
 	this->currentAnimation = RUN;
 	this->animTime = RUN_Z_SPEED;
 	
-	this->velocity = pos - this->position;
-	if (this->velocity.XValue >= 0) {
+	Vector2D dispos = pos - this->position;
+	Vector2D disposConstLength = (pos - this->position).unitVector() * 400;
 
-		if (this->scaleX < 0)
-			this->scaleX = -this->scaleX;
+	if (this->type == ZOMBIE_NORMAL) {
+		this->animTime /= 1.4f;
+		disposConstLength *= 1.5f;
+	}
+	if (this->type == ZOMBIE_HARD) {
+		this->animTime /= 1.7f;
+		disposConstLength *= 2.0f;
 	}
 
-	if (this->velocity.XValue < 0) {
-		if (this->scaleX > 0)
-			this->scaleX = -this->scaleX;
+	this->velocity = disposConstLength;
+
+	//stop flipping image when zombies are to close to you. HARDCODED = bad, sorry.
+	if (dispos.magnitude() >= VISUAL_BUG_FIXING_MACRO_TO_STOP_FLIPPING_IMAGE) {
+		if (this->velocity.XValue >= 0) {
+
+			if (this->scaleX < 0)
+				this->scaleX = -this->scaleX;
+		}
+		if (this->velocity.XValue < 0) {
+			if (this->scaleX > 0)
+				this->scaleX = -this->scaleX;
+		}
 	}
+	
+	
 
 }

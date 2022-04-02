@@ -11,7 +11,7 @@ void StartScreen::Updated(float timeFrame)
 	if (this->duration <= 0.0f) {
 		this->active = false;
 	}
-	this->duration -= timeFrame;
+	this->duration = ObjectManager::getInstance().getLevelManager()->getStartTimer();
 
 }
 
@@ -20,5 +20,5 @@ void StartScreen::Updated(float timeFrame)
 void StartScreen::Initialize()
 {
 	GameObject::Initialize();
-	this->duration = ObjectManager::getInstance().getLevelManager()->getStartTimer()/60;
+	this->duration = ObjectManager::getInstance().getLevelManager()->getStartTimer();
 }

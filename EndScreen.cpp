@@ -10,7 +10,7 @@ void EndScreen::Updated(float timeFrame)
 	if (this->duration <= 0.0f) {
 		this->active = false;
 	}
-	this->duration -= timeFrame;
+	this->duration = ObjectManager::getInstance().getLevelManager()->getEndTimer();
 
 }
 
@@ -19,5 +19,5 @@ void EndScreen::Updated(float timeFrame)
 void EndScreen::Initialize()
 {
 	GameObject::Initialize();
-	this->duration = ObjectManager::getInstance().getLevelManager()->getEndTimer() / 60;
+	this->duration = ObjectManager::getInstance().getLevelManager()->getEndTimer();
 }
