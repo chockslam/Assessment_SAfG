@@ -40,10 +40,10 @@ void Zombie::setLevel(int level)
 	}
 	if(this->level>10 && this->level<=20){
 		this->type = ZOMBIE_HARD;
-		this->scaleX *= 1.5f;
-		this->scaleY *= 1.5f;
+		this->scaleX *= 1.4f;
+		this->scaleY *= 1.4f;
 	}
-	this->health = 100 + this->level * 45;
+	this->health = 100 + this->level * 10;
 }
 
 void Zombie::Updated(float timeFrame)
@@ -76,16 +76,18 @@ void Zombie::Updated(float timeFrame)
 			int width = 0;
 			int height = 0;
 			MyDrawEngine::GetInstance()->GetDimensions(this->image, height, width);
-			width /= 2.3f;
+			width /= 2.7f;
 			this->boundingRect.PlaceAt(Vector2D(this->position.XValue - width / 2 * this->scaleY, this->position.YValue - height / 2 * this->scaleY), Vector2D(this->position.XValue + width / 2 * this->scaleY, this->position.YValue + height / 2 * this->scaleY));
 		}
 		// Process death
 		if (this->health <= 0) {
-			if (this->currentAnimation != DEATH)
+			if (this->currentAnimation != DEATH) {
+				currentAnimation = DEATH;
+				this->shapeExist = false;
+				this->animLooped = false;
 				ObjectManager::getInstance().getLevelManager()->EnemyDead();
-			currentAnimation = DEATH;
-			this->shapeExist = false;
-			this->animLooped = false;
+			}
+			
 		}
 
 		

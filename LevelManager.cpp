@@ -34,8 +34,8 @@
 #define LEVEL_TWO_FOREGROUND L"Yellow Fog"
 #define LEVEL_TWO_MAX_REACH 3000.0f
 
-#define LEVEL_TWO_WEAK_ZOMBIE_NUMBER 15;
-#define LEVEL_TWO_WEAK_CRAWLER_NUMBER 9;
+#define LEVEL_TWO_WEAK_ZOMBIE_NUMBER 7;
+#define LEVEL_TWO_WEAK_CRAWLER_NUMBER 7;
 #define LEVEL_TWO_NORMAL_ZOMBIE_NUMBER 7;
 #define LEVEL_TWO_NORMAL_CRAWLER_NUMBER 5;
 #define LEVEL_TWO_HARD_ZOMBIE_NUMBER 3;
@@ -229,27 +229,27 @@ void LevelManager::RespawnEnemies()
 		numHardC = LEVEL_TWO_HARD_CRAWLER_NUMBER;
 	}
 	for (int i = 1; i <= numWeakZ; i++) {
-		ObjectManager::getInstance().Add(L"Weak Zombie", Vector2D(rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+		ObjectManager::getInstance().Add(L"Weak Zombie", Vector2D(500 + rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
 		numEnemies += 1;
 	}
 	for (int i = 1; i <= numWeakC; i++) {
-		ObjectManager::getInstance().Add(L"Weak Crawler", Vector2D(rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand()%2+1);
+		ObjectManager::getInstance().Add(L"Weak Crawler", Vector2D(500 + rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand()%2+1);
 		numEnemies += 1;
 	}
-	for (int i = 1; i <= numWeakZ; i++) {
-		ObjectManager::getInstance().Add(L"Normal Zombie", Vector2D(rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+	for (int i = 1; i <= numNormalZ; i++) {
+		ObjectManager::getInstance().Add(L"Normal Zombie", Vector2D(500 + rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
 		numEnemies += 1;
 	}
 	for (int i = 1; i <= numNormalC; i++) {
-		ObjectManager::getInstance().Add(L"Normal Crawler", Vector2D(rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+		ObjectManager::getInstance().Add(L"Normal Crawler", Vector2D(500 + rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
 		numEnemies += 1;
 	}
 	for (int i = 1; i <= numHardZ; i++) {
-		ObjectManager::getInstance().Add(L"Hard Zombie", Vector2D(rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+		ObjectManager::getInstance().Add(L"Hard Zombie", Vector2D(500 + rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
 		numEnemies += 1;
 	}
 	for (int i = 1; i <= numHardC; i++) {
-		ObjectManager::getInstance().Add(L"Hard Crawler", Vector2D(rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+		ObjectManager::getInstance().Add(L"Hard Crawler", Vector2D(500 + rand() % this->maxX, rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
 		numEnemies += 1;
 	}
 }

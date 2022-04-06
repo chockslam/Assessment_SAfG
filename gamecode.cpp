@@ -346,7 +346,6 @@ ErrorType Game::EndOfGame()
    // *********************************************************************
 	MySoundEngine* pSE = MySoundEngine::GetInstance();
 	pSE->StopAllSounds();
-
 	ObjectManager::getInstance().DeleteAll();
 
 	return SUCCESS;

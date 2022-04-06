@@ -170,14 +170,13 @@ void Hero::Updated(float timeFrame)
 		}
 
 		if (health <= 0) {
-			currentAnimation = DEATH;
-			this->shapeExist = false;
-			this->animLooped = false;
-			this->animTime = DEATH_SPEED;
-			if (!this->dead) {
+			if (this->currentAnimation != DEATH) {
 				ObjectManager::getInstance().getLevelManager()->PlayerDead();
 				ObjectManager::getInstance().Add(L"Dead Screen", { 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 10.0f, 10.0f);
-				this->dead = true;
+				currentAnimation = DEATH;
+				this->shapeExist = false;
+				this->animLooped = false;
+				this->animTime = DEATH_SPEED;
 			}
 		}
 		
