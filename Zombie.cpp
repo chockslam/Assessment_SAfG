@@ -1,11 +1,20 @@
 #include "Zombie.h"
+#include "mysoundengine.h"
 #include "mydrawengine.h"
 #include <random>
 #include "ObjectManager.h"
 #include "AnimMasks.h"
 
-
+#define DEATH_VOLUME -100
+#define ROAR_VOLUME -1000
 #define VISUAL_BUG_FIXING_MACRO_TO_STOP_FLIPPING_IMAGE 10.0f
+
+#define WEAK_ZOMBIE_DEATH_SOUND  L"assets\\enemies\\sounds\\Death3.wav"
+#define NORMAL_ZOMBIE_DEATH_SOUND  L"assets\\enemies\\sounds\\Death2.wav"
+#define HARD_ZOMBIE_DEATH_SOUND  L"assets\\enemies\\sounds\\Death.wav"
+#define WEAK_ZOMBIE_ROAR_SOUND  L"assets\\enemies\\sounds\\Roar1.wav"
+#define NORMAL_ZOMBIE_ROAR_SOUND  L"assets\\enemies\\sounds\\Roar2.wav"
+#define HARD_ZOMBIE_ROAR_SOUND  L"assets\\enemies\\sounds\\Roar3.wav"
 
 #define IDLE_Z_SPEED 0.1f
 #define RUN_Z_SPEED 0.05f
@@ -30,19 +39,28 @@ Zombie::Zombie(Vector2D initPos, Vector2D vel, float rotation, float scX, float 
 void Zombie::setLevel(int level)
 {
 	this->level = level;
-	if(this->level>0 && this->level<=5){
+	if(this->level>=0 && this->level<=5){
 		this->type = ZOMBIE_WEAK;
+		this->deathSound = MySoundEngine::GetInstance()->LoadWav(WEAK_ZOMBIE_DEATH_SOUND);
+		this->hurtSound = MySoundEngine::GetInstance()->LoadWav(WEAK_ZOMBIE_ROAR_SOUND);
 	}
 	if(this->level>5 && this->level<=10){
 		this->type = ZOMBIE_NORMAL;
 		this->scaleX *= 1.25f;
 		this->scaleY *= 1.25f;
+		this->deathSound = MySoundEngine::GetInstance()->LoadWav(NORMAL_ZOMBIE_DEATH_SOUND);
+		this->hurtSound = MySoundEngine::GetInstance()->LoadWav(NORMAL_ZOMBIE_ROAR_SOUND);
 	}
 	if(this->level>10 && this->level<=20){
 		this->type = ZOMBIE_HARD;
 		this->scaleX *= 1.4f;
 		this->scaleY *= 1.4f;
+		this->deathSound = MySoundEngine::GetInstance()->LoadWav(HARD_ZOMBIE_DEATH_SOUND);
+		this->hurtSound = MySoundEngine::GetInstance()->LoadWav(HARD_ZOMBIE_ROAR_SOUND);
 	}
+	MySoundEngine::GetInstance()->SetVolume(this->deathSound,	DEATH_VOLUME);
+	MySoundEngine::GetInstance()->SetVolume(this->hurtSound,	ROAR_VOLUME);
+
 	this->health = 100 + this->level * 10;
 }
 
@@ -82,6 +100,7 @@ void Zombie::Updated(float timeFrame)
 		// Process death
 		if (this->health <= 0) {
 			if (this->currentAnimation != DEATH) {
+				MySoundEngine::GetInstance()->Play(this->deathSound);
 				currentAnimation = DEATH;
 				this->shapeExist = false;
 				this->animLooped = false;
@@ -103,18 +122,28 @@ IShape2D& Zombie::GetShape()
 
 void Zombie::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
-	if (other->GetType() == ObjectType::BULLET) {
+	if (other->GetType() == ObjectType::FIRE) {
 		if (this->active) {
-
+			MySoundEngine::GetInstance()->Play(this->hurtSound);
 			this->currentAnimation = FALL;
 			this->knockBack(KNOCK_Z_POWER / 2, KNOCK_Z_SPEED, other);
-			this->health -=40;
+			this->health -= 40;
+			
+		}
+	}
+	if (other->GetType() == ObjectType::FIRE_STRONG) {
+		if (this->active) {
+			MySoundEngine::GetInstance()->Play(this->hurtSound);
+			this->currentAnimation = FALL;
+			this->knockBack(KNOCK_Z_POWER / 2, KNOCK_Z_SPEED, other);
+			this->health -= 120;
 			
 		}
 	}
 
 	if (other->GetType() == ObjectType::SHIP) {
 		if (this->active) {
+			
 			this->currentAnimation = ATTACK;
 			this->attacking = true;
 			this->animTime = ATTACK_Z_SPEED;

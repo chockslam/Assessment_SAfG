@@ -57,6 +57,8 @@ private:
 
     void RespawnEnemies();
     void RespawnPlayer();
+
+    void RespawnPowerUps();
     
     //static std::shared_ptr<LevelManager> d;
     
@@ -78,9 +80,13 @@ private:
 
     float maxReach;
 
+    float levelTimer;
+    
     int heroHealth;
     int maxHeroHealth;
     int numEnemies;
     int playerLives; 
+
+    int mainSong;
 };
 

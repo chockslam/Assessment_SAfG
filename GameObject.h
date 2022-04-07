@@ -45,6 +45,8 @@ protected:
 	float scaleX;
 	float scaleY;
 
+	float alpha;
+
 	Vector2D position;
 	float posOffsetPower;
 	
@@ -54,7 +56,6 @@ protected:
 
 	std::wstring path;
 	int image;
-
 	bool active;
 };
 

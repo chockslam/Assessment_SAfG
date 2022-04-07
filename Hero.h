@@ -17,6 +17,8 @@ public:
     Hero();
     ~Hero();
 
+    void Initialize();
+
     Vector2D getVel() const { return this->velocity; };
 
     void Updated(float timeFrame);
@@ -29,7 +31,8 @@ private:
     Circle2D boundingCircle;
     
     const float AccPower = 200.0f;
-    bool dead;
+
+    float poweredUpTimer;
 
     float shootCoolDown;
 

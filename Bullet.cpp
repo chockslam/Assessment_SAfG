@@ -1,9 +1,11 @@
 #include "Bullet.h"
 #include "mydrawengine.h"
+#include "mysoundengine.h"
 #include "ObjectManager.h"
 
 
 #define BULLET_COOLDOWN 0.05f
+
 
 Bullet::Bullet(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY , bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
 	:
@@ -11,7 +13,8 @@ Bullet::Bullet(Vector2D initPos, Vector2D vel, float rotation, float scX, float 
 {
 	animated = true;
 	animTime = BULLET_COOLDOWN;
-	type = ObjectType::BULLET;
+	type = ObjectType::FIRE;
+
 }
 
 void Bullet::Updated(float timeFrame)
@@ -37,7 +40,6 @@ void Bullet::Updated(float timeFrame)
 }
 
 
-
 void Bullet::ProcessCollision(std::shared_ptr<CollidableObject> other)
 {
 	if (other->GetType() == ObjectType::ZOMBIE_WEAK	 ||
@@ -54,4 +56,9 @@ IShape2D& Bullet::GetShape()
 {
 	// TODO: insert return statement here
 	return this->boundingRect;
+}
+
+void Bullet::MakeStrong()
+{
+	this->type = ObjectType::FIRE_STRONG;
 }

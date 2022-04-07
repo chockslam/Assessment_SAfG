@@ -11,6 +11,7 @@ public:
     void Updated(float timeFrame);
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
     IShape2D& GetShape();
+    void MakeStrong();
 private:
     Vector2D velocity;
     float timer = 2.0f; 

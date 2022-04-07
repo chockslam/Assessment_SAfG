@@ -19,6 +19,9 @@ protected:
     bool knocked;
     float knockedTimer;
 
+    int deathSound;
+    int hurtSound;
+
     float health;
     const float AccPower = 200.0f;
     float frictionPower;

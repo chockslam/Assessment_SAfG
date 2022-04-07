@@ -13,6 +13,6 @@ void HealthBar::Updated(float timeFrame)
 {
 	this->maxHealth = ObjectManager::getInstance().getLevelManager()->getMaxHeroHealth();
 	this->currHealth = ObjectManager::getInstance().getLevelManager()->getHeroHealth();
-	this->scaleX = this->initScaleX * this->currHealth / this->maxHealth;
+	this->scaleX = (this->currHealth>0.0f) ? this->initScaleX * this->currHealth / this->maxHealth : 0.0f;
 
 }

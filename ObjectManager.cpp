@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "LevelManager.h"
 #include "HealthBar.h"
+#include "PowerUp.h"
 #include "DeadScreen.h"
 #include "StartScreen.h"
 #include "EndScreen.h"
@@ -457,6 +458,61 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		go = cgo;
 
 	}
+	if (name == L"Strong Bullet") 
+	{
+		anims[IDLE] = std::list<std::wstring>{
+				L"assets\\fire\\fire_1.png",
+				L"assets\\fire\\fire_2.png",
+				L"assets\\fire\\fire_3.png",
+				L"assets\\fire\\fire_4.png",
+				L"assets\\fire\\fire_5.png",
+				L"assets\\fire\\fire_6.png",
+				L"assets\\fire\\fire_7.png",
+				L"assets\\fire\\fire_8.png",
+				L"assets\\fire\\fire_9.png",
+				L"assets\\fire\\fire_10.png",
+				L"assets\\fire\\fire_8.png",
+				L"assets\\fire\\fire_9.png",
+				L"assets\\fire\\fire_10.png",
+				L"assets\\fire\\fire_8.png",
+				L"assets\\fire\\fire_9.png",
+				L"assets\\fire\\fire_10.png",
+				L"assets\\fire\\fire_8.png",
+				L"assets\\fire\\fire_9.png",
+				L"assets\\fire\\fire_10.png",
+				L"assets\\fire\\fire_11.png",
+				L"assets\\fire\\fire_12.png",
+				L"assets\\fire\\fire_13.png",
+				L"assets\\fire\\fire_14.png",
+				L"assets\\fire\\fire_15.png"
+		};
+		auto bullet = std::make_shared<Bullet>(pos, vel, rot, sizeX * 1.5f, sizeY * 1.5f, false, anims);
+		bullet->MakeStrong();
+		cgo = std::move(bullet);
+		
+		pObjectCollidable.push_back(cgo);
+
+		go = cgo;
+
+	}
+
+
+	if (name == L"Power Up")
+	{
+		anims[IDLE] = std::list<std::wstring>{
+				L"assets\\powerup\\p" + std::to_wstring(appearance) + L"\\pu1.png",
+				L"assets\\powerup\\p" + std::to_wstring(appearance) + L"\\pu2.png",
+				L"assets\\powerup\\p" + std::to_wstring(appearance) + L"\\pu3.png",
+				L"assets\\powerup\\p" + std::to_wstring(appearance) + L"\\pu4.png"
+		};
+		cgo = std::make_shared<PowerUp>(pos, vel, rot, sizeX, sizeY, false, anims);
+
+		pObjectCollidable.push_back(cgo);
+
+		go = cgo;
+
+
+	}
 	
 	if (name == L"Explosion") {
 		anims[IDLE] = std::list<std::wstring>{
@@ -562,7 +618,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 	}
 	if (name == L"End Screen") {
 		anims[IDLE] = std::list<std::wstring>{
-				L"assets\\ui\\level_complete.png",
+				L"assets\\ui\\level_complete-mini.png",
 		};
 		auto sp = std::make_shared<EndScreen>(pos, rot, sizeX, sizeY, false, anims);
 		go = sp;

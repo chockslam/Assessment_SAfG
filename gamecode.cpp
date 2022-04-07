@@ -285,7 +285,7 @@ ErrorType Game::StartOfGame()
 	
 	// Create Ship
 	
-	ObjectManager::getInstance().Add(L"Level Manager", Vector2D(), Vector2D(), 0.0f, 0.0f, 0);
+	ObjectManager::getInstance().Add(L"Level Manager");
 	
 
 

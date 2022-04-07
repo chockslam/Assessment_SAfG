@@ -17,7 +17,8 @@ GameObject::GameObject(Vector2D initPos, float rotation, float scX, float scY, b
 	animated(false),
 	animPaths(paths),
 	animLooped(false),
-	animTime(0.0f)
+	animTime(0.0f),
+	alpha(0.0f)
 {
 
 	currentAnimation = IDLE;
@@ -63,7 +64,7 @@ void GameObject::Render()
 {
 	if (this->active) {
 		MyDrawEngine* pDE = MyDrawEngine::GetInstance();
-		pDE->DrawAt(this->position, this->image, this->scaleX, this->scaleY, this->rotation);
+		pDE->DrawAt(this->position, this->image, this->scaleX, this->scaleY, this->rotation, this->alpha);
 	}
 }
 
