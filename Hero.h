@@ -34,6 +34,7 @@ private:
 
     float poweredUpTimer;
 
+
     float shootCoolDown;
 
     const Vector2D right = Vector2D(100.0f, 0.0f);     
@@ -41,6 +42,9 @@ private:
     const Vector2D up = Vector2D(0.0f, 100.0f);
     const Vector2D down = Vector2D(0.0f, -9.81f);
 
+
+    // facilitates varied speed of movements.
+    float posOffsetPower;
 };
 
 

@@ -1,3 +1,11 @@
+/*
+    * Dead Screen .h file
+    * 19012503
+    * Aim of the class: Represents any screen displayed after the player dies.
+    * DRAWBACK: Dead screen/End Screen/Start screen might be merged to reduce amount of code.
+*/
+
+
 #pragma once
 #include "UIElement.h"
 class DeadScreen :
@@ -9,6 +17,7 @@ public:
     void Initialize();
     void Render();
 private:
+    // how long would dead screen be displayed.
     float duration;
 };
 

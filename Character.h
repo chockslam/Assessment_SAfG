@@ -1,5 +1,16 @@
+/*
+    * Character .h file
+    * 19012503
+    * Aim of the class: Represents any character - whether it is a player or zombie.
+    * Notes :   NEEDS TO BE EXTENDED BY ACTUAL REPRESENTATION OF CHARACTERS, i.e. zombie or hero.
+    *           ALL EXPLANATION REGARDING FUNCTIONS' PURPOSE IS LOCATED IN .CPP FILE.
+*/
+
 #pragma once
 #include "CollidableObject.h"
+
+
+
 class Character :
     public CollidableObject
 {
@@ -13,17 +24,18 @@ protected:
 
     Vector2D velocity;
 
-    bool attacking;
-    float attackTimer;
 
-    bool knocked;
-    float knockedTimer;
+    bool attacking;                         // whether the character is currently attacking.
+    float attackTimer;                      // how much time does attack animation needs to be played once.
 
-    int deathSound;
-    int hurtSound;
+    bool knocked;                           // whether the character is currently stunned/knocked.
+    float knockedTimer;                     // how much time does attack animation needs to be played once.
 
-    float health;
-    const float AccPower = 200.0f;
-    float frictionPower;
+    int deathSound;                         // play this sound if dead.
+    int hurtSound;                          // play this sound if damaged.
+
+    float health;                           // health of the character
+    const float AccPower = 200.0f;          // movement related parameter
+    float frictionPower;                    // movement related parameter
 };
 

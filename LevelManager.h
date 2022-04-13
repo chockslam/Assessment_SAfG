@@ -1,3 +1,12 @@
+/*
+    * Level Manager .h file
+    * 19012503
+    * Aim of the class: Manages the state of level and keeps track of levels too
+    * as well as provides mechanism of communication between various objects.
+    * Notes : Should be rendered and updated the last.
+    * ALL EXPLANATION REGARDING FUNCTIONS' PURPOSE IS LOCATED IN .CPP FILE. 
+*/
+
 #pragma once
 #include "GameObject.h"
 
@@ -12,18 +21,12 @@ class LevelManager :
 public:
 
     LevelManager();
-    //static std::shared_ptr<LevelManager> getInstance() {
-    //    if (!d)
-    //        d.reset(new LevelManager);
-    //    return d;
-    //}
-
+    
     void StartLevel(int level = 1);
     void Initialize();
     void Updated(float timeFrame);
     void Render();
     
-    void AddScore();
     void EnemyDead();
     void PlayerDead();
 
@@ -32,20 +35,22 @@ public:
     void SetHP(int hp);
     void SetMaxHP(int hp);
 
-    float getHeroHealth() const { return heroHealth; };
-    float getMaxHeroHealth() const { return maxHeroHealth; };
-    int getMinY() const { return minY; };
-    int getMaxY() const { return maxY; };
 
-    int getMinCameraX() const { return minX; };
-    int getMaxCameraX() const { return maxX; };
-    
-    int getMinPlayerX() const { return minX - PLAYER_OFFSET_X; };
-    int getMaxPlayerX() const { return maxX + PLAYER_OFFSET_X; };
-
-    float getDeathCoolDown() const { return playerDeathCoolDownTimer; };
-    float getStartTimer() const { return startGameTimer; };
-    float getEndTimer() const { return endGameTimer; };
+    // GETTERS
+    float getHeroHealth() const { return heroHealth; };                                 // Used to communicate current Hero's health to Health Bar.
+    float getMaxHeroHealth() const { return maxHeroHealth; };                           // Used to communicate max Hero's health to Health Bar.
+    int getMinY() const { return minY; };                                               // Area restriction related function
+    int getMaxY() const { return maxY; };                                               // Area restriction related function
+                                                                                        
+    int getMinCameraX() const { return minX; };                                         // Area restriction related function (Camera movement)
+    int getMaxCameraX() const { return maxX; };                                         // Area restriction related function (Camera movement)
+                                                                                        
+    int getMinPlayerX() const { return minX - PLAYER_OFFSET_X; };                       // Area restriction related function
+    int getMaxPlayerX() const { return maxX + PLAYER_OFFSET_X; };                       // Area restriction related function
+                                                                                        
+    float getDeathCoolDown() const { return playerDeathCoolDownTimer; };                // Death screen timer
+    float getStartTimer() const { return startGameTimer; };                             // Start screen timer
+    float getEndTimer() const { return endGameTimer; };                                 // Level Complete screen timer
 
 
 
@@ -60,33 +65,42 @@ private:
 
     void RespawnPowerUps();
     
-    //static std::shared_ptr<LevelManager> d;
-    
+    // level building utility
     int YPos;
+    
+    // Level restriction regarding Y axis
     int maxY;
     int minY;
+    
+    // level building utility
     int XPos;
+    
+    // Level restriction regarding X axis
     int maxX;
     int minX;
 
+    // current level
     int level;
-    int currentLevel;
     
-    int score;
+    // Timers
     int playerDeathCoolDownTimer;
     int startGameTimer;
     int endGameTimer;
-    bool isAction;
-
+    
+    // Zombies field of vision (how far away they notice you from, which also depends on the difficulty of zombie)
     float maxReach;
 
+    // Time restriction for level. If time runs out - start game over again.
     float levelTimer;
     
+    // Hero health - helps to communicate health between hero and health bar.
     int heroHealth;
     int maxHeroHealth;
-    int numEnemies;
-    int playerLives; 
+    
+    
+    int numEnemies;             // Number of enemies.
+    int playerLives;            // Must be 1 according to the logic of levels.
 
-    int mainSong;
+    int mainSong;               // Main song variable.
 };
 

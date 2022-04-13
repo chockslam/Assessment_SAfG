@@ -1,3 +1,11 @@
+/*
+    * Collidable Object .h file
+    * 19012503
+    * Aim of the class: Represents any 'Collidable' gameObject.
+    * Notes :   ABSTRACT CLASS. Its extension must implement GetShape() and ProcessCollision(...) functions
+	*			GetShape must return a collision shape.
+*/
+
 #pragma once
 #include "GameObject.h"
 
@@ -10,7 +18,6 @@ public:
 	bool DoesShapeExist() const { return shapeExist; }
 	virtual IShape2D& GetShape() = 0;
 protected:
-//	std::shared_ptr<LevelManager> lm = nullptr;
-	bool shapeExist;
+	bool shapeExist; // denotes whether the collision shape needs to be updated and placed.
 };
 

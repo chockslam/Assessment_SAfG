@@ -1,3 +1,13 @@
+/*
+	* Level Manager .cpp file
+	* 19012503
+	* Aim: Manages the state of level and keeps track of levels too 
+	* as well as provides mechanism of communication between various objects (functions implementation).
+	* Notes : Should be rendered and updated the last.
+*/
+
+
+
 #include "LevelManager.h"
 #include "mydrawengine.h"
 #include "mysoundengine.h"
@@ -119,7 +129,8 @@ void LevelManager::StartLevel(int level)
 	}
 	// do level-starting actions, only if the level does not exceeds maximum allowed level.
 	if (this->level <= NUMBER_OF_LEVELS) {
-
+		
+		this->numEnemies = 0;							// reset enemies counter
 
 		this->startGameTimer = START_TIMER;				// Start screen showing time
 		this->endGameTimer = 0.0f;						// Mission Complete screen showing time - reset.
@@ -359,11 +370,18 @@ void LevelManager::RespawnEnemies()
 /// </summary>
 void LevelManager::RespawnPlayer()
 {
-	ObjectManager::getInstance().Add(L"Player", { -3000.0f, 0.0f }, { 0.0f, 0.0f }, 4.5f, 4.5f, 0.0f, 1);
+	ObjectManager::getInstance().Add(	L"Player",
+										{ -3000.0f, 0.0f },
+										{ 0.0f, 0.0f },
+										4.5f,
+										4.5f,
+										0.0f,
+										1
+									);
 }
 
 /// <summary>
-/// Respawn power ups/
+/// Respawn power ups.
 /// </summary>
 void LevelManager::RespawnPowerUps()
 {
@@ -378,19 +396,17 @@ void LevelManager::RespawnPowerUps()
 	}
 
 	for (int i = 1; i <= numPowerUps; i++) {
-		ObjectManager::getInstance().Add(	L"Power Up", Vector2D(300 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY),
+		ObjectManager::getInstance().Add(	L"Power Up", 
+											Vector2D(300 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY),
 											{},
 											0.0f,
 											3.5f,
 											3.5f,
-											this->level);  // different appearance of power ups for each level. it is implied that level does not exceed 7.
+											this->level
+										);  // different appearance of power ups for each level. it is implied that level does not exceed 7.
 	}
 }
 
-void LevelManager::AddScore()
-{
-	this->score++;
-}
 
 void LevelManager::EnemyDead()
 {
@@ -402,21 +418,37 @@ void LevelManager::PlayerDead()
 	playerLives--;
 }
 
+/// <summary>
+/// was used to set level boundaries.
+/// </summary>
+/// <param name="Ypos"></param>
 void LevelManager::SetYPos(int Ypos)
 {
 	this->YPos = Ypos;
 }
 
+
+/// <summary>
+/// was used to set level boundaries.
+/// </summary>
+/// <param name="Ypos"></param>
 void LevelManager::SetXPos(int Xpos)
 {
 	this->XPos = Xpos;
 }
 
+
+/// <summary>
+/// Used to communicate current health between Hero and LevelManager.
+/// </summary>
 void LevelManager::SetHP(int hp)
 {
 	this->heroHealth = hp;
 }
 
+/// <summary>
+/// Used to communicate max health between Hero and LevelManager.
+/// </summary>
 void LevelManager::SetMaxHP(int hp)
 {
 	this->maxHeroHealth = hp;

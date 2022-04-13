@@ -56,6 +56,7 @@ Hero::Hero(Vector2D initPos, Vector2D vel, float scX, float scY, float rotation,
 	this->frictionPower = 5.5f;
 	this->shootCoolDown = SHOOT_COOLDOWN;
 	this->poweredUpTimer = 0.0f;
+	this->posOffsetPower = 30.0f;
 }
 
 Hero::Hero(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated)
@@ -133,10 +134,9 @@ void Hero::Updated(float timeFrame)
 		float rotOff = 0.06f;
 
 	
-		ObjectManager::getInstance().getLevelManager()->SetYPos(this->position.YValue);
+		//ObjectManager::getInstance().getLevelManager()->SetYPos(this->position.YValue);
 		ObjectManager::getInstance().getLevelManager()->SetMaxHP(this->maxHealth);
 		ObjectManager::getInstance().getLevelManager()->SetHP(this->health);
-		ObjectManager::getInstance().getLevelManager()->SetYPos(this->maxHealth);
 
 		if (this->posOffsetPower > 30.0f) {
 			if (this->currentAnimation == RUN) {
