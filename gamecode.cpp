@@ -11,6 +11,8 @@
 #include <math.h>
 #include "shapes.h"
 
+#include "ObjectManager.h"
+
 
 Game::Game()
 {
@@ -19,6 +21,7 @@ Game::Game()
 
 Game::~Game()
 {
+	//_CrtDumpMemoryLeaks();
    // No-op
 }
 
@@ -279,11 +282,13 @@ ErrorType Game::StartOfGame()
 {
    // Code to set up your game *********************************************
    // **********************************************************************
-
-	ship = new Spaceship(Vector2D(1000,2), Vector2D(0, 1),2.0f, false, L"assets\\basic.bmp");
-	ship->Activate();
-	ship->Initialize();
 	
+	// Create Ship
+	
+	ObjectManager::getInstance().Add(L"Level Manager");
+	
+
+
 	gt.mark();
 	gt.mark();
 
@@ -310,12 +315,18 @@ ErrorType Game::Update()
 		escapepressed=false;
 
 
+
+
    // Your code goes here *************************************************
    // *********************************************************************
 
-	ship->Updated();
 
-   
+	// Manage Objects - delete inactive ones, update and render all
+
+	ObjectManager::getInstance().DeleteInactive();
+	ObjectManager::getInstance().UpdateAll(gt.mdFrameTime);
+	ObjectManager::getInstance().RenderAll();
+
 	gt.mark();
 
 
@@ -333,12 +344,18 @@ ErrorType Game::Update()
 ErrorType Game::EndOfGame()
 // called when the game ends by returning to main menu
 {
-   // Add code here to tidy up ********************************************
-   // *********************************************************************
+	// Add code here to tidy up ********************************************
+	// *********************************************************************
+		
+	// Stop sounds , delete objects when game ends
+	
 	MySoundEngine* pSE = MySoundEngine::GetInstance();
 	pSE->StopAllSounds();
-	
 
+	ObjectManager::getInstance().DeleteAll();
+	
 	return SUCCESS;
+
 }
+
 

@@ -205,6 +205,11 @@ Vector2D Vector2D::rotatedBy(float angle) const
 	
 }
 
+float Vector2D::dotProduct(Vector2D v1, Vector2D v2)
+{
+	return v1.XValue*v2.XValue + v1.YValue*v2.YValue;
+}
+
 Vector2D operator*(float multiplier, Vector2D v) 
 {
 	return v*multiplier;

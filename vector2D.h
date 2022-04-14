@@ -113,6 +113,9 @@ public:
 	// Returns a vector of identical magnitude, but rotated by the specified angle (in radians)
 	Vector2D rotatedBy(float angle) const;
 
+	// Dot product
+	static float dotProduct(Vector2D v1, Vector2D v2);
+
 };
 
 Vector2D operator*(float multiplier, Vector2D v);

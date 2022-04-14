@@ -197,10 +197,12 @@ int WINAPI WinMain(HINSTANCE hInstance,			// A number that registers the instanc
 			}
 
 		}		// End infinite loop
+		
 
 		Game::instance.Shutdown();									// Clear up the game
 
 	}	// End if window created
+	
 
 	return((int)msg.wParam);								      // Return to windows
 

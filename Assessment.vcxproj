@@ -19,32 +19,62 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CollidableObject.cpp" />
+    <ClCompile Include="DeadScreen.cpp" />
+    <ClCompile Include="EndScreen.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="gamecode.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="gametimer.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="mydrawengine.cpp" />
     <ClCompile Include="myinputs.cpp" />
     <ClCompile Include="mysoundengine.cpp" />
+    <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="PlayableCharacter.cpp" />
+    <ClCompile Include="StartScreen.cpp" />
+    <ClCompile Include="UIElement.cpp" />
+    <ClCompile Include="Zombie.cpp" />
     <ClCompile Include="Shapes.cpp" />
-    <ClCompile Include="Spaceship.cpp" />
+    <ClCompile Include="Hero.cpp" />
     <ClCompile Include="vector2D.cpp" />
     <ClCompile Include="wincode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimMasks.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="CollidableObject.h" />
+    <ClInclude Include="DeadScreen.h" />
+    <ClInclude Include="EndScreen.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="errortype.h" />
+    <ClInclude Include="HealthBar.h" />
+    <ClInclude Include="PowerUp.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="gamecode.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="gametimer.h" />
+    <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="PlayableCharacter.h" />
+    <ClInclude Include="StartScreen.h" />
+    <ClInclude Include="TypeGO.h" />
     <ClInclude Include="mydrawengine.h" />
     <ClInclude Include="myinputs.h" />
     <ClInclude Include="mysoundengine.h" />
+    <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="objecttypes.h" />
+    <ClInclude Include="UIElement.h" />
+    <ClInclude Include="Zombie.h" />
     <ClInclude Include="Shapes.h" />
-    <ClInclude Include="Spaceship.h" />
+    <ClInclude Include="Hero.h" />
     <ClInclude Include="vector2D.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
