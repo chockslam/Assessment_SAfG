@@ -314,12 +314,14 @@ ErrorType Game::Update()
 	else
 		escapepressed=false;
 
-	//om->DeleteInactive();
 
 
 
    // Your code goes here *************************************************
    // *********************************************************************
+
+
+	// Manage Objects - delete inactive ones, update and render all
 
 	ObjectManager::getInstance().DeleteInactive();
 	ObjectManager::getInstance().UpdateAll(gt.mdFrameTime);
@@ -342,12 +344,16 @@ ErrorType Game::Update()
 ErrorType Game::EndOfGame()
 // called when the game ends by returning to main menu
 {
-   // Add code here to tidy up ********************************************
-   // *********************************************************************
+	// Add code here to tidy up ********************************************
+	// *********************************************************************
+		
+	// Stop sounds , delete objects when game ends
+	
 	MySoundEngine* pSE = MySoundEngine::GetInstance();
 	pSE->StopAllSounds();
-	ObjectManager::getInstance().DeleteAll();
 
+	ObjectManager::getInstance().DeleteAll();
+	
 	return SUCCESS;
 
 }

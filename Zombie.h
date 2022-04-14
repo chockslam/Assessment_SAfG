@@ -1,3 +1,9 @@
+/*
+    * Zombie .h file
+    * 19012503
+    * Aim of the class:		Represents an Enemy - Zombie. Zombie can be WEAK, NORMAL,HARD.
+*/
+
 #pragma once
 #include "Character.h"
 class Zombie :
@@ -9,11 +15,12 @@ public:
     void Updated(float timeFrame);
     IShape2D& GetShape();
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
-    Vector2D getVel() const { return this->velocity; };
     virtual void ProcessProximity(std::shared_ptr<GameObject> other, float dist, float maxDist);
 private:
     void goTo(Vector2D pos);
 
+
+    // level of the zombie
     int level;
 
     Rectangle2D boundingRect;

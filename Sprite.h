@@ -1,3 +1,9 @@
+/*
+    * Sprite .h file
+    * 19012503
+    * Aim of the class:		Represents any non-collidable sprite in the game world, i.e. background, foreground, etc.
+*/
+
 #pragma once
 #include "GameObject.h"
 #include <list>

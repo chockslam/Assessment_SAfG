@@ -1,3 +1,11 @@
+/*
+	* Object Manager .h file
+	* 19012503
+	* Aim of the class:		Game Engine related class, which manages objects in various ways: collisions, update, rendering, deletion of objects is done here.
+	*						The class also has an extension functionality related to Object Factory.
+	*						(functions implementation)
+*/
+
 #include "ObjectManager.h"
 #include "mydrawengine.h"
 #include "Zombie.h"
@@ -17,18 +25,35 @@
 
 #include <typeinfo>
 
-
+/// <summary>
+/// Object factory related function.
+/// Decouples creation of objects from other part of the game engine/ game logic.
+/// </summary>
+/// <param name="name"> name of the object to be created</param>
+/// <param name="pos">position</param>
+/// <param name="vel">initial velocity</param>
+/// <param name="rot">rotation</param>
+/// <param name="sizeX">Scale accros x axis</param>
+/// <param name="sizeY">Scale accros y axis</param>
+/// <param name="appearance"> image/appearence of the object - not applied to all </param>
 void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot, float sizeX, float sizeY, int appearance)
 {
+
+	// will be added to the list of all objects
 	std::shared_ptr<GameObject> go = nullptr;
+	// will be added to the list of collidable objects
 	std::shared_ptr<CollidableObject> cgo = nullptr;
 
+	// map on animations...
 	std::unordered_map<std::wstring, std::list<std::wstring>> anims;
 
+	//-------------------------------VARIOUS OBJECTS---------------------------------------------------//
+	//-------------------------------VARIOUS OBJECTS---------------------------------------------------//
+	//-------------------------------VARIOUS OBJECTS---------------------------------------------------//
 	if (name == L"Weak Zombie") 
 	{
 
-
+		// IDLE ANIMATION
 		anims[IDLE] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_2.png",
@@ -36,6 +61,8 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_4.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\idle\\idle_5.png",
 		};
+
+		// RUN ANIMATION
 		anims[RUN] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_2.png",
@@ -45,6 +72,8 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_6.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\run\\run_7.png"
 		};
+
+		// FALL ANIMATION
 		anims[FALL] = std::list<std::wstring>{ 
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_1.png",
@@ -53,6 +82,8 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\hit\\hit_2.png"
 		};
+
+		// ATTACK ANIMATION
 		anims[ATTACK] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_2.png",
@@ -62,6 +93,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\attack\\attack_6.png"
 		};
 
+		// DEATH ANIMATION
 		anims[DEATH] = std::list<std::wstring>{
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_1.png",
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_2.png",
@@ -81,9 +113,12 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 			L"assets\\enemies\\z" + std::to_wstring(appearance) + L"\\death_1\\death_7.png"
 		};
 		auto z = std::make_shared<Zombie>(pos, vel, rot, sizeX, sizeY, false, anims);
+		// weak zombie's level ranges from 0-5.
 		z->setLevel(rand() % 6);
 		cgo = z;
+		// push the pointer to the list of collidable objects
 		pObjectCollidable.push_back(cgo);
+		// interpret it as a GameObject to push it to the list later.
 		go = cgo;
 	}
 	if (name == L"Normal Zombie") 
@@ -489,9 +524,7 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		auto bullet = std::make_shared<Bullet>(pos, vel, rot, sizeX * 1.5f, sizeY * 1.5f, false, anims);
 		bullet->MakeStrong();
 		cgo = std::move(bullet);
-		
 		pObjectCollidable.push_back(cgo);
-
 		go = cgo;
 
 	}
@@ -512,35 +545,6 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		go = cgo;
 
 
-	}
-	
-	if (name == L"Explosion") {
-		anims[IDLE] = std::list<std::wstring>{
-				L"assets\\explosion1.bmp",
-				L"assets\\explosion2.bmp",
-				L"assets\\explosion3.bmp",
-				L"assets\\explosion4.bmp",
-				L"assets\\explosion5.bmp",
-				L"assets\\explosion6.bmp",
-				L"assets\\explosion7.bmp",
-				L"assets\\explosion8.bmp"
-		};
-		go = std::make_shared<Sprite>(pos, rot, sizeX, sizeY, false, anims);
-		
-	}
-	if (name == L"Puff") {
-		anims[IDLE] = std::list<std::wstring>{
-				L"assets\\puff1.bmp",
-				L"assets\\puff2.bmp",
-				L"assets\\puff3.bmp",
-				L"assets\\puff4.bmp",
-				L"assets\\puff5.bmp",
-				L"assets\\puff6.bmp",
-				L"assets\\puff7.bmp",
-				L"assets\\puff8.bmp"
-		};
-		go = std::make_shared<Sprite>(pos, rot, sizeX, sizeY, false, anims);
-		
 	}
 	if (name == L"Green Fog") {
 		anims[IDLE] = std::list<std::wstring>{
@@ -623,8 +627,14 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 		auto sp = std::make_shared<EndScreen>(pos, rot, sizeX, sizeY, false, anims);
 		go = sp;
 	}
+
+	//-------------------------------VARIOUS OBJECTS---------------------------------------------------//
+	//-------------------------------VARIOUS OBJECTS---------------------------------------------------//
+	//-------------------------------VARIOUS OBJECTS---------------------------------------------------//
+	
 	
 	if (go) {
+		// Initialize, activate and push GameObject to the object list.
 		go->Initialize();
 		go->Activate();
 		pObjectList.push_back(std::move(go));
@@ -633,27 +643,26 @@ void ObjectManager::Add(std::wstring name, Vector2D pos, Vector2D vel, float rot
 
 }
 
-void ObjectManager::AddObject(std::shared_ptr<GameObject> object)
-{
-	this->pObjectList.push_back(std::move(object));
-}
-
+/// <summary>
+/// Update All GameObjects.
+/// </summary>
+/// <param name="frameTime">time between frames</param>
 void ObjectManager::UpdateAll(float frameTime)
 {
-	//auto p = QueryObject<Spaceship>();
-	//if (p) {
-	//	if()
-	//}
 	for (auto& obj : this->pObjectList) {
 		obj->Updated(frameTime);
 	}
 
-	// should be updated the last.
+	// Level Manager should be updated the last.
 	lm->Updated(frameTime);
 	
+	// Check Collision after update every frame.
 	CheckCollisions();
 }
 
+/// <summary>
+/// Render all GameObjects
+/// </summary>
 void ObjectManager::RenderAll()
 {
 
@@ -662,17 +671,24 @@ void ObjectManager::RenderAll()
 		obj->Render();
 	}
 
-	// should be rendered the last.
+	// Level Manager should be rendered the last.
 	lm->Render();
 
 }
 
+/// <summary>
+/// Delete objects from all the lists.
+/// </summary>
 void ObjectManager::DeleteAll()
 {
+	
 	pObjectList.clear();
 	pObjectCollidable.clear();
 }
 
+/// <summary>
+/// Delete all inactive objects from all the lists.
+/// </summary>
 void ObjectManager::DeleteInactive()
 {
 	for (auto& obj : pObjectList) 
@@ -692,14 +708,19 @@ void ObjectManager::DeleteInactive()
 	pObjectList.remove(NULL);
 }
 
+/// <summary>
+/// Inactivate all objects in the list.
+/// </summary>
 void ObjectManager::InactivateAll()
 {
-	for(auto pObj: pObjectList){
-		if(pObj->GetType() != ObjectType::LEVEL_MANAGER)
+	for(auto& pObj: pObjectList){
 			pObj->Deactivate();
 	}
 }
 
+/// <summary>
+/// Collision checking function.
+/// </summary>
 void ObjectManager::CheckCollisions() 
 {
 	std::list<std::shared_ptr<CollidableObject>>::iterator it1;
@@ -727,10 +748,20 @@ void ObjectManager::CheckCollisions()
 
 }
 
+/// <summary>
+/// Functions that checks other interaction between objects rather than just collision.
+/// It is used specifically for Zombies and A Hero in the context of the game.
+/// Similar to collision cheking.
+/// </summary>
+/// <param name="objType1">first type of the object to check interaction with</param>
+/// <param name="objType2">second type of the object to check interaction with</param>
+/// <param name="threshold"> minimum distance to check interaction with. </param>
 void ObjectManager::checkOtherInteraction(std::wstring objType1, std::wstring objType2, float threshold)
 {
 	if (objType1 == L"Zombies" && objType2 == L"Player") {
+		// list of all zombies
 		auto list = QueryObjectList<Zombie>();
+		// A hero.
 		auto p = QueryObject<Hero>();
 		for (auto obj : list) {
 			if (p && obj &&

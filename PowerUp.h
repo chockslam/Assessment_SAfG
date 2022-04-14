@@ -1,3 +1,9 @@
+/*
+    * Power-up .h file
+    * 19012503
+    * Aim of the class:		Represents a power-up which supposed to grant player an ability on collision.
+*/
+
 #pragma once
 #include "CollidableObject.h"
 class PowerUp :

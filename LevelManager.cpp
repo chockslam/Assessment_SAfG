@@ -219,7 +219,7 @@ void LevelManager::Updated(float timeFrame)
 		// if all enemies killed show end screen.
 		if (numEnemies == 0) {
 			endGameTimer = END_TIMER;
-			ObjectManager::getInstance().Add(L"End Screen", { 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 0.7f, 0.7f);
+ 			ObjectManager::getInstance().Add(L"End Screen", { 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 0.7f, 0.7f);
 		}
 	}
 	// if level timer has expired, start First level.
@@ -253,10 +253,6 @@ void LevelManager::Render()
 		MyDrawEngine::GetInstance()->WriteText(50, 120, L"HURRY UP!!!",
 			MyDrawEngine::RED);
 	}
-	//MyDrawEngine::GetInstance()->WriteInt(150, 50, playerLives,
-	//	MyDrawEngine::GREEN);
-	//MyDrawEngine::GetInstance()->WriteInt(250, 50, XPos,
-	//	MyDrawEngine::BLUE);
 }
 
 /// <summary>

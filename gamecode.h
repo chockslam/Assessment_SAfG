@@ -83,14 +83,6 @@ public:
 	ErrorType EndOfGame();
 
 
-	
-private:
-	
-	//GameObject* pRock;
-	float rot;
-
-	float thrustOn = false;
-
 };
 
 

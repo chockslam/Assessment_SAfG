@@ -1,3 +1,11 @@
+/*
+	* Start Screen .cpp file
+	* 19012503
+	* Aim of the class: Represents any screen displayed before the level starts (functions implementation).
+	* DRAWBACK: Dead screen/End Screen/Start screen might be merged to reduce amount of code.
+	* SIMILAR TO OTHER SCREENS IMPLEMENTATION - CHECK THEM FOR EXPLANATION.
+*/
+
 #include "StartScreen.h"
 #include "ObjectManager.h"
 

@@ -7,6 +7,9 @@
    // Changed FillCircle to use positive angles.
 // Modified 06/09/2019
 //		Updating LoadPicture, FindPicture, AddFont to const wchar_t to support string literals in parameters
+// modified 03/25/2022
+//		Changes DrawAt function to process ScaleX and ScaleY separately. Line 902.
+
 
 
 #include "mydrawengine.h"
@@ -895,6 +898,7 @@ ErrorType MyDrawEngine::WriteDouble(Vector2D position, double num, int colour, F
 // **************************************************************
 
 // Draw a picture at the requested location
+// ScaleX and ScaleY are treated separately.
 ErrorType MyDrawEngine::DrawAt(Vector2D position, PictureIndex pic, float scaleX, float scaleY, float angle, float transparency)
 {
 	// Find the picture

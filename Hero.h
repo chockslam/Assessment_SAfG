@@ -1,3 +1,8 @@
+/*
+    * Hero .h file
+    * 19012503
+    * Aim of the class:		Represents a playable hero, who is tracked by camera and controlled using keyboard.
+*/
 #pragma once
 #include "PlayableCharacter.h"
 #include <memory>
@@ -7,41 +12,38 @@ class Hero :
     public PlayableCharacter
 {
 public:
+// ---------- CONTRUCTORS WRITTEN FOR EXPERIMENTATION PURPOSES ------------------------------------------------------------------//
     Hero(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths);
     Hero(Vector2D initPos, Vector2D vel, float rotation, float scX, float scY, bool activated);
     Hero(Vector2D initPos, Vector2D vel, float rotation);
     Hero(Vector2D initPos, Vector2D vel, bool activated);
     Hero(Vector2D initPos, Vector2D vel);
     Hero(Vector2D initPos);
-    IShape2D& GetShape();
     Hero();
+// ---------- CONTRUCTORS WRITTEN FOR EXPERIMENTATION PURPOSES ------------------------------------------------------------------//
+    
+    IShape2D& GetShape();
     ~Hero();
 
     void Initialize();
-
-    Vector2D getVel() const { return this->velocity; };
-
     void Updated(float timeFrame);
     void ProcessCollision(std::shared_ptr<CollidableObject> other);
 protected:
+    // control handle
     void control(float timeFrame, int up = DIK_W, int left = DIK_A, int down = DIK_S, int right = DIK_D, int run = DIK_LSHIFT, int shoot = DIK_SPACE);
 private:
 
+    // facilitates the timer which indicates invincibility of a hero after being hit.
     float invincTimer;
+
+    // collision detection facility
     Circle2D boundingCircle;
     
-    const float AccPower = 200.0f;
-
+    // indicates how long does the player emits STRONG BULLETS/FIREBALLS
     float poweredUpTimer;
 
-
+    // reduce frequency of shooting - timer
     float shootCoolDown;
-
-    const Vector2D right = Vector2D(100.0f, 0.0f);     
-    const Vector2D left = Vector2D(-100.0f, 0.0f);
-    const Vector2D up = Vector2D(0.0f, 100.0f);
-    const Vector2D down = Vector2D(0.0f, -9.81f);
-
 
     // facilitates varied speed of movements.
     float posOffsetPower;
