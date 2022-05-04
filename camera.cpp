@@ -1,8 +1,8 @@
 // camera.cpp
 // Shell engine version 2020
 // Chris Rook
-// Last modified 20/09/2018
-
+// Last modified 10/04/2022 - 
+//    * returns world position of the camera needed for UIElement render function(Glebs Medvedevs)
 #pragma once
 
 #include "mydrawengine.h"
@@ -105,7 +105,7 @@ void Camera::SetZoom(float zoom)
 	m_zoom = zoom;
 }
 
-// Get world position
+// Get world position (for UIElement functionality)
 Vector2D Camera::getWorldPosition()
 {
 	return m_worldPosition;
