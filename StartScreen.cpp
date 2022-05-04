@@ -19,8 +19,8 @@ void StartScreen::Updated(float timeFrame)
 	if (this->duration <= 0.0f) {
 		this->active = false;
 	}
-	this->duration = ObjectManager::getInstance().getLevelManager()->getStartTimer();
-
+	//this->duration = ObjectManager::getInstance().getLevelManager()->getStartTimer();
+	this->duration -= timeFrame;
 }
 
 

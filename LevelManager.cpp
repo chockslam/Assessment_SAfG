@@ -17,9 +17,9 @@
 
 
 //---------------- TIMERS ------------------------------------------------------//
-#define END_TIMER 400.0f				//Level End Timer
-#define START_TIMER 100.0f				//Level Star Timer
-#define DEATH_COOL_DOWN_PLAYER 500.0f	//Death cooldown
+#define END_TIMER 4.0f				//Level End Timer
+#define START_TIMER 2.0f				//Level Star Timer
+#define DEATH_COOL_DOWN_PLAYER 5.0f	//Death cooldown
 //---------------- TIMERS ------------------------------------------------------//
 
 
@@ -102,7 +102,6 @@ LevelManager::LevelManager()
 void LevelManager::StartLevel(int level)
 {
 
-
 	this->level = level;
 
 	MySoundEngine::GetInstance()->StopAllSounds();
@@ -129,7 +128,8 @@ void LevelManager::StartLevel(int level)
 	}
 	// do level-starting actions, only if the level does not exceeds maximum allowed level.
 	if (this->level <= NUMBER_OF_LEVELS) {
-		
+
+		this->playerLives = 1;
 		this->numEnemies = 0;							// reset enemies counter
 
 		this->startGameTimer = START_TIMER;				// Start screen showing time
@@ -197,6 +197,7 @@ void LevelManager::Updated(float timeFrame)
 		endGameTimer -= timeFrame;
 		if (endGameTimer <= 0.0f) {
 			ObjectManager::getInstance().InactivateAll();
+			ObjectManager::getInstance().DeleteInactive();
 			this->level = (this->level < NUMBER_OF_LEVELS) ? this->level + 1 : LEVEL_ONE;
 			StartLevel(this->level);
 		}

@@ -1,7 +1,8 @@
 // camera.h
 // Shell engine version 2020
 // Chris Rook
-// Last modified 20/09/2018
+// Last modified 10/04/2022 - 
+//    * returns world position of the camera needed for UIElement render function(Glebs Medvedevs)
 
 
 #pragma once

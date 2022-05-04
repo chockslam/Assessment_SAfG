@@ -20,11 +20,7 @@ void EndScreen::Updated(float timeFrame)
 	if (this->duration <= 0.0f) {
 		this->active = false;
 	}
-	// Needs to be synchronised with level manager variable due to the occasional fps issues 
-	// which might cause unpredicted behivior of the screen,
-	// i.e. it stays for too short because time frame is too big.
-	this->duration = ObjectManager::getInstance().getLevelManager()->getEndTimer();
-
+	this->duration -= timeFrame;
 }
 
 /// <summary>

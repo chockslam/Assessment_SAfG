@@ -83,9 +83,9 @@ private:
     int level;
     
     // Timers
-    int playerDeathCoolDownTimer;
-    int startGameTimer;
-    int endGameTimer;
+    float playerDeathCoolDownTimer;
+    float startGameTimer;
+    float endGameTimer;
     
     // Zombies field of vision (how far away they notice you from, which also depends on the difficulty of zombie)
     float maxReach;
