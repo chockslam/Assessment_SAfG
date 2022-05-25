@@ -3,7 +3,6 @@
 	* 19012503
 	* Aim of the class:		Game Engine related class, which manages objects in various ways: collisions, update, rendering, deletion of objects is done here.
 	*						The class also has an extension functionality related to Object Factory.
-	* C++ Singleton implementation taken from https://stackoverflow.com/questions/1008019/c-singleton-design-pattern;
 */
 #pragma once
 #include <list>
@@ -14,32 +13,11 @@
 class ObjectManager
 {
 public:
-    static ObjectManager& getInstance()
-    {
-        static ObjectManager    instance; // Guaranteed to be destroyed.
-                              // Instantiated on first use.
-        return instance;
-    }
-private:
-    ObjectManager() {}                    // Constructor? (the {} brackets) are needed here.
-
-    // C++ 11
-    // =======
-    // We can use the better technique of deleting the methods
-    // we don't want.
-public:
-    ObjectManager(ObjectManager const&) = delete;
-    void operator=(ObjectManager const&) = delete;
-
-    // Note: Scott Meyers mentions in his Effective Modern
-    //       C++ book, that deleted functions should generally
-    //       be public as it results in better error messages
-    //       due to the compilers behavior to check accessibility
-    //       before deleted status
-public:
+	ObjectManager() {};
 	// Level Manager getter.
 	std::shared_ptr<LevelManager> getLevelManager() const { return this->lm; };
 	
+	void AddObject(std::shared_ptr<GameObject> obj); // ObjectFactory related method
 	void Add(std::wstring name, Vector2D pos = { 0.0f, 0.0f }, Vector2D vel = { 0.0f, 0.0f }, float rot = 0.0f, float sizeX = 1.0f, float sizeY = 1.0f, int appearance = 1); // ObjectFactory related method
 	void UpdateAll(float frameTime);						// Update all objects in the pObjectList
 	void RenderAll();										// Render all objects in the pObjectList
@@ -59,6 +37,7 @@ private:
 	// List of Collidable gameObjects to process collisions. Subset of ALL gameObjects.
 	std::list<std::shared_ptr<CollidableObject>> pObjectCollidable;
 };
+
 
 /// <summary>
 /// Returns the first encounter of the pointer of of type T (templetated type) from the list of all object.

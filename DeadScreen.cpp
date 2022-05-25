@@ -5,7 +5,7 @@
 */
 
 #include "DeadScreen.h"
-#include "ObjectManager.h"
+#include "ObjectFactory.h"
 #include "mydrawengine.h"
 
 DeadScreen::DeadScreen(Vector2D initPos, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths)
@@ -31,7 +31,7 @@ void DeadScreen::Updated(float timeFrame)
 void DeadScreen::Initialize()
 {
 	GameObject::Initialize();
-	this->duration = ObjectManager::getInstance().getLevelManager()->getDeathCoolDown();
+	this->duration = ObjectFactory::getInstance().getLevelManager()->getDeathCoolDown();
 }
 /// <summary>
 /// Rendering function.

@@ -20,6 +20,7 @@ public:
 	GameObject(Vector2D initPos, float rotation, float scX, float scY, bool activated, std::unordered_map<std::wstring, std::list<std::wstring>> paths);
 	virtual ~GameObject();
 	bool IsActive() const;
+	void SetAnimation(std::wstring state, std::list<std::wstring> listOfAnims);
 	void Activate();
 	void Deactivate();
 	virtual void Initialize();

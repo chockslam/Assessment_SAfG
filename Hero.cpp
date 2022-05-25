@@ -12,7 +12,7 @@
 #include "AnimMasks.h"
 
 
-#include "ObjectManager.h"
+#include "ObjectFactory.h"
 
 // #include "Bullet.h"
 
@@ -155,8 +155,8 @@ void Hero::Updated(float timeFrame)
 	{
 
 		// Communicate state of the Hero object to the level manager, i.e. health information needed for health bar.
-		ObjectManager::getInstance().getLevelManager()->SetMaxHP(this->maxHealth);
-		ObjectManager::getInstance().getLevelManager()->SetHP(this->health);
+		ObjectFactory::getInstance().getLevelManager()->SetMaxHP(this->maxHealth);
+		ObjectFactory::getInstance().getLevelManager()->SetHP(this->health);
 
 		// if the player is running then make RUN animation be played faster. 
 		if (this->posOffsetPower > 30.0f) {
@@ -178,7 +178,7 @@ void Hero::Updated(float timeFrame)
 				animTime = IDLE_SPEED;
 			}
 			// The level started, then player can control, i.e use keyboard.
-			if(ObjectManager::getInstance().getLevelManager()->getStartTimer()<=0.0f)
+			if(ObjectFactory::getInstance().getLevelManager()->getStartTimer()<=0.0f)
 				this->control(timeFrame);
 		}
 
@@ -213,12 +213,12 @@ void Hero::Updated(float timeFrame)
 		this->velocity += friction;
 
 		// restrict hero's movements with tracked camera.
-		RestrictMovement(ObjectManager::getInstance().getLevelManager()->getMinY(),
-						 ObjectManager::getInstance().getLevelManager()->getMinPlayerX(),
-						 ObjectManager::getInstance().getLevelManager()->getMaxY(),
-						 ObjectManager::getInstance().getLevelManager()->getMaxPlayerX(),
-						 ObjectManager::getInstance().getLevelManager()->getMaxCameraX(),
-						 ObjectManager::getInstance().getLevelManager()->getMinCameraX(),
+		RestrictMovement(ObjectFactory::getInstance().getLevelManager()->getMinY(),
+						 ObjectFactory::getInstance().getLevelManager()->getMinPlayerX(),
+						 ObjectFactory::getInstance().getLevelManager()->getMaxY(),
+						 ObjectFactory::getInstance().getLevelManager()->getMaxPlayerX(),
+						 ObjectFactory::getInstance().getLevelManager()->getMaxCameraX(),
+						 ObjectFactory::getInstance().getLevelManager()->getMinCameraX(),
 						 true
 						);
 
@@ -239,8 +239,8 @@ void Hero::Updated(float timeFrame)
 		if (health <= 0) {
 			// only if not dead yet then process death.
 			if (this->currentAnimation != DEATH) {
-				ObjectManager::getInstance().getLevelManager()->PlayerDead();
-				ObjectManager::getInstance().Add(L"Dead Screen", { 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 10.0f, 10.0f);
+				ObjectFactory::getInstance().getLevelManager()->PlayerDead();
+				ObjectFactory::getInstance().AddUI( { 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 10.0f, 10.0f, L"Dead Screen");
 				currentAnimation = DEATH;
 				this->shapeExist = false;
 				this->animLooped = false;
@@ -408,10 +408,10 @@ void Hero::control(float timeFrame, int up, int left, int down, int right, int r
 		
 		// if the player is powered-up then emit strong bullet.
 		if (this->poweredUpTimer > 0.0f) {
-			ObjectManager::getInstance().Add(L"Strong Bullet", this->position, this->velocity, rotation + 3.1415f / 2, this->scaleX * 2, -this->scaleY * 2);
+			ObjectFactory::getInstance().AddBullet(this->position, this->velocity, rotation + 3.1415f / 2, this->scaleX * 2, -this->scaleY * 2, L"Strong");
 		}
 		else {
-			ObjectManager::getInstance().Add(L"Bullet", this->position, this->velocity, rotation + 3.1415f / 2, this->scaleX * 2, -this->scaleY * 2);
+			ObjectFactory::getInstance().AddBullet( this->position, this->velocity, rotation + 3.1415f / 2, this->scaleX * 2, -this->scaleY * 2);
 		}
 		// reset cooldown.
 		this->shootCoolDown = SHOOT_COOLDOWN;

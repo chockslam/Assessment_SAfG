@@ -12,6 +12,7 @@
 #include "shapes.h"
 
 #include "ObjectManager.h"
+#include "ObjectFactory.h"
 
 
 Game::Game()
@@ -285,7 +286,11 @@ ErrorType Game::StartOfGame()
 	
 	// Create Ship
 	
-	ObjectManager::getInstance().Add(L"Level Manager");
+	//ObjectManager::getInstance().Add(L"Level Manager");
+	this->om = std::make_shared<ObjectManager>();
+	ObjectFactory::getInstance().setOM(this->om);
+	ObjectFactory::getInstance().AddLevelManager();
+
 	
 
 
@@ -323,9 +328,9 @@ ErrorType Game::Update()
 
 	// Manage Objects - delete inactive ones, update and render all
 
-	ObjectManager::getInstance().DeleteInactive();
-	ObjectManager::getInstance().UpdateAll(gt.mdFrameTime);
-	ObjectManager::getInstance().RenderAll();
+	this->om->DeleteInactive();
+	this->om->UpdateAll(gt.mdFrameTime);
+	this->om->RenderAll();
 
 	gt.mark();
 
@@ -352,7 +357,7 @@ ErrorType Game::EndOfGame()
 	MySoundEngine* pSE = MySoundEngine::GetInstance();
 	pSE->StopAllSounds();
 
-	ObjectManager::getInstance().DeleteAll();
+	this->om->DeleteAll();
 	
 	return SUCCESS;
 

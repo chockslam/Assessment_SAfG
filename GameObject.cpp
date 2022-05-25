@@ -46,6 +46,26 @@ bool GameObject::IsActive() const
 }
 
 /// <summary>
+/// Add animation
+/// </summary>
+/// <param name="state"> type of animation </param>
+/// <param name="listOfAnims">actual pictures</param>
+void GameObject::SetAnimation(std::wstring state, std::list<std::wstring> listOfAnims)
+{
+	// empty list of integers/PictureIndices 
+	std::list<int> animationFrames;
+	// for every path in the list.
+	for (auto pic : listOfAnims) {
+		// load picture and push it to the list.
+		auto frame = MyDrawEngine::GetInstance()->LoadPicture(pic.c_str());
+		animationFrames.push_back(frame);
+	}
+	// emplace name and list of animation to the map.
+	anims.emplace(state, animationFrames);
+}
+
+
+/// <summary>
 /// Activate object.
 /// </summary>
 void GameObject::Activate()

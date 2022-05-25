@@ -10,7 +10,9 @@
 #include "windows.h"
 #include "mydrawengine.h"
 #include "mysoundengine.h"
+#include "ObjectManager.h"
 #include "gametimer.h"
+#include <memory>
 
 // This is a hack for reading keyboard in situations where you don't want to
 // use a full input system.
@@ -40,6 +42,8 @@ private:
 	Game(Game& other);             // Copy constructor disabled
 
 	GameTimer gt;
+
+	std::shared_ptr<ObjectManager> om = nullptr;
 
 
 public:

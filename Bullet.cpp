@@ -78,4 +78,6 @@ IShape2D& Bullet::GetShape()
 void Bullet::MakeStrong()
 {
 	this->type = ObjectType::FIRE_STRONG;
+	this->scaleX *= 1.3;
+	this->scaleY *= 1.3;
 }

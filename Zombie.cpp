@@ -8,7 +8,7 @@
 #include "mysoundengine.h"
 #include "mydrawengine.h"
 #include <random>
-#include "ObjectManager.h"
+#include "ObjectFactory.h"
 #include "AnimMasks.h"
 
 
@@ -113,10 +113,11 @@ void Zombie::Updated(float timeFrame)
 		Vector2D friction = -(this->frictionPower) * this->velocity * timeFrame;
 		this->velocity += friction;
 		// Restric movements without 'camera tracked' option.
-		RestrictMovement(ObjectManager::getInstance().getLevelManager()->getMinY(),
-			ObjectManager::getInstance().getLevelManager()->getMinPlayerX(),
-			ObjectManager::getInstance().getLevelManager()->getMaxY(),
-			ObjectManager::getInstance().getLevelManager()->getMaxPlayerX()
+		RestrictMovement(
+			ObjectFactory::getInstance().getLevelManager()->getMinY(),
+			ObjectFactory::getInstance().getLevelManager()->getMinPlayerX(),
+			ObjectFactory::getInstance().getLevelManager()->getMaxY(),
+			ObjectFactory::getInstance().getLevelManager()->getMaxPlayerX()
 		);
 		// change position
 		this->position += this->velocity * timeFrame;
@@ -150,7 +151,7 @@ void Zombie::Updated(float timeFrame)
 				this->currentAnimation = DEATH;
 				this->shapeExist = false;
 				this->animLooped = false;
-				ObjectManager::getInstance().getLevelManager()->EnemyDead();
+				ObjectFactory::getInstance().getLevelManager()->EnemyDead();
 			}
 			
 		}

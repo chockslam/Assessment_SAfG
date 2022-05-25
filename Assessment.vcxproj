@@ -27,6 +27,7 @@
     <ClCompile Include="EndScreen.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
     <ClCompile Include="HealthBar.cpp" />
+    <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="gamecode.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="errortype.h" />
     <ClInclude Include="HealthBar.h" />
+    <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="gamecode.h" />

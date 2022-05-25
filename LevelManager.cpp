@@ -11,7 +11,7 @@
 #include "LevelManager.h"
 #include "mydrawengine.h"
 #include "mysoundengine.h"
-#include "ObjectManager.h"
+#include "ObjectFactory.h"
 #include <string>
 
 
@@ -196,8 +196,8 @@ void LevelManager::Updated(float timeFrame)
 	if (endGameTimer > 0.0f ) {
 		endGameTimer -= timeFrame;
 		if (endGameTimer <= 0.0f) {
-			ObjectManager::getInstance().InactivateAll();
-			ObjectManager::getInstance().DeleteInactive();
+			ObjectFactory::getInstance().getOM()->InactivateAll();
+			ObjectFactory::getInstance().getOM()->DeleteInactive();
 			this->level = (this->level < NUMBER_OF_LEVELS) ? this->level + 1 : LEVEL_ONE;
 			StartLevel(this->level);
 		}
@@ -220,19 +220,19 @@ void LevelManager::Updated(float timeFrame)
 		// if all enemies killed show end screen.
 		if (numEnemies == 0) {
 			endGameTimer = END_TIMER;
- 			ObjectManager::getInstance().Add(L"End Screen", { 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 0.7f, 0.7f);
+ 			ObjectFactory::getInstance().AddUI( { 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 0.7f, 0.7f, L"End Screen");
 		}
 	}
 	// if level timer has expired, start First level.
 	else {
-		ObjectManager::getInstance().InactivateAll();
+		ObjectFactory::getInstance().getOM()->InactivateAll();
 		this->level = LEVEL_ONE;
 		StartLevel(this->level);
 	}
 	
 	// Process proximity between zombies and a hero. zombies chase a player if they are close enough. 
 	// Primitive interaction...
-	ObjectManager::getInstance().checkOtherInteraction(L"Zombies", L"Player", this->maxReach);
+	ObjectFactory::getInstance().getOM()->checkOtherInteraction(L"Zombies", L"Player", this->maxReach);
 }
 
 /// <summary>
@@ -262,8 +262,8 @@ void LevelManager::Render()
 void LevelManager::makeUI()
 {
 	// Handle Start sceen and Health bar
-  	ObjectManager::getInstance().Add(L"Start Screen", { 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 1.0f, 1.0f);
-	ObjectManager::getInstance().Add(L"Health Bar", { 0.0f , 900.0f }, { 0.0f, 0.0f }, 0.0f, 4.0f);
+	ObjectFactory::getInstance().AddUI({ 0.0f , 0.0f }, { 0.0f, 0.0f }, 0.0f, 1.0f, 1.0f, L"Start Screen");
+	ObjectFactory::getInstance().AddUI({ 0.0f , 900.0f }, { 0.0f, 0.0f },0.0f, 4.0f, 1.0f, L"Health Bar");
 }
 
 /// <summary>
@@ -283,7 +283,7 @@ void LevelManager::CreateBackground(int length)
 	float size = 2048.0f;				// hardcoded. Should be dependent on the width of the picture
 	float widthScale = 3.0f;			// hardcoded
 	for (int i = 0; i < length; i++) {
-		ObjectManager::getInstance().Add(backG, { -2000.0f + size * i * widthScale, 0.0f }, { 0.0f, 0.0f }, 0.0f, widthScale, 2.0f, 1);
+		ObjectFactory::getInstance().AddSprite({ -2000.0f + size * i * widthScale, 0.0f }, { 0.0f, 0.0f }, 0.0f, widthScale, 2.0f, backG);
 	}
 }
 /// <summary>
@@ -303,7 +303,7 @@ void LevelManager::CreateForeground(int length)
 	float size = 2048.0f;				// hardcoded. Should be dependent on the width of the picture
 	float widthScale = 3.0f;			// hardcoded
 	for (int i = 0; i < length; i++) {
-		ObjectManager::getInstance().Add(foreG, { -850.0f + size * i *widthScale, 0.0f }, { 0.0f, 0.0f }, 0.0f, widthScale, 9.0f, 1);
+		ObjectFactory::getInstance().AddSprite({ -850.0f + size * i *widthScale, 0.0f }, { 0.0f, 0.0f }, 0.0f, widthScale, 9.0f, foreG);
 	}
 }
 
@@ -338,27 +338,27 @@ void LevelManager::RespawnEnemies()
 	}
 	// Add number of zombies and randomly place them within boundaries of the map.
 	for (int i = 1; i <= numWeakZ; i++) {
-		ObjectManager::getInstance().Add(L"Weak Zombie",	Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+		ObjectFactory::getInstance().AddZombie(	Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1, L"Weak Zombie");
 		numEnemies += 1;
 	}
 	for (int i = 1; i <= numWeakC; i++) {
-		ObjectManager::getInstance().Add(L"Weak Crawler",	Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand()%2+1);
+		ObjectFactory::getInstance().AddZombie(Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1, L"Weak Crawler");
 		numEnemies += 1;
 	}
 	for (int i = 1; i <= numNormalZ; i++) {
-		ObjectManager::getInstance().Add(L"Normal Zombie",	Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+		ObjectFactory::getInstance().AddZombie(Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1, L"Normal Zombie");
 		numEnemies += 1;
 	}
 	for (int i = 1; i <= numNormalC; i++) {
-		ObjectManager::getInstance().Add(L"Normal Crawler",	Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+		ObjectFactory::getInstance().AddZombie(Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1, L"Normal Crawler");
 		numEnemies += 1;
 	}
 	for (int i = 1; i <= numHardZ; i++) {
-		ObjectManager::getInstance().Add(L"Hard Zombie",	Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+		ObjectFactory::getInstance().AddZombie(Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1, L"Hard Zombie");
 		numEnemies += 1;
 	}
 	for (int i = 1; i <= numHardC; i++) {
-		ObjectManager::getInstance().Add(L"Hard Crawler",	Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1);
+		ObjectFactory::getInstance().AddZombie(Vector2D(1000 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY), {}, 0.0f, 3.5f, 3.5f, rand() % 2 + 1, L"Hard Crawler");
 		numEnemies += 1;
 	}
 }
@@ -367,13 +367,12 @@ void LevelManager::RespawnEnemies()
 /// </summary>
 void LevelManager::RespawnPlayer()
 {
-	ObjectManager::getInstance().Add(	L"Player",
+	ObjectFactory::getInstance().AddHero(
 										{ -3000.0f, 0.0f },
 										{ 0.0f, 0.0f },
 										4.5f,
 										4.5f,
-										0.0f,
-										1
+										0.0f
 									);
 }
 
@@ -393,7 +392,7 @@ void LevelManager::RespawnPowerUps()
 	}
 
 	for (int i = 1; i <= numPowerUps; i++) {
-		ObjectManager::getInstance().Add(	L"Power Up", 
+		ObjectFactory::getInstance().AddPowerUp(
 											Vector2D(300 + rand() % (this->maxX - 1000), rand() % (this->maxY + abs(this->minY)) + this->minY),
 											{},
 											0.0f,
